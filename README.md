@@ -41,16 +41,17 @@ Tests cover desktop and mobile Chromium; check real phones before publication.
 
 The venue is Caswell House, Brize Norton, Oxfordshire, OX18 3NJ. There is no RSVP database yet.
 
-## Publish later through Cloudflare Pages
+## Publish through Cloudflare Workers
 
 1. Review content and check on real phones.
 2. Push the reviewed project to the selected GitHub repository.
-3. Create a Cloudflare Pages project and connect the repository. Select the branch containing the code.
-4. Use Node 24, build command `npm run build`, output directory `dist`, repository root as project root.
+3. Connect the `imogenanddan` Cloudflare Worker to `Paxdolmes/wedding`, production branch `main`.
+4. Use Node 24, build command `npm run build`, deploy command `npx wrangler deploy`, repository root as project root. `wrangler.jsonc` sets the Worker name, required compatibility date and `dist` asset directory. The existing command `npx wrangler deploy --assets ./dist --name imogenanddan` also works with this configuration.
 5. Test the Cloudflare-provided deployment address.
-6. Add `imogenanddan.com` in the Pages project's custom domains and follow its DNS instructions; add `www` if desired.
+6. Add `imogenanddan.com` in the Worker's Domains tab; add `www.imogenanddan.com` if desired.
 7. Check HTTPS, opening interaction, calendar download and hotel links before sharing.
 
 Environment publication is separate from website deployment. Keep committed work
 and a downloadable source archive before rebuilding an environment. This project
-has not deployed a website or changed DNS.
+uses Cloudflare's GitHub integration to deploy changes pushed to `main`. Check the
+latest Cloudflare build result and live domain to confirm publication.
