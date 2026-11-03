@@ -1,48 +1,20 @@
-.page { min-height: 100svh; padding: 0 6vw; background: radial-gradient(ellipse at 50% 48%, #fffdf7 0, transparent 68%); }
-.masthead, footer { max-width: 1160px; margin: auto; display: flex; align-items: center; justify-content: space-between; }
-.masthead { min-height: 94px; border-bottom: 1px solid #dcded1; }
-.monogram { font-size: 25px; letter-spacing: 3px; }
-.monogram i { font-size: 19px; font-weight: normal; }
-.eyebrow { font-family: Arial, sans-serif; font-size: 10px; letter-spacing: 2.6px; text-transform: uppercase; line-height: 1.7; }
-.introduction { text-align: center; padding: 44px 0 0; }
-h1 { font-size: clamp(36px, 5vw, 58px); line-height: 1.12; font-weight: normal; letter-spacing: -1.6px; margin: 18px 0; }
-h1 em { font-weight: normal; }
-.introduction > p:last-child { font-size: 15px; color: #656c4c; line-height: 1.7; margin: 0; }
-.letter-stage { width: min(430px, 100%); height: 430px; transition: height 500ms ease; margin: 0 auto; position: relative; }
-.letter-stage.is-open { height: 560px; }
-.envelope { position: absolute; bottom: 92px; width: 100%; height: 246px; border-radius: 4px; background: #828c5f; box-shadow: 0 22px 40px -16px #424a2c40, 0 2px 3px #424a2c12; perspective: 1000px; }
-.envelope-lining { position: absolute; inset: 9px; background: repeating-linear-gradient(45deg, #7c8757 0 1px, #939d72 1px 8px); border-radius: 3px; }
-.envelope-flap { position: absolute; inset: 0 0 auto; height: 150px; background: #a7af86; clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: top; z-index: 3; backface-visibility: visible; }
-.is-open .envelope-flap { z-index: 0; }
-.envelope-pocket { position: absolute; inset: 0; background: linear-gradient(150deg, #b6be95, #949f70); clip-path: polygon(0 0, 50% 53%, 100% 0, 100% 100%, 0 100%); border-radius: 3px; z-index: 2; }
-.envelope-pocket::after { content: ''; position: absolute; inset: 0; background: #aab58a; clip-path: polygon(0 100%, 50% 46%, 100% 100%); }
-.wax-seal { position: absolute; top: 115px; left: calc(50% - 34px); z-index: 5; width: 68px; height: 68px; border: 5px solid #c8af7b; border-radius: 46% 52% 45% 49%; background: radial-gradient(circle at 35% 25%, #d9c294, #bea16c); box-shadow: 2px 4px 7px #5d553d35, inset 0 0 0 1px #a88e60; color: #65532f; transition: transform 180ms ease, box-shadow 180ms ease; }
-.wax-seal span { font-size: 16px; font-style: italic; text-shadow: 0 1px 0 #eedab2; }
-.wax-seal:hover { transform: rotate(-6deg) scale(1.06); box-shadow: 3px 6px 10px #5d553d40; }
-.envelope-address { position: absolute; bottom: 23px; width: 100%; text-align: center; z-index: 3; font-size: 15px; font-style: italic; color: #485431; }
-.invitation { position: absolute; bottom: 16px; left: 20px; right: 20px; min-height: 300px; padding: 20px 12px 25px; text-align: center; background: #fffdf7; border: 1px solid #e3dfd1; box-shadow: 0 6px 18px #424a2c20; z-index: 4; }
-.invitation::before { content: ''; position: absolute; inset: 9px; border: 1px solid #e3dfd1; pointer-events: none; }
-.invitation:focus { outline: none; }
-.sprig { display: block; width: 66px; height: 30px; margin: 0 auto 5px; color: #6f7e49; }
-.invitation .eyebrow { margin: 5px 0 10px; }
-h2 { font-weight: normal; font-size: clamp(29px, 7vw, 39px); letter-spacing: -1px; margin: 0; }
-.fine-rule { height: 1px; width: 36px; background: #c9b17f; margin: 12px auto; }
-.wedding-date { font-size: 17px; margin: 0 0 8px; }
-.wedding-location { font-family: Arial, sans-serif; font-size: 11px; line-height: 1.6; margin: 0; letter-spacing: .5px; }
-.letter-actions { position: absolute; bottom: 7px; width: 100%; text-align: center; min-height: 65px; }
-.opening-hint { font-size: 14px; margin: 0 0 5px; }
-.text-button { border: none; background: none; text-decoration: underline; text-underline-offset: 4px; font-family: Arial, sans-serif; font-size: 11px; min-height: 44px; padding: 8px 12px; color: #485431; }
-.text-button span { margin-left: 6px; }
-footer { border-top: 1px solid #dcded1; min-height: 66px; color: #656c4c; font-size: 12px; font-style: italic; }
-.calendar-link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; margin-top: 14px; padding: 0 18px; background: #485431; color: #fffdf7; font-family: Arial, sans-serif; font-size: 11px; letter-spacing: .5px; text-decoration: none; border-radius: 2px; position: relative; }
-.calendar-link:hover { background: #354124; }
-.dress-code { max-width: 430px; margin: 0 auto 36px; padding: 23px 12px 8px; border-top: 1px solid #dcded1; text-align: center; }
-.dress-code h2 { letter-spacing: 2.6px; margin-bottom: 12px; }
-.dress-code p { font-size: 15px; line-height: 1.8; margin: 0; }
-.dress-code em { color: #656c4c; font-size: 14px; }
-@media (max-width: 480px) {
-.page { padding: 0 22px; } .masthead { min-height: 74px; } .masthead .eyebrow { font-size: 8px; letter-spacing: 1.3px; }
-.introduction { padding-top: 32px; } .introduction > .eyebrow { font-size: 8px; letter-spacing: 1.8px; } .introduction > p:last-child { max-width: 260px; margin: auto; font-size: 14px; }
-.envelope { height: 220px; } .envelope-flap { height: 132px; } .wax-seal { top: 99px; } .invitation { left: 12px; right: 12px; }
+.page { min-height: 100svh; padding: 0 6vw; background: #f7f4eb; }
+.masthead { max-width: 1200px; margin: auto; display: flex; align-items: center; justify-content: space-between; min-height: 100px; border-bottom: 1px solid #81896a30; }
+.monogram { font-size: 32px; letter-spacing: 2px; }.monogram i { font-size: 23px; color: #9c8b60; }.masthead a { text-decoration: none; color: inherit; }.masthead a span { margin-left: 16px; }
+.eyebrow { font: 10px/1.8 Arial, sans-serif; letter-spacing: 2.6px; text-transform: uppercase; }
+.invitation { position: relative; max-width: 1000px; min-height: calc(100svh - 100px); margin: auto; padding: 45px 0 26px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }.invitation:focus { outline: none; }
+.invitation-branch { width: 56px; height: 66px; color: #818966; margin-bottom: 16px; }.invitation .eyebrow { margin: 0 0 7px; }.save-the-date { font-size: 29px; font-style: italic; color: #8e805b; margin: 0; }
+h1 { font-size: clamp(68px, 10vw, 136px); font-weight: 400; line-height: 1.05; letter-spacing: -5px; margin: 18px 0 32px; }h1 > span { font-style: italic; font-size: .7em; color: #9d8d64; padding: 0 .04em; }
+.date-lockup { display: flex; align-items: center; gap: 30px; }.date-lockup > span { width: 105px; border-top: 1px solid #9f987555; border-bottom: 1px solid #9f987555; padding: 10px 0; font: 9px/1.5 Arial, sans-serif; text-transform: uppercase; letter-spacing: 2px; }.date-lockup time { font-size: 31px; line-height: 1.15; font-weight: 400; }.date-lockup time > span { display: block; font-size: 23px; font-style: italic; margin: 4px 0; }
+.wedding-location { font-size: 23px; margin: 22px 0 0; }.invitation-note { font-size: 19px; font-style: italic; color: #7b8069; line-height: 1.5; margin: 15px 0 24px; }
+.calendar-link { display: inline-flex; align-items: center; justify-content: center; gap: 36px; min-height: 48px; padding: 0 24px; border: 1px solid #5c6745; color: #4b5738; font: 10px/1.5 Arial, sans-serif; text-transform: uppercase; letter-spacing: 1.6px; text-decoration: none; transition: background .2s, color .2s; }.calendar-link:hover { background: #4b5738; color: #f7f4eb; }.calendar-link > span[aria-hidden] { font-size: 18px; }
+.discover-link { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 35px; color: #7b8069; text-decoration: none; font: 8px/1.5 Arial, sans-serif; letter-spacing: 2px; text-transform: uppercase; padding: 10px; }.discover-link > span:last-child { font-size: 20px; }
+h2 { font-size: clamp(32px,4vw,50px); font-weight: 400; line-height: 1.1; letter-spacing: -.8px; margin: 0; }
+.together-section { max-width: 1050px; margin: 80px auto 120px; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(30px,8vw,120px); align-items: center; scroll-margin-top: 40px; }.together-copy h2 { margin: 22px 0 28px; }.together-copy h2 em { color: #89916c; }.together-copy > p:not(.eyebrow) { font-size: 19px; line-height: 1.65; max-width: 370px; }.signature { display: block; font-size: 26px; font-style: italic; margin-top: 28px; color: #8b7955; }.together-section .engagement-photo { transform: rotate(3deg); width: min(100%,360px); }.together-section .photo-print { box-shadow: 5px 14px 30px #50492c17; padding: 13px 13px 0; }.together-section .photo-print figcaption { font-size: 22px; }
+.dress-code { position: relative; max-width: 1080px; margin: 0 auto 100px; padding: 65px 24px; text-align: center; background: #e7eadc; border: 1px solid #b5ba9d5c; }.dress-branch { width: 42px; height: 55px; color: #7d8761; margin-bottom: 16px; }.dress-code h2 { letter-spacing: 2.6px; }.dress-code p { font-size: clamp(36px,5vw,58px); line-height: 1.1; margin: 23px 0; }.dress-code em { color: #7b855f; }.dress-code > span { font-size: 18px; }
+footer { max-width: 1080px; margin: 0 auto; padding: 50px 0; border-top: 1px solid #81896a30; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }.footer-names { font-size: 35px; font-style: italic; }.text-button { border: 0; background: none; text-decoration: underline; text-underline-offset: 5px; font: 11px/1.5 Arial, sans-serif; min-height: 44px; padding: 8px 12px; color: #5c6745; }.text-button span { margin-left: 8px; }
+@media (max-width: 600px) {
+.page { padding: 0 22px; }.masthead { min-height: 76px; }.masthead .eyebrow { font-size: 8px; letter-spacing: 1.2px; }.invitation { min-height: calc(100svh - 76px); padding-top: 30px; }.invitation-branch { width: 44px; height: 52px; margin-bottom: 12px; }.invitation .eyebrow { font-size: 8px; letter-spacing: 1.7px; }h1 { letter-spacing: -2.5px; font-size: clamp(55px,13.5vw,81px); margin: 22px 0 26px; }.save-the-date { font-size: 25px; }.date-lockup { gap: 16px; }.date-lockup > span { width: 85px; font-size: 8px; letter-spacing: 1px; }.wedding-location { font-size: 21px; }.invitation-note { font-size: 18px; }.discover-link { margin-top: 24px; }.together-section { grid-template-columns: 1fr; margin: 60px auto 80px; gap: 24px; }.together-copy { text-align: center; }.together-copy > p:not(.eyebrow) { margin-inline: auto; }.together-section .engagement-photo { width: min(88%,310px); }.dress-code { margin-bottom: 65px; padding: 40px 16px; }.dress-code > span { font-size: 16px; }
 }
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+
+.arrow-icon { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1; vertical-align: middle; }.masthead .arrow-icon { margin-left: 12px; }

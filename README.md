@@ -1,8 +1,8 @@
 # Imogen & Dan — Save the date
 
-React + TypeScript + Vite + Motion. An olive envelope with a gold wax seal opens
-to reveal the date, an all-day calendar download, engagement photo, dress-code
-note, nearby accommodation and a gallery of the nine other supplied photos.
+React + TypeScript + Vite + Motion. A full-screen textured ivory envelope with an olive wax seal opens through a
+choreographed 3D flap and card sequence. The revealed invitation includes the date,
+calendar download, all ten personal photos, dress code and illustrated hotel cards.
 
 ## Develop
 
@@ -32,7 +32,11 @@ Tests cover desktop and mobile Chromium; check real phones before publication.
 ## Edit content
 
 - `src/wedding.ts`: names, display date, venue.
-- `src/App.tsx` and `src/App.css`: invitation and dress code.
+- `src/EnvelopeIntro.tsx` and CSS: seal, layered paper geometry, pointer tilt and opening sequence; reduced-motion access skips the animation.
+- `src/App.tsx` and `src/App.css`: revealed invitation and dress code.
+- `public/fonts/`: self-hosted, subsetted Cormorant Garamond fonts and OFL license.
+- `src/Accommodation.tsx` and CSS: hotel photos, driving estimates, map links and expandable price context.
+- `docs/hotel-photo-sources.md`: official hotel photograph sources.
 - `public/save-the-date.ics`: calendar event; change separately when the date changes. End date is exclusive. No ceremony time has been assumed.
 - `src/photos.ts` and `src/assets/photos/`: all ten original photos, alternative text and captions; duplicate Colosseum upload omitted.
 - `src/PhotoStory.tsx` and CSS: featured engagement portrait and responsive gallery.

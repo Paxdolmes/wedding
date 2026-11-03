@@ -33,3 +33,7 @@ The price pages require JavaScript; plain HTTP responses sometimes omit rates.
 The Minster Mill booking engine denied the request, so no price was inferred.
 Google returned an automated-traffic challenge; no search snippets were used as
 rate evidence. Recommendations rely on the venue and hotel websites above.
+
+## Driving times
+
+The displayed 10–15 minute estimates for the Witney hotels and 15–20 minute estimate for the Double Red Duke are approximate planning allowances based on the listed local distances, not measured live journey times. Each hotel now links to Google Maps driving directions to Caswell House for route and traffic checks.
