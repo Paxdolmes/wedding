@@ -1,0 +1,29 @@
+.accommodation { max-width: 1080px; margin: 55px auto 65px; padding-top: 40px; border-top: 1px solid #dcded1; }
+.accommodation-heading { text-align: center; margin-bottom: 30px; }
+.accommodation-heading h2 { margin: 14px 0; font-size: clamp(30px,4vw,42px); }
+.accommodation-heading > p:last-child { color: #656c4c; font-style: italic; line-height: 1.7; }
+.price-guide { max-width: 760px; margin: 0 auto 32px; padding: 20px 24px; background: #e9ecdd; line-height: 1.7; text-align: center; font-size: 14px; }
+.price-guide > strong { font: 11px/1.7 Arial,sans-serif; letter-spacing: 1.4px; text-transform: uppercase; }
+.price-guide p { margin: 10px 0 0; }
+.hotel-grid { padding: 0; margin: 0; list-style: none; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
+.hotel-card { padding: 28px; background: #fffdf7; border: 1px solid #dcded1; display: flex; flex-direction: column; align-items: flex-start; }
+.hotel-tier { padding: 6px 10px; background: #e9ecdd; font: 10px/1.5 Arial,sans-serif; letter-spacing: 1px; text-transform: uppercase; }
+.hotel-card h3 { font-size: 27px; font-weight: normal; margin: 20px 0 10px; }
+.hotel-location { font: 11px/1.7 Arial,sans-serif; color: #656c4c; margin: 0; }
+.hotel-description { font-size: 15px; line-height: 1.7; margin: 16px 0 24px; }
+.hotel-price { margin-top: auto; display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; }
+.hotel-price strong { font-size: 31px; font-weight: normal; }
+.hotel-price span { font: 11px/1.6 Arial,sans-serif; color: #656c4c; }
+.hotel-room { font-size: 14px; margin: 10px 0; }
+.hotel-terms { font: 11px/1.7 Arial,sans-serif; color: #656c4c; margin: 0 0 18px; }
+.hotel-link { min-height: 44px; display: inline-flex; align-items: center; padding: 10px 16px; font: 11px/1.6 Arial,sans-serif; background: #485431; color: #fffdf7; text-decoration: none; }
+.hotel-link:hover { background: #354124; }
+.sample-rates { width: 100%; font: 12px/1.6 Arial,sans-serif; margin-top: 18px; }
+.sample-rates summary { cursor: pointer; padding: 10px 0; text-underline-offset: 3px; }
+.sample-rates dl { margin: 8px 0 0; border-top: 1px solid #dcded1; }
+.sample-rates dl > div { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid #ececde; }
+.sample-rates dd { margin: 0; }
+.stay-notes { max-width: 760px; margin: 28px auto 0; font-size: 13px; line-height: 1.8; text-align: center; color: #656c4c; }
+.stay-notes a { color: #485431; text-underline-offset: 3px; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+@media(max-width:650px) { .hotel-grid { grid-template-columns: 1fr; gap: 18px; } .hotel-card { padding: 23px; } .price-guide { padding: 18px; } }

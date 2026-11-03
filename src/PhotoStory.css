@@ -1,0 +1,15 @@
+.invitation-with-photo { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: clamp(35px,6vw,80px); align-items: center; max-width: 960px; margin: auto; }
+.engagement-photo { width: min(100%,350px); margin: 24px auto 0; text-align: center; }
+.photo-print { margin: 0; padding: 10px 10px 0; background: #fffdf7; border: 1px solid #e3dfd1; box-shadow: 0 7px 20px #424a2c12; }
+.photo-print img { display: block; width: 100%; height: auto; }
+.photo-print figcaption { padding: 17px 4px 19px; text-align: center; font-size: 14px; font-style: italic; line-height: 1.5; color: #485431; }
+.engagement-photo > .eyebrow { margin: 22px 0; font-size: 9px; }
+.photo-story { max-width: 1080px; margin: 50px auto 70px; padding-top: 40px; border-top: 1px solid #dcded1; }
+.photo-story-heading { text-align: center; margin-bottom: 35px; }
+.photo-story-heading h2 { font-size: clamp(29px,4vw,42px); margin: 14px 0; }
+.photo-story-heading > p:last-child { font-style: italic; color: #656c4c; }
+.photo-gallery { columns: 3; column-gap: 22px; }
+.photo-gallery .photo-print { break-inside: avoid; margin-bottom: 22px; }
+.photo-gallery a { display: block; }
+@media(max-width:760px) { .invitation-with-photo { display: block; } .engagement-photo { max-width: 300px; margin: 10px auto 35px; } .photo-gallery { columns: 2; column-gap: 14px; } .photo-gallery .photo-print { margin-bottom: 14px; padding: 6px 6px 0; } .photo-gallery figcaption { font-size: 12px; padding: 12px 2px; } }
+@media(max-width:380px) { .photo-gallery { columns: 1; } }

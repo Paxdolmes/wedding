@@ -1,0 +1,48 @@
+.page { min-height: 100svh; padding: 0 6vw; background: radial-gradient(ellipse at 50% 48%, #fffdf7 0, transparent 68%); }
+.masthead, footer { max-width: 1160px; margin: auto; display: flex; align-items: center; justify-content: space-between; }
+.masthead { min-height: 94px; border-bottom: 1px solid #dcded1; }
+.monogram { font-size: 25px; letter-spacing: 3px; }
+.monogram i { font-size: 19px; font-weight: normal; }
+.eyebrow { font-family: Arial, sans-serif; font-size: 10px; letter-spacing: 2.6px; text-transform: uppercase; line-height: 1.7; }
+.introduction { text-align: center; padding: 44px 0 0; }
+h1 { font-size: clamp(36px, 5vw, 58px); line-height: 1.12; font-weight: normal; letter-spacing: -1.6px; margin: 18px 0; }
+h1 em { font-weight: normal; }
+.introduction > p:last-child { font-size: 15px; color: #656c4c; line-height: 1.7; margin: 0; }
+.letter-stage { width: min(430px, 100%); height: 430px; transition: height 500ms ease; margin: 0 auto; position: relative; }
+.letter-stage.is-open { height: 560px; }
+.envelope { position: absolute; bottom: 92px; width: 100%; height: 246px; border-radius: 4px; background: #828c5f; box-shadow: 0 22px 40px -16px #424a2c40, 0 2px 3px #424a2c12; perspective: 1000px; }
+.envelope-lining { position: absolute; inset: 9px; background: repeating-linear-gradient(45deg, #7c8757 0 1px, #939d72 1px 8px); border-radius: 3px; }
+.envelope-flap { position: absolute; inset: 0 0 auto; height: 150px; background: #a7af86; clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: top; z-index: 3; backface-visibility: visible; }
+.is-open .envelope-flap { z-index: 0; }
+.envelope-pocket { position: absolute; inset: 0; background: linear-gradient(150deg, #b6be95, #949f70); clip-path: polygon(0 0, 50% 53%, 100% 0, 100% 100%, 0 100%); border-radius: 3px; z-index: 2; }
+.envelope-pocket::after { content: ''; position: absolute; inset: 0; background: #aab58a; clip-path: polygon(0 100%, 50% 46%, 100% 100%); }
+.wax-seal { position: absolute; top: 115px; left: calc(50% - 34px); z-index: 5; width: 68px; height: 68px; border: 5px solid #c8af7b; border-radius: 46% 52% 45% 49%; background: radial-gradient(circle at 35% 25%, #d9c294, #bea16c); box-shadow: 2px 4px 7px #5d553d35, inset 0 0 0 1px #a88e60; color: #65532f; transition: transform 180ms ease, box-shadow 180ms ease; }
+.wax-seal span { font-size: 16px; font-style: italic; text-shadow: 0 1px 0 #eedab2; }
+.wax-seal:hover { transform: rotate(-6deg) scale(1.06); box-shadow: 3px 6px 10px #5d553d40; }
+.envelope-address { position: absolute; bottom: 23px; width: 100%; text-align: center; z-index: 3; font-size: 15px; font-style: italic; color: #485431; }
+.invitation { position: absolute; bottom: 16px; left: 20px; right: 20px; min-height: 300px; padding: 20px 12px 25px; text-align: center; background: #fffdf7; border: 1px solid #e3dfd1; box-shadow: 0 6px 18px #424a2c20; z-index: 4; }
+.invitation::before { content: ''; position: absolute; inset: 9px; border: 1px solid #e3dfd1; pointer-events: none; }
+.invitation:focus { outline: none; }
+.sprig { display: block; width: 66px; height: 30px; margin: 0 auto 5px; color: #6f7e49; }
+.invitation .eyebrow { margin: 5px 0 10px; }
+h2 { font-weight: normal; font-size: clamp(29px, 7vw, 39px); letter-spacing: -1px; margin: 0; }
+.fine-rule { height: 1px; width: 36px; background: #c9b17f; margin: 12px auto; }
+.wedding-date { font-size: 17px; margin: 0 0 8px; }
+.wedding-location { font-family: Arial, sans-serif; font-size: 11px; line-height: 1.6; margin: 0; letter-spacing: .5px; }
+.letter-actions { position: absolute; bottom: 7px; width: 100%; text-align: center; min-height: 65px; }
+.opening-hint { font-size: 14px; margin: 0 0 5px; }
+.text-button { border: none; background: none; text-decoration: underline; text-underline-offset: 4px; font-family: Arial, sans-serif; font-size: 11px; min-height: 44px; padding: 8px 12px; color: #485431; }
+.text-button span { margin-left: 6px; }
+footer { border-top: 1px solid #dcded1; min-height: 66px; color: #656c4c; font-size: 12px; font-style: italic; }
+.calendar-link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; margin-top: 14px; padding: 0 18px; background: #485431; color: #fffdf7; font-family: Arial, sans-serif; font-size: 11px; letter-spacing: .5px; text-decoration: none; border-radius: 2px; position: relative; }
+.calendar-link:hover { background: #354124; }
+.dress-code { max-width: 430px; margin: 0 auto 36px; padding: 23px 12px 8px; border-top: 1px solid #dcded1; text-align: center; }
+.dress-code h2 { letter-spacing: 2.6px; margin-bottom: 12px; }
+.dress-code p { font-size: 15px; line-height: 1.8; margin: 0; }
+.dress-code em { color: #656c4c; font-size: 14px; }
+@media (max-width: 480px) {
+.page { padding: 0 22px; } .masthead { min-height: 74px; } .masthead .eyebrow { font-size: 8px; letter-spacing: 1.3px; }
+.introduction { padding-top: 32px; } .introduction > .eyebrow { font-size: 8px; letter-spacing: 1.8px; } .introduction > p:last-child { max-width: 260px; margin: auto; font-size: 14px; }
+.envelope { height: 220px; } .envelope-flap { height: 132px; } .wax-seal { top: 99px; } .invitation { left: 12px; right: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }

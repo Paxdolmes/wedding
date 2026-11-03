@@ -1,0 +1,7 @@
+:root { font-family: Georgia, 'Times New Roman', serif; color: #424a2c; background: #f7f5ef; font-synthesis: none; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; color-scheme: light; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+button { font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible { outline: 2px solid #424a2c; outline-offset: 7px; }
+button[hidden] { display: none; }
+::selection { background: #d5d9bd; }
