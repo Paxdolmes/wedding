@@ -55,13 +55,16 @@ function reveals(root: HTMLElement) {
   ScrollTrigger.batch(items, { start: 'top 90%', once: true, onEnter: batch => gsap.to(batch, { opacity: 1, y: 0, duration: 1.2, stagger: .12, ease: 'power3.out', clearProps: 'transform' }) })
 }
 
-/** Photo prints are laid down at a slight angle and develop from a washed-out sepia to full colour. */
+/**
+ * Photo prints are laid down at a slight angle and develop from faded to full strength.
+ * The fade is opacity only: animating a CSS filter (blur, sepia) on large photos makes Safari paint them black until it finishes.
+ */
 function prints(root: HTMLElement) {
   for (const print of all(root, '.photo-print, .venue-photo, .thursday-note, .menu-card')) {
     const timeline = gsap.timeline({ scrollTrigger: once(print, 'top 92%') })
     timeline.from(print, { opacity: 0, y: 56, rotation: '+=4', duration: 1.5, ease: 'power3.out', clearProps: 'transform,opacity' })
     const image = print.querySelector('img')
-    if (image) timeline.from(image, { filter: 'sepia(.7) saturate(.35) brightness(1.2) contrast(.82) blur(3px)', duration: 2.6, ease: 'power2.out', clearProps: 'filter' }, .1)
+    if (image) timeline.from(image, { opacity: .3, duration: 2.6, ease: 'power2.out', clearProps: 'opacity' }, .1)
   }
   // The venue photographs drift a little slower than the page, as if seen through a window.
   for (const frame of all(root, '.venue-photo .frame')) {

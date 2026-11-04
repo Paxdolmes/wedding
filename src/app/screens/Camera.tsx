@@ -11,7 +11,7 @@ export function CameraScreen({ me, onShot }: { me: Me; onShot: () => void }) {
   if (gallery.data?.revealed && !autoSwitched && !session.staff) { setAutoSwitched(true); setView('gallery') }
 
   return <div className="screen camera-screen">
-    <header className="screen-head"><p className="eyebrow">{me.shots} shots for the weekend</p><h1>Disposable camera</h1></header>
+    <header className="screen-head"><p className="eyebrow">One roll · {me.shots} shots</p><h1>Disposable camera</h1></header>
     <div className="segmented" role="tablist">
       <button role="tab" aria-selected={view === 'camera'} onClick={() => setView('camera')}>Camera</button>
       <button role="tab" aria-selected={view === 'gallery'} onClick={() => setView('gallery')}>Gallery</button>
@@ -29,10 +29,11 @@ function Camera({ me, onShot }: { me: Me; onShot: () => void }) {
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState('')
   const [used, setUsed] = useState(me.shotsUsed)
+  const [loaded, setLoaded] = useState(() => { try { return localStorage.getItem('film-loaded') === '1' } catch { return false } })
   const left = me.shots - used
 
   useEffect(() => {
-    if (left <= 0 || !navigator.mediaDevices?.getUserMedia) return
+    if (left <= 0 || (!loaded && used === 0) || !navigator.mediaDevices?.getUserMedia) return
     let stream: MediaStream | null = null
     let cancelled = false
     navigator.mediaDevices.getUserMedia({ video: { facingMode: facing, width: { ideal: 1920 }, height: { ideal: 1440 } }, audio: false }).then(s => {
@@ -42,15 +43,14 @@ function Camera({ me, onShot }: { me: Me; onShot: () => void }) {
       setLive(true)
     }).catch(() => setLive(false))
     return () => { cancelled = true; stream?.getTracks().forEach(t => t.stop()) }
-  }, [facing, left])
+  }, [facing, left, loaded, used])
 
   const upload = async (canvas: HTMLCanvasElement) => {
     const blob = await canvasToJpeg(canvas)
     const result = await api<{ shotsUsed: number }>('photos', { raw: blob })
     setUsed(result.shotsUsed)
     onShot()
-    const remaining = me.shots - result.shotsUsed
-    setMessage(remaining ? `Click, wind. ${remaining} left on the roll.` : 'That’s the whole roll! Your photos develop the morning after.')
+    setMessage(afterShot(me.shots - result.shotsUsed))
   }
 
   const shoot = async () => {
@@ -72,7 +72,8 @@ function Camera({ me, onShot }: { me: Me; onShot: () => void }) {
     } catch (e) { setMessage((e as Error).message) } finally { setBusy(false); if (fileInput.current) fileInput.current.value = '' }
   }
 
-  if (left <= 0) return <div className="card roll-done"><h2>Roll finished</h2><p className="muted">All {me.shots} shots taken. They’re being developed and arrive in the gallery the morning after the wedding.</p><FilmStrip used={me.shots} total={me.shots} /></div>
+  if (left <= 0) return <div className="card roll-done"><h2>That’s the whole roll</h2><p className="muted">All {me.shots} shots taken. Thank you! They’re in the darkroom now, and the morning after the wedding everyone’s photos are shared with all the guests in the gallery.</p><FilmStrip used={me.shots} total={me.shots} /></div>
+  if (!loaded && used === 0) return <FilmBox shots={me.shots} onLoad={() => { setLoaded(true); try { localStorage.setItem('film-loaded', '1') } catch { /* private mode */ } }} />
 
   return <div className="disposable">
     <div className="camera-body">
@@ -89,9 +90,42 @@ function Camera({ me, onShot }: { me: Me; onShot: () => void }) {
       </div>
       <input ref={fileInput} type="file" accept="image/*" capture="environment" hidden onChange={e => fromFile(e.target.files?.[0])} />
     </div>
-    <p className="camera-message" aria-live="polite">{message || 'No previews, no retakes. Just like the real thing.'}</p>
+    <p className="camera-message" aria-live="polite">{message || reminder(left, me.shots)}</p>
     <FilmStrip used={used} total={me.shots} />
+    <p className="hint camera-rules">No previews, no retakes. Every photo is shared with all the guests the morning after.</p>
   </div>
+}
+
+/** What the camera says while it waits for the next shot. */
+function reminder(left: number, total: number) {
+  if (left === 1) return 'Last shot on the roll. Make it a good one.'
+  if (left <= 5) return `Only ${left} left. Save them for the best bits.`
+  if (left === total) return `${total} shots. Use them all, but make them count.`
+  return `${left} left. Use them all, but make them count.`
+}
+
+/** What the camera says once a shot has been wound on. */
+function afterShot(left: number) {
+  if (left <= 0) return 'That’s the whole roll!'
+  if (left === 1) return 'Click, wind. One left. Make it a good one.'
+  if (left <= 5) return `Click, wind. Only ${left} left.`
+  return `Click, wind. ${left} left on the roll.`
+}
+
+const rules = [
+  ['Use them all, but make them count', 'There’s no delete and no retake. Every press of the shutter is one fewer on the roll.'],
+  ['No peeking', 'Like a real disposable, you won’t see a single photo until it’s developed.'],
+  ['Shared with everyone', 'The morning after the wedding, every guest’s photos are revealed together in one gallery for everyone to see.'],
+]
+
+/** The film box: the rules of the roll, shown once before the first shot. */
+function FilmBox({ shots, onLoad }: { shots: number; onLoad: () => void }) {
+  return <motion.section className="film-box" aria-labelledby="film-box-title" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, ease: [.22, 1, .36, 1] }}>
+    <p className="film-box-brand">I&amp;D · Single-use camera · ISO 400</p>
+    <h2 id="film-box-title"><span className="film-box-shots">{shots}</span><span className="film-box-label">shots. One roll. That’s it.</span></h2>
+    <ol>{rules.map(([title, text]) => <li key={title}><strong>{title}</strong><span>{text}</span></li>)}</ol>
+    <button className="button film-box-load" onClick={onLoad}>Load the film</button>
+  </motion.section>
 }
 
 function FilmStrip({ used, total }: { used: number; total: number }) {
@@ -108,7 +142,7 @@ function GalleryView({ gallery, reload }: { gallery: Gallery | null; reload: () 
     return <div className="card developing">
       <div className="darkroom" aria-hidden="true"><span /><span /><span /></div>
       <h2>Still in the darkroom</h2>
-      <p className="muted">Every guest’s photos develop together on {formatWhen(gallery.revealAt)}.{left > 0 && left < 72 * 3600_000 ? ` That’s ${hours > 0 ? `${hours} hr ` : ''}${Math.floor(left / 60_000) % 60} min away.` : ''}</p>
+      <p className="muted">Every guest’s photos develop together on {formatWhen(gallery.revealAt)} and are shared here with everyone.{left > 0 && left < 72 * 3600_000 ? ` That’s ${hours > 0 ? `${hours} hr ` : ''}${Math.floor(left / 60_000) % 60} min away.` : ''}</p>
       <p><strong>{gallery.total}</strong> {gallery.total === 1 ? 'photo' : 'photos'} taken so far{gallery.mine ? `, ${gallery.mine} of them yours` : ''}.</p>
     </div>
   }

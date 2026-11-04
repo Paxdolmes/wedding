@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Animated, Modal, Platform, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { api, photoUrl, session, uploadPhoto, type Gallery, type Me } from '../api'
+import { storage } from '../storage'
 import { developPhoto } from '../film'
 import { formatWhen, useApi, useNow } from '../hooks'
 import { colors, fonts } from '../theme'
@@ -18,7 +19,7 @@ export function CameraScreen({ me, onShot }: { me: Me; onShot: () => void }) {
   const [autoSwitched, setAutoSwitched] = useState(false)
   if (gallery.data?.revealed && !autoSwitched && !session.staff) { setAutoSwitched(true); setView('gallery') }
   return <Screen onRefresh={gallery.refresh} refreshing={gallery.refreshing}>
-    <ScreenHead eyebrow={`${me.shots} shots for the weekend`} title="Disposable camera" />
+    <ScreenHead eyebrow={`One roll · ${me.shots} shots`} title="Disposable camera" />
     <Segmented value={view} onChange={setView} options={[{ value: 'camera', label: 'Camera' }, { value: 'gallery', label: 'Gallery' }]} />
     {view === 'camera' ? <DisposableCamera me={me} onShot={() => { onShot(); gallery.reload() }} /> : <GalleryView gallery={gallery.data} reload={gallery.reload} />}
   </Screen>
@@ -32,6 +33,8 @@ function DisposableCamera({ me, onShot }: { me: Me; onShot: () => void }) {
   const [busy, setBusy] = useState(false)
   const [used, setUsed] = useState(me.shotsUsed)
   const [message, setMessage] = useState('')
+  const [loaded, setLoaded] = useState<boolean | null>(null)
+  useEffect(() => { storage.get('film-loaded').then(v => setLoaded(v === '1'), () => setLoaded(false)) }, [])
   const flash = useState(() => new Animated.Value(0))[0]
   const { width } = useWindowDimensions()
   const left = me.shots - used
@@ -48,12 +51,13 @@ function DisposableCamera({ me, onShot }: { me: Me; onShot: () => void }) {
       const result = await uploadPhoto(await developPhoto(picture))
       setUsed(result.shotsUsed)
       onShot()
-      const remaining = me.shots - result.shotsUsed
-      setMessage(remaining ? `Click, wind. ${remaining} left on the roll.` : 'That’s the whole roll! Your photos develop the morning after.')
+      setMessage(afterShot(me.shots - result.shotsUsed))
     } catch (e) { setMessage((e as Error).message || 'That shot didn’t take. Try again.') } finally { setBusy(false) }
   }
 
-  if (left <= 0) return <Card><Heading>Roll finished</Heading><Body muted>All {me.shots} shots taken. They’re being developed and arrive in the gallery the morning after the wedding.</Body><FilmStrip used={me.shots} total={me.shots} /></Card>
+  if (left <= 0) return <Card><Heading>That’s the whole roll</Heading><Body muted>All {me.shots} shots taken. Thank you! They’re in the darkroom now, and the morning after the wedding everyone’s photos are shared with all the guests in the gallery.</Body><FilmStrip used={me.shots} total={me.shots} /></Card>
+  if (loaded === null) return null
+  if (!loaded && used === 0) return <FilmBox shots={me.shots} onLoad={() => { setLoaded(true); storage.set('film-loaded', '1') }} />
   if (!permission) return null
   if (!permission.granted) return <Card>
     <Heading>Your camera’s in the box</Heading>
@@ -78,8 +82,46 @@ function DisposableCamera({ me, onShot }: { me: Me; onShot: () => void }) {
         <View style={{ width: 48 }} />
       </View>
     </View>
-    <Hint style={{ textAlign: 'center' }}>{message || 'No previews, no retakes. Just like the real thing.'}</Hint>
+    <Text style={s.message} accessibilityLiveRegion="polite">{message || reminder(left, me.shots)}</Text>
     <FilmStrip used={used} total={me.shots} />
+    <Hint style={{ textAlign: 'center' }}>No previews, no retakes. Every photo is shared with all the guests the morning after.</Hint>
+  </View>
+}
+
+/** What the camera says while it waits for the next shot. */
+function reminder(left: number, total: number) {
+  if (left === 1) return 'Last shot on the roll. Make it a good one.'
+  if (left <= 5) return `Only ${left} left. Save them for the best bits.`
+  if (left === total) return `${total} shots. Use them all, but make them count.`
+  return `${left} left. Use them all, but make them count.`
+}
+
+/** What the camera says once a shot has been wound on. */
+function afterShot(left: number) {
+  if (left <= 0) return 'That’s the whole roll!'
+  if (left === 1) return 'Click, wind. One left. Make it a good one.'
+  if (left <= 5) return `Click, wind. Only ${left} left.`
+  return `Click, wind. ${left} left on the roll.`
+}
+
+/** The film box: the rules of the roll, shown once before the first shot. */
+function FilmBox({ shots, onLoad }: { shots: number; onLoad: () => void }) {
+  const rules = [
+    ['Use them all, but make them count', 'There’s no delete and no retake. Every press of the shutter is one fewer on the roll.'],
+    ['No peeking', 'Like a real disposable, you won’t see a single photo until it’s developed.'],
+    ['Shared with everyone', 'The morning after the wedding, every guest’s photos are revealed together in one gallery for everyone to see.'],
+  ]
+  return <View style={s.box}>
+    <Text style={s.boxBrand}>I&amp;D · Single-use camera · ISO 400</Text>
+    <Text style={s.boxShots}>{shots}</Text>
+    <Text style={s.boxShotsLabel}>shots. One roll. That’s it.</Text>
+    <View style={s.rules}>
+      {rules.map(([title, text], i) => <View key={title} style={s.rule}>
+        <Text style={s.ruleNumber}>{i + 1}</Text>
+        <View style={{ flex: 1, gap: 3 }}><Text style={s.ruleTitle}>{title}</Text><Text style={s.ruleText}>{text}</Text></View>
+      </View>)}
+    </View>
+    <Pressable style={({ pressed }) => [s.load, pressed && { transform: [{ scale: 0.97 }] }]} onPress={onLoad} accessibilityRole="button"><Text style={s.loadText}>Load the film</Text></Pressable>
   </View>
 }
 
@@ -100,7 +142,7 @@ function GalleryView({ gallery, reload }: { gallery: Gallery | null; reload: () 
     return <View style={s.darkroom}>
       <View style={{ flexDirection: 'row', gap: 10 }}>{[0, 1, 2].map(i => <Developing key={i} delay={i * 600} />)}</View>
       <Heading style={{ color: '#f1e3d4', textAlign: 'center' }}>Still in the darkroom</Heading>
-      <Body style={{ color: '#cdb8a7', textAlign: 'center' }}>Everyone’s photos develop together on {formatWhen(gallery.revealAt)}.{left > 0 && left < 72 * 3600_000 ? ` That’s ${Math.floor(left / 3600_000)} hr ${Math.floor(left / 60_000) % 60} min away.` : ''}</Body>
+      <Body style={{ color: '#cdb8a7', textAlign: 'center' }}>Everyone’s photos develop together on {formatWhen(gallery.revealAt)} and are shared here with all the guests.{left > 0 && left < 72 * 3600_000 ? ` That’s ${Math.floor(left / 3600_000)} hr ${Math.floor(left / 60_000) % 60} min away.` : ''}</Body>
       <Body style={{ color: '#f1e3d4' }}>{gallery.total} {gallery.total === 1 ? 'photo' : 'photos'} taken so far{gallery.mine ? `, ${gallery.mine} of them yours` : ''}.</Body>
     </View>
   }
@@ -147,6 +189,18 @@ const s = StyleSheet.create({
   flip: { width: 48, height: 48, borderRadius: 24, borderWidth: 1, borderColor: 'rgba(239,230,207,0.35)', alignItems: 'center', justifyContent: 'center' },
   shutter: { width: 78, height: 78, borderRadius: 39, borderWidth: 3, borderColor: colors.cameraText, alignItems: 'center', justifyContent: 'center' },
   shutterInner: { width: 60, height: 60, borderRadius: 30, backgroundColor: colors.goldBright, borderWidth: 2, borderColor: '#806b3e' },
+  message: { fontFamily: fonts.serifItalic, fontSize: 19, color: colors.inkSoft, textAlign: 'center' },
+  box: { backgroundColor: colors.camera, borderRadius: 22, padding: 24, gap: 6, alignItems: 'center', borderWidth: 1, borderColor: 'rgba(200,169,95,0.35)', shadowColor: '#000', shadowOpacity: 0.3, shadowRadius: 18, shadowOffset: { width: 0, height: 12 }, elevation: 6 },
+  boxBrand: { fontFamily: fonts.sansMedium, fontSize: 10, letterSpacing: 2.4, textTransform: 'uppercase', color: colors.goldBright },
+  boxShots: { fontFamily: fonts.serif, fontSize: 96, lineHeight: 100, color: colors.cameraText, marginTop: 8 },
+  boxShotsLabel: { fontFamily: fonts.serifItalic, fontSize: 21, color: colors.cameraText, marginBottom: 14 },
+  rules: { alignSelf: 'stretch', gap: 14, paddingVertical: 16, borderTopWidth: 1, borderBottomWidth: 1, borderColor: 'rgba(239,230,207,0.16)' },
+  rule: { flexDirection: 'row', gap: 14, alignItems: 'flex-start' },
+  ruleNumber: { width: 26, height: 26, borderRadius: 13, borderWidth: 1, borderColor: colors.goldBright, color: colors.goldBright, textAlign: 'center', lineHeight: 24, fontFamily: fonts.serif, fontSize: 15 },
+  ruleTitle: { fontFamily: fonts.sansMedium, fontSize: 15, color: colors.cameraText },
+  ruleText: { fontFamily: fonts.sans, fontSize: 14, lineHeight: 20, color: '#c9c1aa' },
+  load: { marginTop: 18, alignSelf: 'stretch', minHeight: 52, borderRadius: 99, backgroundColor: colors.goldBright, alignItems: 'center', justifyContent: 'center' },
+  loadText: { fontFamily: fonts.sansMedium, fontSize: 13, letterSpacing: 2.2, textTransform: 'uppercase', color: '#20261a' },
   strip: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, padding: 8, backgroundColor: '#2a2219', borderRadius: 6 },
   frame: { width: '8.6%', aspectRatio: 1, borderRadius: 2, backgroundColor: '#4a3c2a' },
   exposed: { backgroundColor: '#c47634' },

@@ -12,7 +12,6 @@
 .venue-photo .frame { overflow: hidden; background: #e4e1d4; box-shadow: var(--shadow-print); }
 .venue-photo .frame img { display: block; width: 100%; height: auto; transform: scale(1.1); }
 .venue-photo figcaption { display: flex; align-items: baseline; gap: 14px; margin-top: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--rule); font: 400 19px/1.35 var(--serif); color: var(--ink-soft); }
-.venue-photo .plate { flex-shrink: 0; padding: 0 .1em; font: italic 400 18px/1 var(--serif); }
 .bench-caption { font: 25px/1.25 var(--script); color: var(--ink); }
 .bench-caption em { font-style: normal; color: var(--gold); }
 .venue-map { display: flex; width: fit-content; align-items: center; gap: 14px; margin: clamp(40px, 5vw, 60px) auto 0; padding: 10px 2px; color: var(--ink-soft); font: 400 11px/1.5 var(--sans); letter-spacing: .26em; text-transform: uppercase; }
