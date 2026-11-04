@@ -26,7 +26,7 @@
 .envelope-lettering { position: absolute; left: 0; right: 0; bottom: 8%; display: grid; text-align: center; gap: .6cqw; color: #746b51; }
 .envelope-lettering > span:first-child { font: italic 5cqw/1.3 'Cormorant Garamond', Georgia, serif; }
 .envelope-lettering > span:last-child { font: 1.15cqw/1.5 Arial, sans-serif; letter-spacing: .36cqw; }
-.seal-assembly { position: absolute; z-index: 9; width: 19%; aspect-ratio: 1; top: 41.6%; left: 40.5%; pointer-events: none; }
+.seal-assembly { position: absolute; z-index: 9; perspective: 400px; width: 19%; aspect-ratio: 1; top: 41.6%; left: 40.5%; pointer-events: none; }
 .seal-instruction { position: absolute; width: 180%; left: -40%; top: 118%; text-align: center; font: max(8px, 1.2cqw)/1.5 Arial, sans-serif; letter-spacing: .26cqw; color: #685f47; opacity: 0; transition: opacity .25s; }
 .envelope-trigger { position: absolute; inset: 0; border: 0; border-radius: 5px; background: transparent; z-index: 10; cursor: pointer; }
 .envelope-trigger:focus-visible { outline: 2px solid #64704a; outline-offset: 14px; }
@@ -86,8 +86,13 @@
 .seal-half-top, .seal-half-bottom { opacity: 0; }
 .seal-half-top .wax-stamp, .seal-half-bottom .wax-stamp { transform-origin: 50% 50%; }
 .seal-crack { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.seal-crack path { fill: none; stroke: #1f2c17; stroke-opacity: .85; stroke-width: 1.4; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
-.seal-crack path + path { stroke: #d3d6ae; stroke-width: .7; stroke-opacity: .7; }
+.seal-crack path { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.seal-crack .crack-main { stroke: #1d2a15; stroke-opacity: .8; stroke-width: 1.1; }
+.seal-crack .crack-branch { stroke: #1d2a15; stroke-opacity: .55; stroke-width: .6; }
+.seal-crack .crack-lip { stroke: #dfe2bd; stroke-opacity: .45; stroke-width: .4; }
+.seal-crack .crack-glint { stroke: #fffbe6; stroke-width: 1; stroke-dasharray: .14 1.2; opacity: 0; filter: drop-shadow(0 0 1.5px #fff6cf); }
+.seal-press-glow { position: absolute; inset: -12%; border-radius: 50%; opacity: 0; pointer-events: none; background: radial-gradient(circle, #fff8dd00 48%, #fff8dd99 58%, #fff8dd00 72%); }
+.seal-half-bottom { transform-style: preserve-3d; }
 .wax-crumb { position: absolute; top: 47%; opacity: 0; border-radius: 40% 60% 45% 55%; background: radial-gradient(circle at 35% 30%, #a3aa80, #4d5c35 70%); box-shadow: 0 1px 1px #26351f55; }
 .seal-glint { position: absolute; inset: 6%; border-radius: 50%; overflow: hidden; pointer-events: none; mix-blend-mode: soft-light; }
 .seal-glint::after { content: ''; position: absolute; inset: -20%; background: linear-gradient(115deg, transparent 38%, #fffbe8 50%, transparent 62%); transform: translateX(-120%); }

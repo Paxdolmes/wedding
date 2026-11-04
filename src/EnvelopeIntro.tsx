@@ -1,15 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, stagger, useAnimate, useMotionValue, useReducedMotion, useSpring } from 'motion/react'
 import { OliveBranch } from './OliveBranch'
-import { WaxSeal, crackPath } from './WaxSeal'
+import { WaxSeal } from './WaxSeal'
+import { crackBranches, crackHalves } from './crack'
 import './EnvelopeIntro.css'
 
 type Phase = 'sealed' | 'unsealing' | 'flap' | 'extracting' | 'settling' | 'unfolding' | 'celebrating' | 'revealing'
 const silk = [.22, 1, .36, 1] as const
 const paper = [.45, 0, .18, 1] as const
 const wait = (seconds: number) => new Promise(resolve => setTimeout(resolve, seconds * 1000))
-const crumbs = Array.from({ length: 11 }, (_, index) => ({
-  left: 12 + index * 7.6 + (index % 3) * 1.5,
+const crumbs = Array.from({ length: 7 }, (_, index) => ({
+  left: 18 + index * 10.5 + (index % 3) * 1.5,
   x: (index - 5) * 9 + (index % 2 ? 14 : -10),
   rise: 18 + (index % 4) * 9,
   fall: 150 + (index % 5) * 40,
@@ -61,31 +62,38 @@ export function EnvelopeIntro({ onReveal, onOpen, onCelebrate, replay }: { onRev
     const halves = '.seal-whole .wax-stamp, .seal-half-top .wax-stamp, .seal-half-bottom .wax-stamp'
     setPhase('unsealing')
 
-    // 1. Press: the wax gives a little under the thumb.
-    animate('.seal-instruction, .seal-glint', { opacity: 0 }, { duration: .2 })
-    await animate(halves, { scale: .93 }, { duration: .16, ease: 'easeOut' })
+    // 1. Press: the wax gives under the thumb and warms a little.
+    animate('.seal-instruction, .seal-glint', { opacity: 0 }, { duration: .25 })
+    animate('.seal-press-glow', { opacity: [0, .55, 0], scale: [.85, 1.15, 1.3] }, { duration: .9, ease: 'easeOut' })
+    await animate(halves, { scale: .95, y: '1.5%' }, { duration: .24, ease: [.3, 0, .2, 1] })
     if (!mounted.current) return
 
-    // 2. Crack: a fracture runs across the seal with a tiny shudder and a spray of crumbs.
-    animate('.seal-crack path', { strokeDashoffset: [1, 0] }, { duration: .22, ease: 'easeIn' })
-    animate('.break-edge', { opacity: 1 }, { duration: .15, delay: .2 })
+    // 2. Crack: a hairline runs outwards from the centre, branches, and catches the light.
+    animate('.seal-crack .crack-main', { strokeDashoffset: [1, 0] }, { duration: .34, ease: [.2, .7, .3, 1] })
+    animate('.seal-crack .crack-branch', { strokeDashoffset: [1, 0] }, { duration: .22, delay: .16, ease: 'easeOut' })
+    animate('.seal-crack .crack-glint', { strokeDashoffset: [1.2, -.2], opacity: [0, 1, 0] }, { duration: .55, delay: .2, ease: 'easeInOut' })
     // Swap the whole seal for its two halves underneath the crack line.
-    animate('.seal-half-top, .seal-half-bottom', { opacity: 1 }, { duration: .01, delay: .12 })
-    animate('.seal-whole', { opacity: 0 }, { duration: .01, delay: .13 })
-    animate(halves, { scale: 1, x: [0, -1.5, 1.2, 0] }, { duration: .3, ease: 'easeOut' })
-    await wait(.2)
-    crumbs.forEach((crumb, index) => animate(`.wax-crumb-${index}`,
-      { opacity: [0, 1, 1, 0], x: [0, crumb.x * .4, crumb.x], y: [0, -crumb.rise, crumb.fall], rotate: [0, crumb.spin] },
-      { duration: .9 + (index % 3) * .12, ease: ['easeOut', 'easeIn'], times: [0, .1, .75, 1] }))
+    animate('.seal-half-top, .seal-half-bottom', { opacity: 1 }, { duration: .01, delay: .1 })
+    animate('.seal-whole', { opacity: 0 }, { duration: .01, delay: .11 })
+    animate('.break-edge', { opacity: 1 }, { duration: .3, delay: .2 })
+    animate(halves, { scale: 1, y: '0%' }, { duration: .45, ease: [.34, 1.4, .64, 1] })
+    await wait(.5)
     if (!mounted.current) return
 
-    // 3. Break: the lower half peels off and drops away; the upper half stays stuck to the flap.
-    animate('.seal-crack', { opacity: 0 }, { duration: .35, delay: .1 })
-    animate('.seal-half-bottom', { y: ['0%', '-5%', '230%'], x: ['0%', '3%', '18%'], rotate: [0, -7, 34], opacity: [1, 1, 0] }, { duration: 1.15, ease: ['easeOut', 'easeIn'], times: [0, .18, 1], opacity: { duration: 1.15, times: [0, .75, 1] } })
-    animate('.seal-contact-shadow', { scale: 1.4, opacity: 0 }, { duration: .7 })
+    // 3. Part: the halves ease apart for a breath before the lower one lets go.
+    animate('.seal-crack', { opacity: 0 }, { duration: .3 })
+    animate('.seal-half-top .wax-stamp', { y: '-2.5%', rotate: -2 }, { duration: .4, ease: silk })
+    await animate('.seal-half-bottom', { y: '4%', rotate: 2.5 }, { duration: .32, ease: silk })
+    if (!mounted.current) return
+    crumbs.forEach((crumb, index) => animate(`.wax-crumb-${index}`,
+      { opacity: [0, .9, .9, 0], x: [0, crumb.x * .3, crumb.x * .8], y: [0, -crumb.rise * .5, crumb.fall], rotate: [0, crumb.spin] },
+      { duration: 1 + (index % 3) * .15, ease: ['easeOut', 'easeIn'], times: [0, .12, .7, 1] }))
+    // The lower half peels away, tipping back as it falls, and fades before it lands.
+    animate('.seal-half-bottom', { y: '240%', x: '12%', rotate: 26, rotateX: 38, opacity: [1, 1, 0] }, { duration: 1.35, ease: [.55, 0, .85, .4], opacity: { duration: 1.35, times: [0, .7, 1] } })
+    animate('.seal-contact-shadow', { scale: 1.4, opacity: 0 }, { duration: .8 })
     animate('.envelope-lettering', { opacity: .25 }, { duration: 1 })
-    animate('.envelope-composition', { rotate: -1, y: '22%', scale: .92 }, { duration: 1.6, ease: silk, delay: .1 })
-    await wait(.12)
+    animate('.envelope-composition', { rotate: -1, y: '22%', scale: .92 }, { duration: 1.6, ease: silk, delay: .05 })
+    await wait(.15)
     if (!mounted.current) return
 
     // 4. The flap lifts, carrying its half of the seal, and folds back behind the card.
@@ -138,14 +146,31 @@ export function EnvelopeIntro({ onReveal, onOpen, onCelebrate, replay }: { onRev
     await wait(2.1)
     if (!mounted.current) return
 
-    // 9. The stationery dissolves into the page, which is already waiting underneath.
+    // 9. The card flies towards the viewer until its paper fills the screen, then the page is there.
     setPhase('revealing')
+    const tilt = root.querySelector('.envelope-tilt') as HTMLElement
+    const tiltBox = tilt.getBoundingClientRect()
+    const cardBox = card.getBoundingClientRect()
+    // Enough zoom for the centre panel alone to cover the screen with room to spare.
+    const zoom = Math.max(window.innerWidth / cardBox.width, window.innerHeight / cardBox.height) * 1.6
+    const tiltCentre = { x: tiltBox.left + tiltBox.width / 2, y: tiltBox.top + tiltBox.height / 2 }
+    const cardCentre = { x: cardBox.left + cardBox.width / 2, y: cardBox.top + cardBox.height / 2 }
+    const shift = { x: window.innerWidth / 2 - tiltCentre.x - zoom * (cardCentre.x - tiltCentre.x), y: window.innerHeight / 2 - tiltCentre.y - zoom * (cardCentre.y - tiltCentre.y) }
+    animate('.invite-banner', { opacity: 0, y: -16 }, { duration: .35, ease: 'easeIn' })
+    animate('.keepsake-border', { opacity: 0 }, { duration: .35, delay: .72, ease: 'easeIn' })
+    // A small wind-up before the rush forward makes the zoom feel thrown rather than slid.
+    await animate(tilt, { scale: .97 }, { duration: .22, ease: 'easeOut' })
+    if (!mounted.current) return
+    animate(tilt, { scale: zoom, x: shift.x, y: shift.y }, { duration: 1.05, ease: [.7, 0, .84, 0] })
+    await wait(.85)
+    if (!mounted.current) return
+    // The page mounts behind the now paper-filled screen and settles into place as the paper lifts away.
     onReveal()
+    await wait(.25)
+    if (!mounted.current) return
     await Promise.all([
-      animate('.keepsake-card', { scale: Math.min(unfoldedScale * 1.08, 1.08), y: '-3%' }, { duration: .95, ease: silk }),
-      animate('.invite-banner', { opacity: 0, y: -12 }, { duration: .6, ease: 'easeIn' }),
-      animate('.envelope-intro-surface', { opacity: 0 }, { duration: .95, ease: 'easeInOut' }),
-      animate('.envelope-tilt', { opacity: 0 }, { duration: .75, delay: .1, ease: 'easeInOut' }),
+      animate('.envelope-intro-surface', { opacity: 0 }, { duration: .5, ease: 'easeOut' }),
+      animate(tilt, { opacity: 0 }, { duration: .5, ease: 'easeOut' }),
     ])
     if (mounted.current) onOpen()
   }
@@ -181,7 +206,13 @@ export function EnvelopeIntro({ onReveal, onOpen, onCelebrate, replay }: { onRev
         <div className="seal-assembly" aria-hidden="true">
           <div className="seal-half-bottom"><WaxSeal part="bottom" /></div>
           <div className="seal-whole"><WaxSeal /></div>
-          <svg className="seal-crack" viewBox="0 0 140 140"><path d={crackPath} pathLength={1} /><path d={crackPath} pathLength={1} transform="translate(0 -1.3)" /></svg>
+          <svg className="seal-crack" viewBox="0 0 140 140">
+            {crackHalves.map(d => <path key={d} className="crack-main" d={d} pathLength={1} />)}
+            {crackBranches.map(d => <path key={d} className="crack-branch" d={d} pathLength={1} />)}
+            {crackHalves.map(d => <path key={`lip-${d}`} className="crack-main crack-lip" d={d} pathLength={1} transform="translate(0 -1.1)" />)}
+            {crackHalves.map(d => <path key={`glint-${d}`} className="crack-glint" d={d} pathLength={1} transform="translate(0 -1.1)" />)}
+          </svg>
+          <span className="seal-press-glow" />
           {crumbs.map((crumb, index) => <span key={index} className={`wax-crumb wax-crumb-${index}`} style={{ left: `${crumb.left}%`, width: crumb.size * 2, height: crumb.size * 1.6 }} />)}
           <span className="seal-glint" />
           <span className="seal-instruction">PRESS TO OPEN</span>

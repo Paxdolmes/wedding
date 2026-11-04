@@ -1,9 +1,6 @@
 import { useId } from 'react'
+import { crackPath, points } from './crack'
 
-/** The jagged line the wax breaks along, in the seal's 140 × 140 coordinate space. */
-export const crackPath = 'M-6 66L8 67.5L15 64.5L24 67L31 65L37 68.5L46 66L52 63.5L60 67L67 65.5L73 69L81 66L88 64L95 67.5L104 66.5L110 63.5L119 67L127 65L135 67.5L146 66'
-const crackPoints = crackPath.slice(1).split('L').map(point => point.split(' ').map(Number))
-const points = (lift: number) => crackPoints.map(([x, y]) => `${x},${y - lift}`).reverse().join(' ')
 const clips = {
   top: `-6,-12 146,-12 ${points(0)}`,
   // The lower half overlaps the crack slightly so no hairline seam shows while the seal is whole.
@@ -33,7 +30,7 @@ export function WaxSeal({ part }: { part?: 'top' | 'bottom' }) {
       </g>
       <path d="M38 93Q70 115 102 93M40 96l2-9m4 12 2-9m4 12 2-9m6 12 1-9m8 10v-8m8 7-1-9m8 6-2-9m8 5-3-9" stroke="#b5be90" strokeOpacity=".45" strokeWidth=".8" fill="none"/>
       {/* The broken face: a dark fracture with a pale lip catching the light. */}
-      {part === 'top' && <path className="break-edge" d={crackPath} fill="none" stroke="#c9cda4" strokeOpacity=".7" strokeWidth="1.2" transform="translate(0 -1.2)"/>}
+      {part === 'top' && <path className="break-edge" d={crackPath} fill="none" stroke="#c9cda4" strokeOpacity=".5" strokeWidth=".7" transform="translate(0 -1.2)"/>}
       {part === 'bottom' && <path className="break-edge" d={crackPath} fill="none" stroke="#1f2c17" strokeOpacity=".7" strokeWidth="1.6" transform="translate(0 1)"/>}
     </g>
   </svg>
