@@ -1,7 +1,7 @@
 import { useId } from 'react'
 
 /**
- * The I & D monogram: Imogen and Daniel either side of a gold script ampersand, ringed by
+ * The I & D monogram: Imogen and Daniel either side of a gold ampersand, ringed by
  * "Imogen & Daniel Holmes", the name they'll share, and the date in Roman numerals.
  */
 export function Monogram({ size = 160, ring = true, className, title = 'Imogen and Daniel Holmes monogram' }: { size?: number; ring?: boolean; className?: string; title?: string }) {
@@ -17,13 +17,13 @@ export function Monogram({ size = 160, ring = true, className, title = 'Imogen a
       <circle cx="100" cy="100" r="96" fill="none" stroke={`url(#${id}-foil)`} strokeWidth="1.4" />
       <circle cx="100" cy="100" r="91.5" fill="none" stroke="currentColor" strokeOpacity=".35" strokeWidth=".6" />
       <circle cx="100" cy="100" r="68" fill="none" stroke="currentColor" strokeOpacity=".35" strokeWidth=".6" />
-      <text fill="currentColor" fontFamily="var(--sans, 'Jost', sans-serif)" fontSize="9.2" letterSpacing="2.6" fontWeight="500">
+      <text fill="currentColor" style={{ fontFamily: 'var(--sans)' }} fontSize="9.2" letterSpacing="2.6" fontWeight="500">
         <textPath href={`#${id}-ring`} startOffset="0" textLength="498" lengthAdjust="spacing">IMOGEN &amp; DANIEL HOLMES · XXIV · VIII · MMXXVIII ·</textPath>
       </text>
     </>}
-    <text x="69" y="122" textAnchor="middle" fill="currentColor" fontFamily="var(--serif, 'Cormorant Garamond', serif)" fontSize="66" fontWeight="500">I</text>
-    <text x="131" y="122" textAnchor="middle" fill="currentColor" fontFamily="var(--serif, 'Cormorant Garamond', serif)" fontSize="66" fontWeight="500">D</text>
-    <text x="100" y="131" textAnchor="middle" fill={`url(#${id}-foil)`} fontFamily="var(--script, 'Pinyon Script', cursive)" fontSize="70">&amp;</text>
+    <text x="65" y="122" textAnchor="middle" fill="currentColor" style={{ fontFamily: 'var(--serif)' }} fontSize="66" fontWeight="500">I</text>
+    <text x="135" y="122" textAnchor="middle" fill="currentColor" style={{ fontFamily: 'var(--serif)' }} fontSize="66" fontWeight="500">D</text>
+    <text x="100" y="119" textAnchor="middle" fill={`url(#${id}-foil)`} style={{ fontFamily: 'var(--serif)' }} fontSize="44" fontWeight="500">&amp;</text>
     {/* A small olive sprig beneath, echoing the wax seal. */}
     <g transform="translate(100 146)" fill="none" stroke={`url(#${id}-foil)`} strokeWidth="1.1" strokeLinecap="round">
       <path d="M-22 0 Q0 -5 22 0" />
