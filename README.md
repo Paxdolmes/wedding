@@ -33,7 +33,11 @@ Tests cover desktop and mobile Chromium; check real phones before publication.
 
 - `src/wedding.ts`: names, display date, venue.
 - `src/EnvelopeIntro.tsx` and CSS: staged wax release, moving fold shadows, card flex, responsive gatefold wings and a continuous transition into the page; reduced-motion access skips the animation.
-- `src/WaxSeal.tsx`: sculpted SVG wax edge, engraved monogram and dated rim.
+- `src/WaxSeal.tsx`: sculpted SVG wax edge, engraved monogram and dated rim; draws either half along the crack line.
+- `src/Celebration.tsx`: canvas burst of petals, olive leaves and gold confetti when the card opens.
+- `src/details.ts`: order of the day, menu, wines and the Friday beer-garden plan (pub name, first-date time). Empty timeline times show "Time to follow".
+- `src/Details.tsx` and CSS: Thursday note, timeline, food & drink, first-date counter.
+- `src/Venue.tsx`, CSS and `src/assets/venue/`: Caswell House photos and the watercolour.
 - `src/App.tsx` and `src/App.css`: revealed invitation and dress code.
 - `public/fonts/`: self-hosted, subsetted Cormorant Garamond fonts and OFL license.
 - `src/Accommodation.tsx` and CSS: hotel photos, driving estimates, map links and expandable price context.
