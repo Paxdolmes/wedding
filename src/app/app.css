@@ -141,7 +141,19 @@ details.card summary { font-family: var(--sans); font-size: .9rem; cursor: point
 .shutter:disabled span { opacity: .5; }
 .flip { justify-self: start; width: 48px; height: 48px; border-radius: 50%; border: 1px solid #efe6cf55; background: #ffffff10; color: #efe6cf; font-size: 1.3rem; }
 .flip:disabled { opacity: .3; }
-.camera-message { text-align: center; font-family: var(--sans); font-size: .88rem; color: var(--muted); min-height: 1.4em; }
+.camera-message { text-align: center; font-family: var(--serif); font-style: italic; font-size: 1.2rem; color: var(--ink-soft); min-height: 1.4em; margin: 0; }
+.camera-rules { text-align: center; margin: 0; }
+.film-box { display: grid; justify-items: center; gap: .4rem; padding: 1.6rem 1.4rem; border-radius: 22px; background: linear-gradient(170deg, #2f3722, #20261a); border: 1px solid #c8a95f59; box-shadow: 0 24px 40px -22px #20261acc, inset 0 1px 0 #ffffff1a; color: #efe6cf; text-align: center; }
+.film-box-brand { margin: 0; font-family: var(--sans); font-size: .64rem; letter-spacing: .24em; text-transform: uppercase; color: var(--gold-bright); }
+.film-box h2 { display: grid; margin: .4rem 0 .6rem; font-weight: 400; }
+.film-box-shots { font-family: var(--serif); font-size: 6rem; line-height: 1; }
+.film-box-label { font-family: var(--serif); font-style: italic; font-size: 1.3rem; }
+.film-box ol { list-style: none; counter-reset: rule; margin: 0; padding: 1rem 0; display: grid; gap: .9rem; justify-self: stretch; text-align: left; border-block: 1px solid #efe6cf29; }
+.film-box li { counter-increment: rule; display: grid; grid-template-columns: 26px minmax(0, 1fr); column-gap: .9rem; row-gap: .15rem; }
+.film-box li::before { content: counter(rule); grid-row: span 2; width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--gold-bright); color: var(--gold-bright); display: grid; place-items: center; font-family: var(--serif); font-size: .95rem; }
+.film-box li strong { font-family: var(--sans); font-weight: 500; font-size: .95rem; }
+.film-box li span { font-family: var(--sans); font-size: .88rem; line-height: 1.45; color: #c9c1aa; }
+.film-box-load { justify-self: stretch; margin-top: 1rem; background: var(--gold-bright); border-color: var(--gold-bright); color: #20261a; }
 .film-strip { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; padding: 8px; background: #2a2219; border-radius: 6px; }
 .film-strip span { aspect-ratio: 1; border-radius: 2px; background: #4a3c2a; }
 .film-strip span.exposed { background: linear-gradient(135deg, #d9893d, #8c4a1f); }

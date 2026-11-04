@@ -16,7 +16,7 @@ test('starts with only an envelope and opens, downloads the calendar and replays
   await expect(card).toBeFocused({ timeout: 15000 })
   await expect(card).toContainText('Imogen & Dan')
   await expect(card).toContainText('24 August 2028')
-  await expect(card).toContainText('Caswell House, Brize Norton')
+  await expect(card).toContainText('Caswell House, Oxfordshire')
   await expect(page.getByRole('region', { name: 'What to wear' })).toContainText('As long as you don’t feel beautiful in white.')
   const downloadPromise = page.waitForEvent('download')
   await page.getByRole('link', { name: /Add to calendar/ }).click()

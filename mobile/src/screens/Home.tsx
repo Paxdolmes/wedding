@@ -31,7 +31,7 @@ export function HomeScreen({ me, go }: { me: Me; go: (tab: Tab) => void }) {
     </Card>
     <View style={s.tiles}>
       <Tile kicker="On the day" title="Find my seat" text="Your table and who you’re sitting beside" onPress={() => go('seat')} />
-      <Tile kicker={`${me.shots - me.shotsUsed} of ${me.shots} shots left`} title="Disposable camera" text="Developed the morning after" onPress={() => go('camera')} />
+      <Tile kicker={`${me.shots - me.shotsUsed} of ${me.shots} shots left`} title="Disposable camera" text="Make every shot count" onPress={() => go('camera')} />
       <Tile kicker="Before & during" title="Song requests" text="And the Battle of the Bangers" onPress={() => go('music')} />
       <Tile kicker="Win bragging rights" title="Predictions" text="Who cries first? How long are the speeches?" onPress={() => go('games')} />
     </View>

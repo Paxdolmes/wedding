@@ -16,7 +16,8 @@ Imogen & Dan's wedding-weekend app comes in three parts that share one backend:
   notification also lands in the app's message list, so nobody misses one.
 - **Find My Seat**: a sealed place card until the couple reveal the seating plan, then an animated reveal of the
   table, where you sit and a short introduction to the people either side.
-- **Disposable camera**: 20 shots per guest (adjustable) with a vintage-film look (faded warm tones, grain, vignette,
+- **Disposable camera**: 20 shots per guest (adjustable). Before the first shot a "film box" sets the rules: use them all but
+  make them count, no peeking, and every photo is shared with everyone the morning after. Each photo gets a vintage-film look (faded warm tones, grain, vignette,
   a light leak and an orange date stamp). No previews; every guest's photos develop together at 9am the morning
   after, or whenever the couple press "Develop the photos now".
 - **Song requests and voting**, a live **DJ board** (DJ code) with Played/Hide, and **Battle of the Bangers**: the

@@ -42,7 +42,7 @@ export function Home({ me, config, go }: { me: Me; config: Config | null; go: (t
 
     <section className="tiles" aria-label="Things to do">
       <button className="tile" onClick={() => go('seat')}><span className="tile-kicker">On the day</span><strong>Find my seat</strong><span>Your table and who you’re sitting beside</span></button>
-      <button className="tile" onClick={() => go('camera')}><span className="tile-kicker">{me.shots - me.shotsUsed} of {me.shots} shots left</span><strong>Disposable camera</strong><span>Developed the morning after</span></button>
+      <button className="tile" onClick={() => go('camera')}><span className="tile-kicker">{me.shots - me.shotsUsed} of {me.shots} shots left</span><strong>Disposable camera</strong><span>Make every shot count</span></button>
       <button className="tile" onClick={() => go('music')}><span className="tile-kicker">Before &amp; during</span><strong>Song requests</strong><span>And the Battle of the Bangers</span></button>
       <button className="tile" onClick={() => go('games')}><span className="tile-kicker">Win bragging rights</span><strong>Predictions</strong><span>Who cries first? How long are the speeches?</span></button>
     </section>
