@@ -64,7 +64,7 @@ export function AfterParty() {
       <strong>{elapsed.days.toLocaleString('en-GB')}</strong>
       <span className="counter-unit">days ago</span>
       <span className="counter-clock" aria-hidden="true">{pad(elapsed.hours)}<i>h</i> {pad(elapsed.minutes)}<i>m</i> {pad(elapsed.seconds)}<i>s</i></span>
-      <span className="counter-date">8 October 2023</span>
+      <span className="counter-date">12 October 2023 · 7:29pm</span>
     </div>
   </section>
 }

@@ -30,5 +30,5 @@ export const wines = [
 /** Friday get-together at the pub where Imogen and Dan had their first date. */
 export const afterParty = {
   pub: 'The [pub name to confirm]',
-  firstDate: '2023-10-08T19:00:00+01:00',
+  firstDate: '2023-10-12T19:29:00+01:00',
 }
