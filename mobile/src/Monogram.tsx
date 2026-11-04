@@ -20,8 +20,8 @@ export function Monogram({ size = 160, ring = true, color = colors.ink }: { size
       <Circle cx="100" cy="100" r="96" fill="none" stroke={foil} strokeWidth="1.4" />
       <Circle cx="100" cy="100" r="91.5" fill="none" stroke={color} strokeOpacity="0.35" strokeWidth="0.6" />
       <Circle cx="100" cy="100" r="68" fill="none" stroke={color} strokeOpacity="0.35" strokeWidth="0.6" />
-      <Text fill={color} fontFamily={fonts.sansMedium} fontSize="9.2" letterSpacing="2.6">
-        <TextPath href={`#${id}ring`} startOffset="0" textLength="498" lengthAdjust="spacing">IMOGEN &amp; DANIEL HOLMES · XXIV · VIII · MMXXVIII ·</TextPath>
+      <Text fill={color} fontFamily={fonts.sansMedium} fontSize="9.2" letterSpacing="5.1">
+        <TextPath href={`#${id}ring`} startOffset="0">IMOGEN &amp; DANIEL HOLMES · XXIV · VIII · MMXXVIII ·</TextPath>
       </Text>
     </>}
     <Text x="65" y="122" textAnchor="middle" fill={color} fontFamily={fonts.serif} fontSize="66">I</Text>

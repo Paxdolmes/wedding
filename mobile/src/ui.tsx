@@ -64,7 +64,7 @@ export function Segmented<T extends string>({ value, options, onChange }: { valu
 
 export const Pill = ({ children }: { children: ReactNode }) => <View style={styles.pill}><Text style={styles.pillText}>{children}</Text></View>
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
   content: { paddingHorizontal: 16, gap: 16, maxWidth: 620, width: '100%', alignSelf: 'center' },
   eyebrow: { fontFamily: fonts.sansMedium, fontSize: 11, letterSpacing: 2.4, textTransform: 'uppercase', color: colors.gold },

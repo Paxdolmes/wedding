@@ -7,8 +7,8 @@ import { formatWhen, useApi, useNow } from '../hooks'
 export function CameraScreen({ me, onShot }: { me: Me; onShot: () => void }) {
   const gallery = useApi<Gallery>('photos', 60_000)
   const [view, setView] = useState<'camera' | 'gallery'>('camera')
-  const open = gallery.data?.revealed
-  useEffect(() => { if (open && !session.staff) setView('gallery') }, [open])
+  const [autoSwitched, setAutoSwitched] = useState(false)
+  if (gallery.data?.revealed && !autoSwitched && !session.staff) { setAutoSwitched(true); setView('gallery') }
 
   return <div className="screen camera-screen">
     <header className="screen-head"><p className="eyebrow">{me.shots} shots for the weekend</p><h1>Disposable camera</h1></header>

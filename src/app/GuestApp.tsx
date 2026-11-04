@@ -35,7 +35,8 @@ export function GuestApp() {
   }, [])
 
   useEffect(() => {
-    Promise.all([api<Config>('config').then(setConfig).catch(() => {}), loadMe()]).finally(() => setReady(true))
+    const load = async () => { await Promise.all([api<Config>('config').then(setConfig).catch(() => {}), loadMe()]); setReady(true) }
+    load()
     refreshPush()
     const onHash = () => { setTab(readTab()); window.scrollTo({ top: 0 }) }
     window.addEventListener('hashchange', onHash)

@@ -1,9 +1,16 @@
-import { chromium } from 'playwright'
-import { mkdirSync } from 'node:fs'
+/**
+ * Renders the I & D monogram into every app icon (iPhone/Android app in mobile/assets, web app in public/app/icons).
+ * Run with `node scripts/render-icons.mjs` after changing the monogram (in the cloud, set PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/opt/pw-browsers/chromium).
+ */
+import { createRequire } from 'node:module'
+const { chromium } = createRequire(import.meta.url)('playwright')
+import { mkdirSync, readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+const root = fileURLToPath(new URL('..', import.meta.url)).replace(/\/$/, '')
+const b64 = f => 'data:font/woff2;base64,' + readFileSync(f).toString('base64')
 const fonts = `
-@font-face { font-family: Serif; src: url(file:///home/claude/wedding/node_modules/@fontsource-variable/cormorant-garamond/files/cormorant-garamond-latin-wght-normal.woff2); font-weight: 300 700; }
-@font-face { font-family: Sans; src: url(file:///home/claude/wedding/node_modules/@fontsource-variable/jost/files/jost-latin-wght-normal.woff2); font-weight: 100 900; }
-@font-face { font-family: Script; src: url(file:///home/claude/wedding/node_modules/@fontsource/pinyon-script/files/pinyon-script-latin-400-normal.woff2); }`
+@font-face { font-family: Serif; src: url(${b64(root + '/node_modules/@fontsource-variable/cormorant-garamond/files/cormorant-garamond-latin-wght-normal.woff2')}); font-weight: 300 700; }
+@font-face { font-family: Sans; src: url(${b64(root + '/node_modules/@fontsource-variable/jost/files/jost-latin-wght-normal.woff2')}); font-weight: 100 900; }`
 // mode: full (ring), plain (no ring). ink colour, foil on/off
 function svg({ ring = true, ink = '#3f4a2b', foil = true }) {
   const gold = foil ? 'url(#foil)' : ink
@@ -14,9 +21,9 @@ function svg({ ring = true, ink = '#3f4a2b', foil = true }) {
   <circle cx="100" cy="100" r="91.5" fill="none" stroke="${ink}" stroke-opacity=".4" stroke-width=".7"/>
   <circle cx="100" cy="100" r="68" fill="none" stroke="${ink}" stroke-opacity=".4" stroke-width=".7"/>
   <text fill="${ink}" font-family="Sans" font-size="9.2" letter-spacing="2.6" font-weight="500"><textPath href="#ring" textLength="498" lengthAdjust="spacing">IMOGEN &amp; DANIEL HOLMES · XXIV · VIII · MMXXVIII ·</textPath></text>` : ''}
-  <text x="69" y="122" text-anchor="middle" fill="${ink}" font-family="Serif" font-size="66" font-weight="500">I</text>
-  <text x="131" y="122" text-anchor="middle" fill="${ink}" font-family="Serif" font-size="66" font-weight="500">D</text>
-  <text x="100" y="131" text-anchor="middle" fill="${gold}" font-family="Script" font-size="70">&amp;</text>
+  <text x="65" y="122" text-anchor="middle" fill="${ink}" font-family="Serif" font-size="66" font-weight="500">I</text>
+  <text x="135" y="122" text-anchor="middle" fill="${ink}" font-family="Serif" font-size="66" font-weight="500">D</text>
+  <text x="100" y="119" text-anchor="middle" fill="${gold}" font-family="Serif" font-size="44" font-weight="500">&amp;</text>
   <g transform="translate(100 146)" fill="none" stroke="${gold}" stroke-width="1.2" stroke-linecap="round"><path d="M-22 0 Q0 -5 22 0"/>
   ${[-15,-7,7,15].map(x => `<ellipse cx="${x}" cy="-4.6" rx="3.4" ry="1.5" transform="rotate(${x<0?-28:28} ${x} -4.6)"/>`).join('')}
   ${[-11,11].map(x => `<ellipse cx="${x}" cy="2.6" rx="3.2" ry="1.4" transform="rotate(${x<0?24:-24} ${x} 2.6)"/>`).join('')}</g></svg>`
@@ -35,16 +42,15 @@ const jobs = [
   ['public/app/icons/maskable-512.png', 512, '#f7f4eb', .66, {}],
   ['public/app/icons/apple-touch-icon.png', 180, '#f7f4eb', .84, {}],
   ['public/app/icons/badge-96.png', 96, null, .96, { ring: false, ink: '#ffffff', foil: false }],
-  ['scratch/monogram-preview.png', 800, '#f7f4eb', .9, {}],
 ]
-const browser = await chromium.launch()
+const browser = await chromium.launch(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH } : {})
 const page = await browser.newPage()
 for (const [name, size, bg, scale, opts] of jobs) {
   await page.setViewportSize({ width: size, height: size })
   await page.setContent(`<html><head><style>${fonts} html,body{margin:0;width:${size}px;height:${size}px;background:${bg ?? 'transparent'};display:grid;place-items:center} div{width:${size*scale}px;height:${size*scale}px}</style></head><body><div>${scale ? svg(opts) : ''}</div></body></html>`)
   await page.evaluate(() => document.fonts.ready)
   await page.waitForTimeout(150)
-  const out = name.startsWith('scratch/') ? '/tmp/claude-0/icons/' + name.slice(8) : '/home/claude/wedding/' + name
+  const out = root + '/' + name
   mkdirSync(out.split('/').slice(0, -1).join('/'), { recursive: true })
   await page.screenshot({ path: out, omitBackground: !bg })
 }

@@ -1,5 +1,5 @@
 import * as Haptics from 'expo-haptics'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Animated, Easing, Platform, Pressable, StyleSheet, Text, View } from 'react-native'
 import { api, type Me, type Seat } from '../api'
 import { initials, useApi } from '../hooks'
@@ -42,11 +42,11 @@ function Envelope() {
 /** Card flips open, the table grows in, chairs fly out to their places and your neighbours slide in. */
 function Reveal({ seat }: { seat: Seat }) {
   const mates = seat.tablemates ?? []
-  const card = useRef(new Animated.Value(0)).current
-  const table = useRef(new Animated.Value(0)).current
-  const chairs = useRef(mates.map(() => new Animated.Value(0))).current
-  const people = useRef(new Animated.Value(0)).current
-  const halo = useRef(new Animated.Value(0)).current
+  const card = useState(() => new Animated.Value(0))[0]
+  const table = useState(() => new Animated.Value(0))[0]
+  const chairs = useState(() => mates.map(() => new Animated.Value(0)))[0]
+  const people = useState(() => new Animated.Value(0))[0]
+  const halo = useState(() => new Animated.Value(0))[0]
 
   useEffect(() => {
     Animated.sequence([

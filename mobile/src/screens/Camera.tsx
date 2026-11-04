@@ -32,7 +32,7 @@ function DisposableCamera({ me, onShot }: { me: Me; onShot: () => void }) {
   const [busy, setBusy] = useState(false)
   const [used, setUsed] = useState(me.shotsUsed)
   const [message, setMessage] = useState('')
-  const flash = useRef(new Animated.Value(0)).current
+  const flash = useState(() => new Animated.Value(0))[0]
   const { width } = useWindowDimensions()
   const left = me.shots - used
 
@@ -72,7 +72,7 @@ function DisposableCamera({ me, onShot }: { me: Me; onShot: () => void }) {
       </View>
       <View style={s.controls}>
         <Pressable style={s.flip} onPress={() => setFacing(f => f === 'back' ? 'front' : 'back')} accessibilityLabel="Switch camera"><Text style={{ color: colors.cameraText, fontSize: 20 }}>⟲</Text></Pressable>
-        <Pressable style={({ pressed }) => [s.shutter, (busy || !ready) && { opacity: 0.5 }]} onPress={shoot} disabled={busy || !ready} accessibilityRole="button" accessibilityLabel="Take photo">
+        <Pressable style={[s.shutter, (busy || !ready) && { opacity: 0.5 }]} onPress={shoot} disabled={busy || !ready} accessibilityRole="button" accessibilityLabel="Take photo">
           {({ pressed }) => <View style={[s.shutterInner, pressed && { transform: [{ scale: 0.88 }] }]} />}
         </Pressable>
         <View style={{ width: 48 }} />
@@ -126,7 +126,7 @@ function GalleryView({ gallery, reload }: { gallery: Gallery | null; reload: () 
 }
 
 function Developing({ delay }: { delay: number }) {
-  const glow = useRef(new Animated.Value(0)).current
+  const glow = useState(() => new Animated.Value(0))[0]
   useEffect(() => {
     const loop = Animated.loop(Animated.sequence([Animated.delay(delay), Animated.timing(glow, { toValue: 1, duration: 1800, useNativeDriver: false }), Animated.timing(glow, { toValue: 0, duration: 1800, useNativeDriver: false })]))
     loop.start()

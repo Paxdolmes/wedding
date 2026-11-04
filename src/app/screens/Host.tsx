@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Monogram } from '../../Monogram'
 import { api, session, type Battle, type Config, type Predictions, type Role, type Song, type StaffSession } from '../api'
 import { formatWhen, timeAgo, useApi } from '../hooks'
@@ -129,15 +129,14 @@ function Guests() {
   const overview = useApi<Overview>('staff/overview')
   const [text, setText] = useState<string | null>(null)
   const [status, setStatus] = useState('')
-  useEffect(() => { if (people.data && text == null) setText(toLines(people.data)) }, [people.data, text])
   return <div className="host-section">
     {overview.data && <p className="stat-line"><strong>{overview.data.guests}</strong> joined · <strong>{overview.data.people}</strong> on the list · <strong>{overview.data.photos}</strong> photos · <strong>{overview.data.songs}</strong> songs</p>}
     <div className="card">
       <h2>Guest list &amp; seating plan</h2>
       <p className="hint">One guest per line: <code>Name | Table | Seat | Groups | A line about them</code>. Seats go round the table in order. Groups are comma-separated and let you message just those people (for example <em>Bridal party, Friday pub</em>).</p>
-      <textarea className="mono" rows={14} value={text ?? ''} onChange={e => setText(e.target.value)} placeholder={'Sam Taylor | Table 1 | 1 | Friday pub | Dan’s uni flatmate, makes a mean negroni\nPriya Shah | Table 1 | 2 | Bridal party | Imogen’s friend since primary school'} spellCheck={false} />
+      <textarea className="mono" rows={14} value={text ?? (people.data ? toLines(people.data) : '')} onChange={e => setText(e.target.value)} placeholder={'Sam Taylor | Table 1 | 1 | Friday pub | Dan’s uni flatmate, makes a mean negroni\nPriya Shah | Table 1 | 2 | Bridal party | Imogen’s friend since primary school'} spellCheck={false} />
       <button className="button primary" onClick={async () => {
-        try { const r = await api<{ count: number }>('staff/people', { method: 'PUT', body: { people: fromLines(text ?? '') } }); setStatus(`Saved ${r.count} guests.`); people.reload(); overview.reload() } catch (e) { setStatus((e as Error).message) }
+        try { const r = await api<{ count: number }>('staff/people', { method: 'PUT', body: { people: fromLines(text ?? (people.data ? toLines(people.data) : '')) } }); setStatus(`Saved ${r.count} guests.`); people.reload(); overview.reload() } catch (e) { setStatus((e as Error).message) }
       }}>Save guest list</button>
       {status && <p className="hint" role="status">{status}</p>}
     </div>

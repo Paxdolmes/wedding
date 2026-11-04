@@ -6,7 +6,7 @@ export function useApi<T>(path: string | null, every = 0) {
   const [data, setData] = useState<T | null>(null)
   const [error, setError] = useState('')
   const pathRef = useRef(path)
-  pathRef.current = path
+  useEffect(() => { pathRef.current = path }, [path])
   const reload = useCallback(async () => {
     if (!pathRef.current) return
     try { setData(await api<T>(pathRef.current)); setError('') } catch (e) { setError((e as Error).message) }

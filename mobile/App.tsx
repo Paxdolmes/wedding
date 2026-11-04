@@ -54,10 +54,12 @@ function Root() {
   }, [loadMe])
 
   // Tapping a notification opens the screen it points to.
-  useEffect(() => {
+  const [handledTap, setHandledTap] = useState<unknown>(undefined)
+  if (tappedUrl !== handledTap) {
+    setHandledTap(tappedUrl)
     const target = tabFromUrl(tappedUrl)
     if (isTab(target)) setTab(target)
-  }, [tappedUrl])
+  }
 
   useEffect(() => { if (ready && fontsLoaded) SplashScreen.hideAsync().catch(() => {}) }, [ready, fontsLoaded])
   if (!ready || !fontsLoaded) return <View style={{ flex: 1, backgroundColor: colors.paper }} />
