@@ -5,7 +5,7 @@ import { WaxSeal } from './WaxSeal'
 import { crackBranches, crackHalves } from './crack'
 import './EnvelopeIntro.css'
 
-type Phase = 'sealed' | 'unsealing' | 'flap' | 'extracting' | 'settling' | 'unfolding' | 'celebrating' | 'revealing'
+type Phase = 'sealed' | 'unsealing' | 'flap' | 'extracting' | 'settling' | 'unfolding' | 'revealing'
 const silk = [.22, 1, .36, 1] as const
 const paper = [.45, 0, .18, 1] as const
 const wait = (seconds: number) => new Promise(resolve => setTimeout(resolve, seconds * 1000))
@@ -136,8 +136,7 @@ export function EnvelopeIntro({ onReveal, onOpen, onCelebrate, replay }: { onRev
     await wait(.2)
     if (!mounted.current) return
 
-    // 8. Hooray: petals and confetti fly, and the card announces itself.
-    setPhase('celebrating')
+    // 8. Petals and confetti fly as the wings open, and the card announces itself.
     onCelebrate()
     animate('.invite-banner', { opacity: 1 }, { duration: .2 })
     animate('.invite-banner .letter', { opacity: [0, 1], y: [22, 0], rotate: [-6, 0], filter: ['blur(4px)', 'blur(0px)'] }, { duration: .6, ease: silk, delay: stagger(.035, { startDelay: .05 }) })
