@@ -7,6 +7,12 @@ lifts the flap and draws out a gatefold card; a champagne bottle pops its cork a
 chapters: the invitation, the day hour by hour, the venue, food and drink, Friday at The Crabtree, dress code, where to
 stay and a gallery of photos, each arriving with its own scroll animation.
 
+## Guest app
+
+The wedding-weekend app (push notifications, Find My Seat, a disposable camera, song requests, Battle of the Bangers
+and predictions) is an iPhone and Android app in `mobile/`, a web version at `/app/`, and a backend in `worker/`.
+Setup, publishing to the App Store and Google Play, and how to run it on the day: [docs/guest-app.md](docs/guest-app.md).
+
 ## Develop
 
 Node.js 24 LTS and npm. From this repository:
@@ -16,7 +22,7 @@ npm ci
 npm run dev -- --host 0.0.0.0 --port 5173 --strictPort
 ```
 
-No application API keys are required. Use the existing checkout in cloud tasks;
+No application API keys are required. The guest app's host screen needs `HOST_PASSCODE` (a Cloudflare secret; locally, in `.dev.vars`). Use the existing checkout in cloud tasks;
 do not create a worktree unless requested. Processes need restarting after an
 environment restoration.
 
@@ -30,7 +36,7 @@ PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/opt/pw-browsers/chromium npm test
 
 The cloud environment has Chromium at `/opt/pw-browsers/chromium`. Elsewhere, run
 `npx playwright install chromium`, then `npm test` without the executable override.
-Tests cover desktop and mobile Chromium; check real phones before publication.
+Tests cover desktop and mobile Chromium, and start the guest app's backend with `wrangler dev`; check real phones before publication.
 
 ## Edit content
 

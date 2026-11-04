@@ -1,8 +1,18 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "imogenanddan",
+  "main": "worker/index.ts",
   "compatibility_date": "2026-11-03",
   "assets": {
-    "directory": "./dist"
-  }
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  // The guest app's data (guests, push subscriptions, photos, songs, games) lives in one SQLite-backed Durable Object.
+  // Nothing needs creating by hand: Cloudflare sets it up on the first deploy.
+  "durable_objects": {
+    "bindings": [{ "name": "HUB", "class_name": "WeddingHub" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["WeddingHub"] }],
+  "observability": { "enabled": true }
 }
