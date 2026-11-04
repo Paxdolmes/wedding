@@ -1,0 +1,75 @@
+.section-heading { text-align: center; max-width: 620px; margin: 0 auto 44px; }
+.section-heading h2 { font-size: clamp(38px, 5vw, 60px); margin: 14px 0; }
+.section-heading h2 em { color: #89916c; }
+.section-heading > p:last-child:not(.eyebrow) { font-size: 19px; font-style: italic; color: #656c4c; line-height: 1.55; margin: 0; }
+
+.thursday-note { max-width: 640px; margin: 0 auto 110px; padding: 44px 32px 40px; text-align: center; background: #fffdf7; border: 1px solid #e3dfd1; box-shadow: 0 7px 20px #424a2c0f; transform: rotate(-1deg); position: relative; }
+.thursday-note::before { content: ''; position: absolute; top: -12px; left: 50%; width: 92px; height: 24px; transform: translateX(-50%) rotate(2deg); background: #e7eadcd9; box-shadow: 0 1px 2px #424a2c14; }
+.thursday-note h2 { margin: 12px 0 16px; }
+.thursday-note h2 em { color: #9d8d64; }
+.thursday-note p:not(.eyebrow) { font-size: 20px; line-height: 1.55; margin: 0 auto 14px; max-width: 460px; }
+.thursday-note > span { font-size: 24px; font-style: italic; color: #7b855f; }
+
+.timeline-section { max-width: 760px; margin: 0 auto 120px; scroll-margin-top: 40px; }
+.timeline { list-style: none; margin: 0; padding: 0; position: relative; }
+.timeline::before { content: ''; position: absolute; top: 12px; bottom: 12px; left: calc(150px + 22px); width: 1px; background: linear-gradient(#81896a00, #81896a66 8%, #81896a66 92%, #81896a00); }
+.timeline li { display: grid; grid-template-columns: 150px 44px 1fr; align-items: start; padding: 12px 0 18px; }
+.timeline-time { text-align: right; font-size: 26px; line-height: 1.2; color: #4b5738; padding-top: 1px; }
+.timeline-time i { font-size: 17px; color: #a29a7f; }
+.timeline-dot { justify-self: center; width: 11px; height: 11px; margin-top: 9px; border-radius: 50%; border: 1px solid #7d8761; background: #f7f4eb; position: relative; z-index: 1; }
+.timeline li.is-set .timeline-dot { background: #7d8761; box-shadow: 0 0 0 4px #e7eadc; }
+.timeline h3 { font-size: 27px; font-weight: 400; margin: 0 0 4px; line-height: 1.2; }
+.timeline p { margin: 0; font-size: 18px; line-height: 1.5; color: #656c4c; font-style: italic; }
+
+.food-section { max-width: 1080px; margin: 0 auto 120px; }
+.food-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(28px, 6vw, 80px); align-items: center; }
+.menu-card { padding: 44px 34px 36px; text-align: center; background: #fffdf7 url('/paper-grain.svg'); border: 1px solid #e3dfd1; outline: 1px solid #c9bf9f80; outline-offset: -12px; box-shadow: 0 10px 28px #424a2c14; }
+.menu-branch { width: 40px; height: 50px; color: #7d8761; }
+.menu-card > .eyebrow { margin: 10px 0 22px; }
+.menu-card dl { margin: 0; display: grid; gap: 18px; }
+.menu-card dt { font: 9px/1.6 Arial, sans-serif; letter-spacing: 2.4px; text-transform: uppercase; color: #9b8b60; }
+.menu-card dd { margin: 4px 0 0; font-size: 25px; }
+.menu-card .is-pending dd { font-size: 20px; font-style: italic; color: #a29a7f; }
+.menu-card div:last-child dd { font-size: 30px; font-style: italic; color: #4b5738; }
+.menu-card div:last-child { padding-top: 18px; border-top: 1px solid #d9d4c2; }
+.menu-note { display: block; margin-top: 26px; font-size: 15px; font-style: italic; color: #7b8069; }
+.wine-list h3 { font-size: clamp(28px, 3.2vw, 38px); font-weight: 400; line-height: 1.2; margin: 14px 0 28px; }
+.wine-list h3 em { color: #9d8d64; }
+.wine-list ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid #d9d4c2; }
+.wine-list li { display: grid; grid-template-columns: 110px 1fr; column-gap: 18px; padding: 16px 0; border-bottom: 1px solid #d9d4c2; }
+.wine-kind { grid-row: span 2; font: 9px/2.6 Arial, sans-serif; letter-spacing: 2.4px; text-transform: uppercase; color: #9b8b60; }
+.wine-name { font-size: 25px; line-height: 1.2; }
+.wine-origin { font-size: 16px; font-style: italic; color: #7b8069; }
+
+.after-party { max-width: 1000px; margin: 0 auto 120px; display: grid; grid-template-columns: 1.2fr .8fr; gap: clamp(28px, 6vw, 80px); align-items: center; }
+.after-party-copy h2 { margin: 14px 0 20px; }
+.after-party-copy h2 em { color: #9d8d64; }
+.after-party-copy > p:last-child { font-size: 20px; line-height: 1.6; margin: 0; max-width: 480px; }
+.first-date-counter { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 38px 24px 30px; border-radius: 50% 50% 4px 4px / 34% 34% 4px 4px; background: #e7eadc; border: 1px solid #b5ba9d5c; }
+.first-date-counter .eyebrow { margin: 0 0 8px; }
+.first-date-counter strong { font-size: clamp(64px, 8vw, 96px); font-weight: 400; line-height: 1; color: #4b5738; font-variant-numeric: lining-nums tabular-nums; }
+.counter-unit { font-size: 24px; font-style: italic; color: #7b855f; margin-top: 4px; }
+.counter-clock { margin-top: 14px; font: 13px/1.5 Arial, sans-serif; letter-spacing: 1.5px; color: #656c4c; font-variant-numeric: tabular-nums; }
+.counter-clock i { font-style: normal; color: #9b8b60; margin-left: 1px; }
+.counter-date { margin-top: 10px; font: 9px/1.5 Arial, sans-serif; letter-spacing: 2.4px; text-transform: uppercase; color: #9b8b60; }
+
+@media (max-width: 760px) {
+  .after-party { grid-template-columns: 1fr; margin-bottom: 80px; text-align: center; }
+  .after-party-copy > p:last-child { font-size: 18px; margin-inline: auto; }
+  .thursday-note { margin-bottom: 80px; padding: 38px 22px 32px; }
+  .thursday-note p:not(.eyebrow) { font-size: 18px; }
+  .timeline-section, .food-section { margin-bottom: 80px; }
+  .timeline::before { left: 5px; }
+  .timeline li { grid-template-columns: 12px 1fr; column-gap: 18px; padding: 10px 0 14px; }
+  .timeline-dot { grid-row: 1 / span 2; grid-column: 1; margin-top: 6px; }
+  .timeline-time { grid-column: 2; text-align: left; font-size: 20px; }
+  .timeline-time i { font-size: 15px; }
+  .timeline li > div { grid-column: 2; }
+  .timeline h3 { font-size: 24px; }
+  .timeline p { font-size: 16px; }
+  .food-grid { grid-template-columns: 1fr; }
+  .menu-card { padding: 36px 22px 30px; }
+  .wine-list { text-align: center; }
+  .wine-list li { grid-template-columns: 1fr; text-align: center; }
+  .wine-kind { grid-row: auto; line-height: 1.8; }
+}

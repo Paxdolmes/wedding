@@ -3,11 +3,14 @@ import './Accommodation.css'
 const pounds = (value: number) => new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP', maximumFractionDigits: 0 }).format(value)
 const exactPounds = (value: number) => new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(value)
 const directions = (hotel: typeof hotels[number]) => `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(hotel.name + ', ' + hotel.place + ', UK')}&destination=${encodeURIComponent('Caswell House, Brize Norton, OX18 3NJ')}&travelmode=driving`
+const averagePrice = (hotel: typeof hotels[number]) => hotel.samples.reduce((a, b) => a + b, 0) / hotel.samples.length
+// Most to least expensive.
+const byPrice = [...hotels].sort((a, b) => averagePrice(b) - averagePrice(a))
 export function Accommodation() {
   return <section className="accommodation" aria-labelledby="accommodation-heading">
-    <div className="accommodation-heading"><p className="eyebrow">Make a night of it</p><h2 id="accommodation-heading">Stay a little longer.</h2><p>A cosy room. A slow morning.<br />A few lovely places close to our celebration.</p><span className="guide-note">Guide prices per double room, per night. Check your dates with the hotel.</span></div>
-    <ul className="hotel-grid">{hotels.map(hotel => {
-      const average = hotel.samples.reduce((a, b) => a + b, 0) / hotel.samples.length
+    <div className="accommodation-heading"><p className="eyebrow">Make a night of it</p><h2 id="accommodation-heading">Where to stay</h2><p>A cosy room. A slow morning.<br />A few lovely places close to our celebration.</p><span className="guide-note">Guide prices per double room, per night. Check your dates with the hotel.</span></div>
+    <ul className="hotel-grid">{byPrice.map(hotel => {
+      const average = averagePrice(hotel)
       return <li className="hotel-card" key={hotel.name}>
         <div className="hotel-photo"><img src={hotel.image} alt={hotel.imageAlt} width="850" height="540" loading="lazy" decoding="async" /><span className="hotel-tier">{hotel.tier}</span><a className="hotel-photo-credit" href={hotel.url} target="_blank" rel="noopener noreferrer">Photo: {hotel.name}</a></div>
         <div className="hotel-content"><p className="hotel-place eyebrow">{hotel.place}</p><h3>{hotel.name}</h3><p className="hotel-location">Approx. {hotel.miles} miles <span aria-hidden="true">·</span> {hotel.drive} drive to Caswell House</p><p className="hotel-description">{hotel.description}</p>
