@@ -89,16 +89,16 @@ export function Celebration({ trigger }: { trigger: number }) {
     // Two hand-thrown bursts from the lower corners, aimed up and across.
     for (const side of [-1, 1]) {
       const originX = side < 0 ? width * -.02 : width * 1.02
-      for (let i = 0; i < (small ? 70 : 120); i++) {
+      for (let i = 0; i < (small ? 110 : 170); i++) {
         const angle = (side < 0 ? -Math.PI / 2 + .3 : -Math.PI / 2 - .3) + random(-.32, .32) + side * -.05
         const velocity = speed * random(.55, 1.05)
-        const kind = pick<Kind>(['petal', 'petal', 'petal', 'leaf', 'confetti', 'confetti', 'fleck'])
+        const kind = pick<Kind>(['petal', 'petal', 'petal', 'petal', 'petal', 'leaf', 'confetti', 'fleck'])
         particles.push(particle(kind, originX, height * random(.88, 1.02), Math.cos(angle) * velocity * (small ? .7 : 1), Math.sin(angle) * velocity, random(0, 10), scale))
       }
     }
     // A softer shower of petals from above, like a handful tossed over the guests.
-    for (let i = 0; i < (small ? 50 : 90); i++) {
-      particles.push(particle(pick<Kind>(['petal', 'petal', 'leaf', 'fleck']), random(0, width), random(-120, -10), random(-.6, .6), random(.5, 2), random(15, 100), scale))
+    for (let i = 0; i < (small ? 110 : 180); i++) {
+      particles.push(particle(pick<Kind>(['petal', 'petal', 'petal', 'petal', 'leaf', 'fleck']), random(0, width), random(-120, -10), random(-.6, .6), random(.5, 2), random(10, 220), scale))
     }
     let frame = 0
     let previous = performance.now()

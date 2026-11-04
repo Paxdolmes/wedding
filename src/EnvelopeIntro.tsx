@@ -133,17 +133,16 @@ export function EnvelopeIntro({ onReveal, onOpen, onCelebrate, replay }: { onRev
     animate('.gate-shadow-left', { scaleX: [1, .35, 0], opacity: [.35, .2, 0] }, { duration: 1.3 })
     animate('.gate-shadow-right', { scaleX: [1, .35, 0], opacity: [.35, .2, 0] }, { duration: 1.3, delay: .12 })
     animate('.card-foil-light', { x: ['-130%', '130%'], opacity: [0, .55, 0] }, { duration: 1.6, delay: .25, ease: 'easeInOut' })
-    await wait(.75)
+    await wait(.2)
     if (!mounted.current) return
 
     // 8. Hooray: petals and confetti fly, and the card announces itself.
     setPhase('celebrating')
     onCelebrate()
     animate('.invite-banner', { opacity: 1 }, { duration: .2 })
-    animate('.invite-banner .hooray', { opacity: [0, 1], y: [8, 0] }, { duration: .5, ease: silk })
-    animate('.invite-banner .letter', { opacity: [0, 1], y: [22, 0], rotate: [-6, 0], filter: ['blur(4px)', 'blur(0px)'] }, { duration: .6, ease: silk, delay: stagger(.035, { startDelay: .12 }) })
+    animate('.invite-banner .letter', { opacity: [0, 1], y: [22, 0], rotate: [-6, 0], filter: ['blur(4px)', 'blur(0px)'] }, { duration: .6, ease: silk, delay: stagger(.035, { startDelay: .05 }) })
     animate('.keepsake-card', { scale: [unfoldedScale, unfoldedScale * 1.025, unfoldedScale] }, { duration: .9, ease: 'easeInOut', delay: .4 })
-    await wait(2.1)
+    await wait(2.6)
     if (!mounted.current) return
 
     // 9. The card flies towards the viewer until its paper fills the screen, then the page is there.
@@ -217,7 +216,7 @@ export function EnvelopeIntro({ onReveal, onOpen, onCelebrate, replay }: { onRev
           <span className="seal-glint" />
           <span className="seal-instruction">PRESS TO OPEN</span>
         </div>
-        <div className="invite-banner" aria-hidden="true"><span className="hooray">Hooray!</span><span className="invite-line">{[...invited].map((letter, index) => <span key={index} className="letter">{letter === ' ' ? ' ' : letter}</span>)}</span></div>
+        <div className="invite-banner" aria-hidden="true"><span className="invite-line">{[...invited].map((letter, index) => <span key={index} className="letter">{letter === ' ' ? ' ' : letter}</span>)}</span></div>
         <button ref={trigger} className="envelope-trigger" onClick={openEnvelope} disabled={opening} aria-label="Open your invitation" aria-describedby="envelope-instructions"><span id="envelope-instructions" className="visually-hidden">Press to break the seal and open Imogen and Dan’s save-the-date.</span></button>
       </motion.div>
     </motion.div>

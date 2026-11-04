@@ -103,7 +103,6 @@
 
 /* "You're invited!" lettering that appears above the opened card. */
 .invite-banner { position: absolute; left: -30%; right: -30%; bottom: calc(50.5% + 44.5% * var(--card-scale, 1) + 4%); z-index: 11; display: flex; flex-direction: column; align-items: center; opacity: 0; pointer-events: none; color: #4b5738; text-align: center; }
-.invite-banner .hooray { font: 12px/1.6 Arial, sans-serif; letter-spacing: 4px; text-transform: uppercase; color: #9b8b60; opacity: 0; }
 .invite-banner .invite-line { font: italic clamp(38px, 10cqw, 72px)/1.1 'Cormorant Garamond', Georgia, serif; white-space: nowrap; }
 .invite-banner .letter { display: inline-block; opacity: 0; }
 .celebration { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 60; pointer-events: none; }
