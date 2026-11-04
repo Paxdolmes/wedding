@@ -41,10 +41,13 @@
 .wine-name { font-size: 25px; line-height: 1.2; }
 .wine-origin { font-size: 16px; font-style: italic; color: #7b8069; }
 
-.after-party { max-width: 1000px; margin: 0 auto 120px; display: grid; grid-template-columns: 1.2fr .8fr; gap: clamp(28px, 6vw, 80px); align-items: center; }
+.after-party { max-width: 1080px; margin: 0 auto 120px; display: grid; grid-template-columns: 1.15fr .62fr .78fr; gap: clamp(28px, 6vw, 80px); align-items: center; }
 .after-party-copy h2 { margin: 14px 0 20px; }
 .after-party-copy h2 em { color: #9d8d64; }
-.after-party-copy > p:last-child { font-size: 20px; line-height: 1.6; margin: 0; max-width: 480px; }
+.after-party-copy > p:not(.eyebrow) { font-size: 20px; line-height: 1.6; margin: 0; max-width: 480px; }
+.after-party-map { display: inline-flex; align-items: center; gap: 12px; margin-top: 18px; padding: 8px 0; color: #4b5738; font: 10px/1.5 Arial, sans-serif; letter-spacing: 1.8px; text-transform: uppercase; text-decoration: none; border-bottom: 1px solid #81896a66; }
+.crabtree-photo { transform: rotate(-2.5deg); max-width: 240px; justify-self: center; }
+.crabtree-photo figcaption { font-size: 18px; padding: 12px 4px 14px; }
 .first-date-counter { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 38px 24px 30px; border-radius: 50% 50% 4px 4px / 34% 34% 4px 4px; background: #e7eadc; border: 1px solid #b5ba9d5c; }
 .first-date-counter .eyebrow { margin: 0 0 8px; }
 .first-date-counter strong { font-size: clamp(64px, 8vw, 96px); font-weight: 400; line-height: 1; color: #4b5738; font-variant-numeric: lining-nums tabular-nums; }
@@ -55,7 +58,8 @@
 
 @media (max-width: 760px) {
   .after-party { grid-template-columns: 1fr; margin-bottom: 80px; text-align: center; }
-  .after-party-copy > p:last-child { font-size: 18px; margin-inline: auto; }
+  .after-party-copy > p:not(.eyebrow) { font-size: 18px; margin-inline: auto; }
+  .crabtree-photo { max-width: 220px; }
   .thursday-note { margin-bottom: 80px; padding: 38px 22px 32px; }
   .thursday-note p:not(.eyebrow) { font-size: 18px; }
   .timeline-section, .food-section { margin-bottom: 80px; }

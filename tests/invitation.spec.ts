@@ -143,6 +143,8 @@ test('shows the day, venue, food and drink, and the first-date counter', async (
   await expect(food).toContainText('Pizza!')
   await expect(food).toContainText('Whispering Angel')
   const party = page.getByRole('region', { name: /One more drink/ })
+  await expect(party).toContainText('The Crabtree in Fulham')
+  await expect(party.getByRole('img')).toHaveCount(1)
   const days = Math.floor((Date.now() - new Date('2023-10-12T19:29:00+01:00').getTime()) / 86400000)
   await expect(party.locator('strong')).toHaveText(days.toLocaleString('en-GB'))
   const hotels = page.getByRole('region', { name: 'Where to stay' }).getByRole('heading', { level: 3 })

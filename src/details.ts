@@ -29,6 +29,8 @@ export const wines = [
 
 /** Friday get-together at the pub where Imogen and Dan had their first date. */
 export const afterParty = {
-  pub: 'The [pub name to confirm]',
+  pub: 'The Crabtree',
+  area: 'Fulham',
+  map: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('The Crabtree, Rainville Road, London W6 9HA'),
   firstDate: '2023-10-12T19:29:00+01:00',
 }

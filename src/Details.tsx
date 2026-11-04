@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { afterParty, menu, timeline, wines } from './details'
 import { OliveBranch } from './OliveBranch'
+import crabtree from './assets/venue/crabtree.webp'
 import './Details.css'
 
 export function ThursdayNote() {
@@ -57,8 +58,10 @@ export function AfterParty() {
     <div className="after-party-copy">
       <p className="eyebrow">Friday 25 August · Keep the party going</p>
       <h2 id="after-party-heading">One more drink, <em>where it all began</em></h2>
-      <p>For those of you who want to keep the party going, we’re planning on gathering in the beer garden at {afterParty.pub} on Friday evening. It’s where we had our very first date.</p>
+      <p>For those of you who want to keep the party going, we’re planning on gathering in the beer garden at {afterParty.pub} in {afterParty.area} on Friday evening. It’s where we had our very first date.</p>
+      <a className="after-party-map" href={afterParty.map} target="_blank" rel="noopener noreferrer">Find {afterParty.pub} <span className="visually-hidden">(opens Google Maps in a new tab)</span><svg className="arrow-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" /></svg></a>
     </div>
+    <figure className="photo-print crabtree-photo"><img src={crabtree} alt="The Crabtree pub at dusk, its brick front lit by gold lanterns." width="289" height="312" loading="lazy" decoding="async" /><figcaption>Where it all began</figcaption></figure>
     <div className="first-date-counter">
       <p className="eyebrow">Our first date was</p>
       <strong>{elapsed.days.toLocaleString('en-GB')}</strong>
