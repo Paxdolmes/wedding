@@ -2,6 +2,7 @@
   "expo": {
     "name": "Imogen & Dan",
     "slug": "imogen-and-dan",
+    "owner": "dholmes",
     "scheme": "imogenanddan",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -63,14 +64,14 @@
     "extra": {
       "apiBase": "https://imogenanddan.com",
       "eas": {
-        "projectId": "PROJECT_ID"
+        "projectId": "6d685135-2648-4569-8a71-de28426df104"
       }
     },
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/PROJECT_ID",
+      "url": "https://u.expo.dev/6d685135-2648-4569-8a71-de28426df104",
       "checkAutomatically": "ON_LOAD",
       "fallbackToCacheTimeout": 0
     }
