@@ -27,7 +27,7 @@ export default function App() {
   return <>
     {!isOpen && <EnvelopeIntro replay={replay} onReveal={() => setShowInvitation(true)} onOpen={() => setIsOpen(true)} onCelebrate={() => setCelebrate(count => count + 1)} />}
     {!reduceMotion && <Celebration trigger={celebrate} />}
-    {showInvitation && <motion.div className="page" inert={!isOpen} aria-hidden={!isOpen || undefined} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: reduceMotion ? 0 : .9 }}>
+    {showInvitation && <motion.div className="page" inert={!isOpen} aria-hidden={!isOpen || undefined} initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 1.04 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: reduceMotion ? 0 : .9, ease: [.22, 1, .36, 1] }} style={{ transformOrigin: '50% 0' }}>
     <header className="masthead"><span className="monogram" aria-label={wedding.names}>I <i>&</i> D</span><a href="#the-details" className="eyebrow">A day to remember <svg className="arrow-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" /></svg></a></header>
     <main>
       <article className="invitation" ref={invitation} tabIndex={-1} aria-labelledby="couple-names">
