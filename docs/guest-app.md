@@ -75,8 +75,9 @@ The app includes Expo Updates, and `mobile/.eas/workflows/publish-update.yml` pu
 2. Production builds use the `production` channel (`eas.json`), so they receive these updates.
 
 Changes to screens, wording and styling go out this way. Adding a native library, changing a plugin in `app.json` or
-changing permissions still needs a new build. When you do that, bump `version` in `app.json` so older builds don't
-receive code they can't run (`runtimeVersion` follows the app version).
+changing permissions still needs a new build. When you do that, bump both `version` and `runtimeVersion` in `app.json`
+so older builds don't receive code they can't run. (`runtimeVersion` is a plain value rather than a policy because Expo
+Launch prebuilds the native project, and EAS doesn't allow runtime version policies once a native folder exists.)
 
 ## Before and during the weekend
 
