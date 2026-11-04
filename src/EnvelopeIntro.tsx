@@ -1,8 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
-import { motion, stagger, useAnimate, useMotionValue, useReducedMotion, useSpring } from 'motion/react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { motion, stagger, useAnimate, useMotionValue, useReducedMotion, useSpring, type AnimationPlaybackControls } from 'motion/react'
 import { OliveBranch } from './OliveBranch'
 import { WaxSeal } from './WaxSeal'
+import { ChampagneBottle, FlyingCork } from './Champagne'
+import { DustMotes, LeafShadows } from './Ambience'
 import { crackBranches, crackHalves } from './crack'
+import { scatterPetals, sprayChampagne, throwPetals } from './confetti'
 import './EnvelopeIntro.css'
 
 type Phase = 'sealed' | 'unsealing' | 'flap' | 'extracting' | 'settling' | 'unfolding' | 'revealing'
@@ -17,17 +20,23 @@ const crumbs = Array.from({ length: 7 }, (_, index) => ({
   spin: (index % 2 ? 1 : -1) * (120 + index * 25),
   size: 2.2 + (index % 3) * 1.1,
 }))
-const invited = 'You’re invited!'
+/** How far the bottle leans over the card when it pops, in degrees from upright. */
+const bottleTilt = -24
+/** A short buzz on phones that support it, for the crack and the pop. */
+const buzz = (pattern: number | number[]) => { try { navigator.vibrate?.(pattern) } catch { /* Not supported here. */ } }
+/** Inline starting styles for the entrance, which reduced motion skips. */
+const hidden = (style: CSSProperties, reduced: boolean | null) => reduced ? undefined : style
 
 function FoldCover() {
   return <div className="gate-design"><div className="cover-emboss"><OliveBranch /><span>I <i>&</i> D</span><OliveBranch /></div><span className="cover-note">A little note,<br /><i>a lifetime of love.</i></span><span className="cover-date">24 · 08 · 2028</span></div>
 }
 
-export function EnvelopeIntro({ onReveal, onOpen, onCelebrate, replay }: { onReveal: () => void; onOpen: () => void; onCelebrate: () => void; replay: boolean }) {
+export function EnvelopeIntro({ onReveal, onOpen, replay }: { onReveal: () => void; onOpen: () => void; replay: boolean }) {
   const [scope, animate] = useAnimate()
   const [phase, setPhase] = useState<Phase>('sealed')
   const busy = useRef(false)
   const mounted = useRef(true)
+  const entrance = useRef<{ begin: () => void; controls: AnimationPlaybackControls[] } | null>(null)
   const trigger = useRef<HTMLButtonElement>(null)
   const flapLayer = useRef<HTMLDivElement>(null)
   const reduced = useReducedMotion()
@@ -46,6 +55,28 @@ export function EnvelopeIntro({ onReveal, onOpen, onCelebrate, replay }: { onRev
     return () => { mounted.current = false; document.body.style.overflow = previousOverflow }
   }, [replay])
 
+  // The envelope is set down on the table, the seal is pressed into the wax, and the address is written.
+  useEffect(() => {
+    if (reduced) return
+    let cancelled = false
+    const controls: AnimationPlaybackControls[] = []
+    const begin = () => {
+      if (controls.length) return
+      controls.push(
+        animate('.envelope-composition', { opacity: [0, 1], y: [56, 0], rotate: [-11, -5], scale: [.93, 1] }, { duration: 1.6, ease: silk }),
+        animate('.envelope-shadow', { opacity: [0, .24], scale: [.75, 1] }, { duration: 1.6, ease: silk }),
+        animate('.seal-assembly', { opacity: [0, 1, 1], scale: [1.55, .95, 1] }, { duration: .75, delay: 1, ease: [.3, 0, .2, 1], times: [0, .72, 1] }),
+        animate('.seal-contact-shadow', { opacity: [0, .25] }, { duration: .4, delay: 1.5 }),
+        animate('.seal-stamp-ring', { opacity: [0, .6, 0], scale: [.9, 1.5] }, { duration: .9, delay: 1.5, ease: 'easeOut' }),
+        animate('.envelope-lettering > span', { '--ink': ['-15%', '115%'] }, { duration: 1.5, ease: [.4, .1, .3, 1], delay: stagger(.55, { startDelay: 1.45 }) }),
+        animate('.press-hint', { opacity: [0, 1], y: [10, 0] }, { duration: 1, delay: 2.4, ease: silk }),
+      )
+    }
+    entrance.current = { begin, controls }
+    Promise.race([document.fonts?.ready, wait(.9)]).then(() => { if (!cancelled) begin() })
+    return () => { cancelled = true; entrance.current = null }
+  }, [animate, reduced])
+
   // Once the flap passes upright it belongs behind the card, not in front of it.
   useEffect(() => flapAngle.on('change', angle => {
     if (flapLayer.current) flapLayer.current.style.zIndex = angle > 90 ? '2' : '6'
@@ -57,18 +88,21 @@ export function EnvelopeIntro({ onReveal, onOpen, onCelebrate, replay }: { onRev
     pointerX.set(0)
     pointerY.set(0)
     if (reduced) { onReveal(); onOpen(); return }
+    // A guest who taps straight away skips the rest of the entrance rather than racing it.
+    if (entrance.current) { entrance.current.begin(); entrance.current.controls.forEach(control => control.complete()) }
     const root = scope.current as HTMLElement
     const card = root.querySelector('.keepsake-card') as HTMLElement
     const halves = '.seal-whole .wax-stamp, .seal-half-top .wax-stamp, .seal-half-bottom .wax-stamp'
     setPhase('unsealing')
 
     // 1. Press: the wax gives under the thumb and warms a little.
-    animate('.seal-instruction, .seal-glint', { opacity: 0 }, { duration: .25 })
+    animate('.press-hint, .seal-glint, .seal-halo', { opacity: 0 }, { duration: .25 })
     animate('.seal-press-glow', { opacity: [0, .55, 0], scale: [.85, 1.15, 1.3] }, { duration: .9, ease: 'easeOut' })
     await animate(halves, { scale: .95, y: '1.5%' }, { duration: .24, ease: [.3, 0, .2, 1] })
     if (!mounted.current) return
 
     // 2. Crack: a hairline runs outwards from the centre, branches, and catches the light.
+    buzz(12)
     animate('.seal-crack .crack-main', { strokeDashoffset: [1, 0] }, { duration: .34, ease: [.2, .7, .3, 1] })
     animate('.seal-crack .crack-branch', { strokeDashoffset: [1, 0] }, { duration: .22, delay: .16, ease: 'easeOut' })
     animate('.seal-crack .crack-glint', { strokeDashoffset: [1.2, -.2], opacity: [0, 1, 0] }, { duration: .55, delay: .2, ease: 'easeInOut' })
@@ -123,6 +157,8 @@ export function EnvelopeIntro({ onReveal, onOpen, onCelebrate, replay }: { onRev
     animate('.envelope-back, .envelope-folds, .flap-layer', { y: drop * 1.25, x: drop * .05, rotate: 4, opacity: [1, 1, 0] }, { duration: 1.1, ease: paper, opacity: { duration: 1.1, times: [0, .55, 1] } })
     animate('.envelope-shadow', { scale: .7, y: 50, opacity: 0 }, { duration: .9 })
     animate('.envelope-composition', { rotate: 0, y: '4%', scale: 1 }, { duration: 1.15, ease: silk })
+    // Meanwhile somebody brings in the champagne.
+    animate('.champagne', { opacity: [0, 1], x: ['38%', '0%'], y: ['52%', '0%'], rotate: [-2, bottleTilt] }, { duration: 1.3, delay: .25, ease: silk, opacity: { duration: .35, delay: .25 } })
     await animate('.keepsake-card', { y: '0%', rotate: 0, scale: unfoldedScale }, { duration: 1.15, ease: silk })
     if (!mounted.current) return
 
@@ -133,15 +169,28 @@ export function EnvelopeIntro({ onReveal, onOpen, onCelebrate, replay }: { onRev
     animate('.gate-shadow-left', { scaleX: [1, .35, 0], opacity: [.35, .2, 0] }, { duration: 1.3 })
     animate('.gate-shadow-right', { scaleX: [1, .35, 0], opacity: [.35, .2, 0] }, { duration: 1.3, delay: .12 })
     animate('.card-foil-light', { x: ['-130%', '130%'], opacity: [0, .55, 0] }, { duration: 1.6, delay: .25, ease: 'easeInOut' })
-    await wait(.2)
+    animate('.card-names', { backgroundPositionX: ['100%', '0%'] }, { duration: 2.2, delay: .35, ease: 'easeInOut' })
+    // A good shake of the bottle while the wings swing open.
+    animate('.champagne-bottle', { rotate: [0, -3.5, 3, -2.5, 2, -1, 0] }, { duration: .55, ease: 'easeInOut' })
+    await wait(.55)
     if (!mounted.current) return
 
-    // 8. Petals and confetti fly as the wings open, and the card announces itself.
-    onCelebrate()
+    // 8. Pop! The cork flies, the champagne gushes, petals are thrown and the card says it out loud.
+    popCork(root)
+    await wait(.12)
+    if (!mounted.current) return
+    throwPetals()
+    animate('.celebration-glow', { opacity: [0, 1, .75] }, { duration: 1.8, ease: 'easeOut' })
     animate('.invite-banner', { opacity: 1 }, { duration: .2 })
-    animate('.invite-banner .letter', { opacity: [0, 1], y: [22, 0], rotate: [-6, 0], filter: ['blur(4px)', 'blur(0px)'] }, { duration: .6, ease: silk, delay: stagger(.035, { startDelay: .05 }) })
-    animate('.keepsake-card', { scale: [unfoldedScale, unfoldedScale * 1.025, unfoldedScale] }, { duration: .9, ease: 'easeInOut', delay: .4 })
-    await wait(2.6)
+    animate('.invite-line', { '--wipe': ['-20%', '120%'] }, { duration: 1.5, ease: [.33, .1, .25, 1] })
+    animate('.invite-line', { backgroundPositionX: ['100%', '0%'] }, { duration: 2.4, delay: .9, ease: 'easeInOut' })
+    animate('.invite-flourish', { opacity: [0, 1], scaleX: [0, 1] }, { duration: 1.1, delay: .9, ease: silk })
+    animate('.keepsake-card', { scale: [unfoldedScale, unfoldedScale * 1.025, unfoldedScale] }, { duration: .9, ease: 'easeInOut', delay: .3 })
+    await wait(1.55)
+    if (!mounted.current) return
+    // The bottle bows out before the card comes forward.
+    animate('.champagne', { x: '34%', y: '58%', rotate: -6, opacity: [1, 1, 0] }, { duration: .95, ease: [.55, 0, .8, .35], opacity: { duration: .95, times: [0, .6, 1] } })
+    await wait(1.1)
     if (!mounted.current) return
 
     // 9. The card flies towards the viewer until its paper fills the screen, then the page is there.
@@ -155,6 +204,7 @@ export function EnvelopeIntro({ onReveal, onOpen, onCelebrate, replay }: { onRev
     const cardCentre = { x: cardBox.left + cardBox.width / 2, y: cardBox.top + cardBox.height / 2 }
     const shift = { x: window.innerWidth / 2 - tiltCentre.x - zoom * (cardCentre.x - tiltCentre.x), y: window.innerHeight / 2 - tiltCentre.y - zoom * (cardCentre.y - tiltCentre.y) }
     animate('.invite-banner', { opacity: 0, y: -16 }, { duration: .35, ease: 'easeIn' })
+    animate('.leaf-shadows, .dust-motes, .celebration-glow', { opacity: 0 }, { duration: .5, ease: 'easeIn' })
     animate('.keepsake-border', { opacity: 0 }, { duration: .35, delay: .72, ease: 'easeIn' })
     // A small wind-up before the rush forward makes the zoom feel thrown rather than slid.
     await animate(tilt, { scale: .97 }, { duration: .22, ease: 'easeOut' })
@@ -164,6 +214,7 @@ export function EnvelopeIntro({ onReveal, onOpen, onCelebrate, replay }: { onRev
     if (!mounted.current) return
     // The page mounts behind the now paper-filled screen and settles into place as the paper lifts away.
     onReveal()
+    scatterPetals()
     await wait(.25)
     if (!mounted.current) return
     await Promise.all([
@@ -173,16 +224,43 @@ export function EnvelopeIntro({ onReveal, onOpen, onCelebrate, replay }: { onRev
     if (mounted.current) onOpen()
   }
 
+  /** The cork leaves along the neck and flies a real parabola, spinning, while the champagne gushes after it. */
+  function popCork(root: HTMLElement) {
+    const bottle = root.querySelector('.champagne-bottle') as HTMLElement
+    const cork = root.querySelector('.bottle-cork') as SVGGElement
+    const flying = root.querySelector('.flying-cork') as HTMLElement
+    const mouth = (root.querySelector('.neck-marker') as HTMLElement).getBoundingClientRect()
+    const corkBox = cork.getBoundingClientRect()
+    const direction = (bottleTilt - 90) * Math.PI / 180
+    sprayChampagne(mouth.left + mouth.width / 2, mouth.top + mouth.height / 2, direction)
+    const start = { x: corkBox.left + corkBox.width / 2, y: corkBox.top + corkBox.height / 2 }
+    const gravity = window.innerHeight * 3.2
+    // Fast enough upwards to peak near the top of the screen; sideways speed follows from the bottle's angle.
+    const vy = -Math.sqrt(2 * gravity * Math.max(80, start.y - window.innerHeight * .1))
+    const vx = vy * Math.cos(direction) / Math.sin(direction)
+    const flight = (-vy + Math.sqrt(vy * vy + 2 * gravity * (window.innerHeight + 80 - start.y))) / gravity
+    const samples = Array.from({ length: 25 }, (_, index) => index / 24 * flight)
+    Object.assign(flying.style, { width: `${bottle.offsetWidth * .26}px`, left: `${start.x}px`, top: `${start.y}px` })
+    cork.style.opacity = '0'
+    animate(flying, { opacity: [1, 1], x: samples.map(t => vx * t), y: samples.map(t => vy * t + gravity * t * t / 2), rotate: [bottleTilt, bottleTilt - 1100] }, { duration: flight, ease: 'linear' })
+    animate('.pop-flash', { opacity: [0, 1, 0], scale: [.2, 1.25, 2] }, { duration: .5, ease: 'easeOut' })
+    animate('.pop-rays', { opacity: [0, 1, 0], scale: [.4, 1.15, 1.5] }, { duration: .42, ease: 'easeOut' })
+    animate('.pop-mist', { opacity: [0, .8, 0], scale: [.3, 1.7, 2.8], y: ['0%', '-35%', '-70%'] }, { duration: 1.25, ease: 'easeOut' })
+    // The kick: the bottle jolts back in the hand, then steadies and tips a little further as it pours.
+    animate('.champagne-bottle', { x: ['0%', '9%', '0%'], y: ['0%', '5%', '0%'], rotate: [0, 6, -4] }, { duration: .8, ease: [.2, .8, .3, 1], times: [0, .14, 1] })
+    buzz([18, 40, 30])
+  }
+
   return <div className="envelope-intro" ref={scope} data-phase={phase} role="main" aria-label="An invitation from Imogen and Dan" aria-busy={opening}>
-    <div className="envelope-intro-surface" aria-hidden="true"><div className="ambient-light" /></div>
+    <div className="envelope-intro-surface" aria-hidden="true"><div className="ambient-light" /><div className="celebration-glow" /></div>
     <motion.div className="envelope-tilt" style={{ rotateX, rotateY }} onPointerMove={event => {
       if (busy.current || reduced || event.pointerType !== 'mouse') return
       const bounds = event.currentTarget.getBoundingClientRect()
       pointerX.set(((event.clientX - bounds.left) / bounds.width - .5) * 7)
       pointerY.set(((event.clientY - bounds.top) / bounds.height - .5) * -5)
     }} onPointerLeave={() => { pointerX.set(0); pointerY.set(0) }}>
-      <motion.div className="envelope-composition" initial={{ rotate: -5 }}>
-        <div className="envelope-shadow" aria-hidden="true" />
+      <motion.div className="envelope-composition" initial={reduced ? { rotate: -5 } : { rotate: -11, opacity: 0, y: 56, scale: .93 }}>
+        <div className="envelope-shadow" aria-hidden="true" style={hidden({ opacity: 0 }, reduced)} />
         <div className="envelope-shell envelope-back" aria-hidden="true"><div className="envelope-liner"><OliveBranch /><OliveBranch /><OliveBranch /></div></div>
         <div className="keepsake-card" aria-hidden="true">
           <div className="card-stock"><div className="keepsake-border"><OliveBranch className="card-branch" /><span className="card-overline">SAVE THE DATE</span><span className="card-names">Imogen <i>&</i> Dan</span><span className="card-rule" /><span className="card-date">24 AUGUST 2028</span><span className="card-venue">Caswell House · Oxfordshire</span></div><div className="card-foil-light" /></div>
@@ -191,7 +269,7 @@ export function EnvelopeIntro({ onReveal, onOpen, onCelebrate, replay }: { onRev
           <div className="card-gate gate-right"><div className="gate-face gate-front"><FoldCover /></div><div className="gate-face gate-back"><OliveBranch /><span>Our next<br />chapter.</span></div></div>
           <div className="paper-curl" />
         </div>
-        <div className="envelope-shell envelope-folds" aria-hidden="true"><div className="pocket-shadow" /><div className="fold-left" /><div className="fold-right" /><div className="fold-bottom" /><div className="envelope-lettering"><span>Imogen & Dan</span><span>FOR YOU, WITH LOVE</span></div></div>
+        <div className="envelope-shell envelope-folds" aria-hidden="true"><div className="pocket-shadow" /><div className="fold-left" /><div className="fold-right" /><div className="fold-bottom" /><div className="envelope-lettering"><span style={hidden({ '--ink': '-15%' } as CSSProperties, reduced)}>Imogen & Dan</span><span style={hidden({ '--ink': '-15%' } as CSSProperties, reduced)}>For you, with love</span></div></div>
         <div className="envelope-shell flap-cast-shadow" aria-hidden="true" />
         <div className="envelope-shell flap-layer" ref={flapLayer} aria-hidden="true">
           <motion.div className="folding-flap" style={{ rotateX: flapAngle }}>
@@ -200,8 +278,10 @@ export function EnvelopeIntro({ onReveal, onOpen, onCelebrate, replay }: { onRev
             <div className="seal-half-top"><WaxSeal part="top" /></div>
           </motion.div>
         </div>
-        <div className="seal-contact-shadow" aria-hidden="true" />
-        <div className="seal-assembly" aria-hidden="true">
+        <div className="seal-contact-shadow" aria-hidden="true" style={hidden({ opacity: 0 }, reduced)} />
+        <div className="seal-assembly" aria-hidden="true" style={hidden({ opacity: 0 }, reduced)}>
+          <span className="seal-halo" />
+          <span className="seal-stamp-ring" />
           <div className="seal-half-bottom"><WaxSeal part="bottom" /></div>
           <div className="seal-whole"><WaxSeal /></div>
           <svg className="seal-crack" viewBox="0 0 140 140">
@@ -213,12 +293,15 @@ export function EnvelopeIntro({ onReveal, onOpen, onCelebrate, replay }: { onRev
           <span className="seal-press-glow" />
           {crumbs.map((crumb, index) => <span key={index} className={`wax-crumb wax-crumb-${index}`} style={{ left: `${crumb.left}%`, width: crumb.size * 2, height: crumb.size * 1.6 }} />)}
           <span className="seal-glint" />
-          <span className="seal-instruction">PRESS TO OPEN</span>
         </div>
-        <div className="invite-banner" aria-hidden="true"><span className="invite-line">{[...invited].map((letter, index) => <span key={index} className="letter">{letter === ' ' ? ' ' : letter}</span>)}</span></div>
+        <div className="invite-banner" aria-hidden="true"><span className="invite-line">You’re invited!</span><span className="invite-flourish"><OliveBranch /><i /><OliveBranch /></span></div>
         <button ref={trigger} className="envelope-trigger" onClick={openEnvelope} disabled={opening} aria-label="Open your invitation" aria-describedby="envelope-instructions"><span id="envelope-instructions" className="visually-hidden">Press to break the seal and open Imogen and Dan’s save-the-date.</span></button>
       </motion.div>
     </motion.div>
+    <ChampagneBottle />
+    <FlyingCork />
+    {!reduced && <><LeafShadows /><DustMotes /></>}
+    <p className="press-hint" aria-hidden="true" style={hidden({ opacity: 0 }, reduced)}><span />Press the seal to open<span /></p>
     <span className="visually-hidden" role="status">{opening ? 'Opening your invitation…' : ''}</span>
   </div>
 }
