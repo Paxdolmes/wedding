@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 import { wedding } from './wedding'
 import { EngagementPhoto, PhotoStory } from './PhotoStory'
@@ -9,16 +9,20 @@ import './App.css'
 
 export default function App() {
   const [isOpen, setIsOpen] = useState(false)
+  const [showInvitation, setShowInvitation] = useState(false)
   const [replay, setReplay] = useState(false)
   const reduceMotion = useReducedMotion()
   const invitation = useRef<HTMLElement>(null)
+  useEffect(() => { if (isOpen) invitation.current?.focus({ preventScroll: true }) }, [isOpen])
   function closeInvitation() {
     window.scrollTo({ top: 0, behavior: 'instant' })
     setReplay(true)
     setIsOpen(false)
+    setShowInvitation(false)
   }
-  if (!isOpen) return <EnvelopeIntro replay={replay} onOpen={() => setIsOpen(true)} />
-  return <motion.div className="page" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: reduceMotion ? 0 : .9 }} onAnimationComplete={() => invitation.current?.focus({ preventScroll: true })}>
+  return <>
+    {!isOpen && <EnvelopeIntro replay={replay} onReveal={() => setShowInvitation(true)} onOpen={() => setIsOpen(true)} />}
+    {showInvitation && <motion.div className="page" inert={!isOpen} aria-hidden={!isOpen || undefined} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: reduceMotion ? 0 : .9 }}>
     <header className="masthead"><span className="monogram" aria-label={wedding.names}>I <i>&</i> D</span><a href="#the-details" className="eyebrow">A day to remember <svg className="arrow-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" /></svg></a></header>
     <main>
       <article className="invitation" ref={invitation} tabIndex={-1} aria-labelledby="couple-names">
@@ -33,5 +37,6 @@ export default function App() {
       <Accommodation /><PhotoStory />
     </main>
     <footer><span className="footer-names">Imogen & Dan</span><span className="eyebrow">24 August 2028 · Caswell House</span><button type="button" className="text-button" onClick={closeInvitation}>Open the envelope again <span aria-hidden="true">↺</span></button></footer>
-  </motion.div>
+  </motion.div>}
+  </>
 }

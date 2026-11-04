@@ -1,7 +1,7 @@
 # Imogen & Dan — Save the date
 
 React + TypeScript + Vite + Motion. A full-screen textured ivory envelope with an olive wax seal opens through a
-choreographed 3D flap and card sequence. The revealed invitation includes the date,
+choreographed wax release, 3D flap, card extraction and gatefold reveal. The revealed invitation includes the date,
 calendar download, all ten personal photos, dress code and illustrated hotel cards.
 
 ## Develop
@@ -32,7 +32,8 @@ Tests cover desktop and mobile Chromium; check real phones before publication.
 ## Edit content
 
 - `src/wedding.ts`: names, display date, venue.
-- `src/EnvelopeIntro.tsx` and CSS: seal, layered paper geometry, pointer tilt and opening sequence; reduced-motion access skips the animation.
+- `src/EnvelopeIntro.tsx` and CSS: staged wax release, moving fold shadows, card flex, responsive gatefold wings and a continuous transition into the page; reduced-motion access skips the animation.
+- `src/WaxSeal.tsx`: sculpted SVG wax edge, engraved monogram and dated rim.
 - `src/App.tsx` and `src/App.css`: revealed invitation and dress code.
 - `public/fonts/`: self-hosted, subsetted Cormorant Garamond fonts and OFL license.
 - `src/Accommodation.tsx` and CSS: hotel photos, driving estimates, map links and expandable price context.

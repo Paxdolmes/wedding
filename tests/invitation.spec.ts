@@ -88,3 +88,39 @@ test('keeps all ten personal photos at their original aspect ratio', async ({ pa
   const urls = await photos.evaluateAll(images => images.map(image => (image as HTMLImageElement).src))
   expect(new Set(urls).size).toBe(10)
 })
+
+test('unfolds both paper wings within the screen before handing focus to the page', async ({ page }) => {
+  await page.goto('/')
+  await page.evaluate(() => {
+    const measurements: { left: number; right: number; top: number; bottom: number }[] = []
+    ;(window as unknown as { wingBounds: typeof measurements }).wingBounds = measurements
+    const measure = () => {
+      const intro = document.querySelector('.envelope-intro')
+      if (!intro) return
+      if (intro.getAttribute('data-phase') === 'unfolding') {
+        for (const wing of document.querySelectorAll('.card-gate')) {
+          const rect = wing.getBoundingClientRect()
+          measurements.push({ left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom })
+        }
+      }
+      requestAnimationFrame(measure)
+    }
+    requestAnimationFrame(measure)
+  })
+  await page.getByRole('button', { name: 'Open your invitation' }).click()
+  await expect(page.locator('[data-phase="extracting"]')).toBeVisible({ timeout: 5000 })
+  await expect(page.getByRole('article')).toHaveCount(0)
+  await expect(page.locator('[data-phase="unfolding"]')).toBeVisible({ timeout: 5000 })
+  await expect(page.getByRole('article')).toHaveCount(0)
+  await expect(page.getByRole('article')).toBeFocused({ timeout: 5000 })
+  const bounds = await page.evaluate(() => {
+    const values = (window as unknown as { wingBounds: { left: number; right: number; top: number; bottom: number }[] }).wingBounds
+    return { count: values.length, left: Math.min(...values.map(r => r.left)), right: Math.max(...values.map(r => r.right)), top: Math.min(...values.map(r => r.top)), bottom: Math.max(...values.map(r => r.bottom)), width: innerWidth, height: innerHeight }
+  })
+  expect(bounds.count).toBeGreaterThan(5)
+  expect(bounds.left).toBeGreaterThanOrEqual(0)
+  expect(bounds.right).toBeLessThanOrEqual(bounds.width)
+  expect(bounds.top).toBeGreaterThanOrEqual(0)
+  expect(bounds.bottom).toBeLessThanOrEqual(bounds.height)
+  expect(await page.evaluate(() => document.body.style.overflow)).toBe('')
+})
