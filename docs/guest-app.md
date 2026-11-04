@@ -65,6 +65,19 @@ Studio is needed. To try the app on your own phone before it's in the stores, bu
 
 Commit the `app.json` change that `eas init` makes.
 
+### 4. Updates without a new build
+
+The app includes Expo Updates, and `mobile/.eas/workflows/publish-update.yml` publishes the latest app code to the
+`production` channel on every push to `main`. Phones pick it up the next time the app is opened.
+
+1. In the Expo project, go to **Project settings → GitHub**, connect the `Paxdolmes/wedding` repository and set the base
+   directory to `mobile`.
+2. Production builds use the `production` channel (`eas.json`), so they receive these updates.
+
+Changes to screens, wording and styling go out this way. Adding a native library, changing a plugin in `app.json` or
+changing permissions still needs a new build. When you do that, bump `version` in `app.json` so older builds don't
+receive code they can't run (`runtimeVersion` follows the app version).
+
 ## Before and during the weekend
 
 1. **Guest list and seating**: on a laptop, open `imogenanddan.com/app/#host` → Guests, and paste one guest per line:

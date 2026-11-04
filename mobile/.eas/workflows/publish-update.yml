@@ -1,0 +1,16 @@
+# Every merge to main sends the latest app code to phones already running a production build,
+# so changes to screens and wording arrive without a new build. Needs the GitHub repository
+# linked in the Expo project's settings, with "mobile" as the base directory.
+# A change to native code or app.json plugins still needs a new build (and a version bump).
+name: Publish update
+
+on:
+  push:
+    branches: ['main']
+
+jobs:
+  update:
+    name: Publish update to production
+    type: update
+    params:
+      branch: production

@@ -11,7 +11,9 @@
     "ios": {
       "bundleIdentifier": "com.imogenanddan.guests",
       "supportsTablet": true,
-      "config": { "usesNonExemptEncryption": false }
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.imogenanddan.guests",
@@ -27,16 +29,50 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      ["expo-splash-screen", { "image": "./assets/splash-icon.png", "imageWidth": 220, "resizeMode": "contain", "backgroundColor": "#f7f4eb" }],
-      ["expo-camera", { "cameraPermission": "Your disposable camera needs the camera to take your shots for the wedding weekend.", "microphonePermission": false, "recordAudioAndroid": false, "barcodeScannerEnabled": false }],
-      ["expo-notifications", { "icon": "./assets/notification-icon.png", "color": "#3f4a2b", "defaultChannel": "weekend" }],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 220,
+          "resizeMode": "contain",
+          "backgroundColor": "#f7f4eb"
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Your disposable camera needs the camera to take your shots for the wedding weekend.",
+          "microphonePermission": false,
+          "recordAudioAndroid": false,
+          "barcodeScannerEnabled": false
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#3f4a2b",
+          "defaultChannel": "weekend"
+        }
+      ],
       "expo-secure-store",
       "expo-font",
       "expo-image",
       "expo-system-ui"
     ],
     "extra": {
-      "apiBase": "https://imogenanddan.com"
+      "apiBase": "https://imogenanddan.com",
+      "eas": {
+        "projectId": "PROJECT_ID"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/PROJECT_ID",
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
     }
   }
 }
