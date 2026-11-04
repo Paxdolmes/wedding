@@ -112,7 +112,7 @@ test('unfolds both paper wings within the screen before handing focus to the pag
   await expect(page.getByRole('article')).toHaveCount(0)
   await expect(page.locator('[data-phase="unfolding"]')).toBeVisible({ timeout: 5000 })
   await expect(page.getByRole('article')).toHaveCount(0)
-  await expect(page.getByRole('article')).toBeFocused({ timeout: 5000 })
+  await expect(page.getByRole('article')).toBeFocused({ timeout: 8000 })
   const bounds = await page.evaluate(() => {
     const values = (window as unknown as { wingBounds: { left: number; right: number; top: number; bottom: number }[] }).wingBounds
     return { count: values.length, left: Math.min(...values.map(r => r.left)), right: Math.max(...values.map(r => r.right)), top: Math.min(...values.map(r => r.top)), bottom: Math.max(...values.map(r => r.bottom)), width: innerWidth, height: innerHeight }

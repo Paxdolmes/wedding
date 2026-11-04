@@ -24,7 +24,7 @@ export function WaxSeal({ part }: { part?: 'top' | 'bottom' }) {
       <circle cx="70" cy="71" r="48" fill={`url(#${id}-face)`} stroke="#354929" strokeWidth="2.5"/>
       <circle cx="70" cy="69.5" r="49.5" fill="none" stroke="#b2bb89" strokeOpacity=".65" strokeWidth="1"/>
       <text className="seal-ring-text" fill="#c6c99b" opacity=".64"><textPath href={`#${id}-circle`} startOffset="5%">IMOGEN &amp; DAN · 24 AUGUST 2028 ·</textPath></text>
-      <g className="stamp-engraving" fontFamily="Cormorant Garamond, Georgia, serif" textAnchor="middle">
+      <g className="stamp-engraving" fontFamily="Cormorant Garamond Variable, Cormorant Garamond, Georgia, serif" textAnchor="middle">
         <g fill="#b5be90" opacity=".65" transform="translate(.6 1)"><text x="55" y="83" fontSize="42">I</text><text x="85" y="83" fontSize="42">D</text><text x="69" y="89" fontSize="23" fontStyle="italic">&amp;</text></g>
         <g fill="#314426"><text x="55" y="83" fontSize="42">I</text><text x="85" y="83" fontSize="42">D</text><text x="69" y="89" fontSize="23" fontStyle="italic">&amp;</text></g>
       </g>

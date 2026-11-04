@@ -1,9 +1,37 @@
-@font-face { font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/cormorant-regular.woff') format('woff'); }
-@font-face { font-family: 'Cormorant Garamond'; font-style: italic; font-weight: 400; font-display: swap; src: url('/fonts/cormorant-italic.woff') format('woff'); }
-:root { font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif; color: #424a2c; background: #f7f5ef; font-synthesis: none; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; color-scheme: light; }
+:root {
+  --serif: 'Cormorant Garamond Variable', 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans: 'Jost Variable', 'Jost', 'Helvetica Neue', Arial, sans-serif;
+  --script: 'Pinyon Script', 'Snell Roundhand', cursive;
+  --paper: #f7f4eb;
+  --card: #fffdf7;
+  --ink: #3f4a2b;
+  --ink-soft: #4b5738;
+  --muted: #6b7354;
+  --sage: #7d8761;
+  --sage-mist: #e7eadc;
+  --gold: #9d8d64;
+  --gold-bright: #c8a95f;
+  --blush: #efc9c0;
+  --rule: #3f4a2b2e;
+  --rule-strong: #3f4a2b52;
+  --ease-paper: cubic-bezier(.22, .61, .36, 1);
+  --shadow-print: 0 1px 1px #3f4a2b0f, 0 14px 28px -18px #3f4a2b47;
+  --shadow-print-lift: 0 1px 1px #3f4a2b0f, 0 26px 42px -22px #3f4a2b57;
+  --foil: linear-gradient(100deg, #806b3e 0%, #9d8d64 20%, #c8a95f 38%, #ecd9a0 48%, #c8a95f 58%, #9d8d64 78%, #806b3e 100%);
+  font-family: var(--serif);
+  color: var(--ink);
+  background: var(--paper);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color-scheme: light;
+}
 * { box-sizing: border-box; }
-body { margin: 0; min-width: 320px; }
+body { margin: 0; min-width: 320px; font-size: 18px; line-height: 1.6; font-feature-settings: 'kern', 'liga', 'pnum'; }
+p { text-wrap: pretty; }
 button { font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-button:focus-visible, a:focus-visible { outline: 2px solid #424a2c; outline-offset: 7px; }
+button:focus-visible, a:focus-visible, summary:focus-visible { outline: 1px solid var(--gold); outline-offset: 6px; }
 button[hidden] { display: none; }
-::selection { background: #d5d9bd; }
+::selection { background: var(--blush); color: var(--ink); }
+img { max-width: 100%; }

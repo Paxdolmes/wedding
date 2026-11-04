@@ -5,3 +5,24 @@ export function OliveBranch({ className = '' }: { className?: string }) {
     <g fill="currentColor"><ellipse cx="45" cy="99" rx="4" ry="6" transform="rotate(-30 45 99)"/><ellipse cx="102" cy="88" rx="4" ry="6" transform="rotate(40 102 88)"/></g>
   </svg>
 }
+
+// Leaves along a gently curving stem: x, y and angle, alternating above and below.
+const sprigLeaves: [number, number, number][] = [[24, 32, -36], [40, 32, 32], [57, 30, -32], [74, 30, 28], [91, 29, -28], [108, 29, 25], [125, 28.5, -24], [142, 29, 21], [158, 29.5, -18]]
+
+/** A horizontal olive sprig drawn in a hairline, made of separate strokes so it can be drawn on. */
+export function OliveSprig({ className = '', flip = false }: { className?: string; flip?: boolean }) {
+  return <svg className={className} viewBox="0 0 190 56" fill="none" aria-hidden="true" style={flip ? { transform: 'scaleX(-1)' } : undefined}>
+    <path d="M6 33C50 30 110 26 184 28" stroke="currentColor" strokeWidth=".9" strokeLinecap="round" />
+    {sprigLeaves.map(([x, y, angle]) => <g key={x} transform={`translate(${x} ${y}) rotate(${angle})`}>
+      <path d="M0 0C5-5.5 15-5.5 21 0C15 5.5 5 5.5 0 0Z" stroke="currentColor" strokeWidth=".8" fill="currentColor" fillOpacity=".08" />
+      <path d="M2 0H18" stroke="currentColor" strokeWidth=".5" strokeOpacity=".6" />
+    </g>)}
+    <ellipse cx="68" cy="40" rx="3.6" ry="2.8" fill="currentColor" fillOpacity=".25" />
+    <ellipse cx="120" cy="18" rx="3.4" ry="2.6" fill="currentColor" fillOpacity=".25" />
+  </svg>
+}
+
+/** Two mirrored sprigs either side of a small gold lozenge. */
+export function SprigDivider({ className = '' }: { className?: string }) {
+  return <div className={`sprig-divider ${className}`} aria-hidden="true"><OliveSprig flip /><i /><OliveSprig /></div>
+}
