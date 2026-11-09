@@ -1,11 +1,19 @@
 # Imogen & Dan — Save the date
 
-React + TypeScript + Vite, with Motion for the envelope and GSAP for the page. A textured ivory envelope is set down
-under dappled garden light, its olive wax seal pressed in and the address written by hand. Pressing the seal cracks it,
-lifts the flap and draws out a gatefold card; a champagne bottle pops its cork as the card opens, petals are thrown and
-"You're invited!" is written in gold before the card flies forward into the page. The page is laid out in numbered
-chapters: the invitation, the day hour by hour, the venue, food and drink, Friday at The Crabtree, dress code, where to
-stay and a gallery of photos, each arriving with its own scroll animation.
+React + TypeScript + Vite, with Motion for the envelope and the save-the-date, and GSAP for the full page. A textured
+ivory envelope is set down under dappled garden light, its olive wax seal pressed in and the address written by hand.
+Pressing the seal cracks it, lifts the flap and draws out a gatefold card; as the card opens, petals are thrown and
+"You're invited!" is written in gold before the card flies forward into the page.
+
+**For now the page is only the save-the-date**, laid out like Imogen and Dan's own design: Caswell House in watercolour,
+olive sprigs in the corners of a fine frame, the date, and a "Save our date" button that adds it to the guest's calendar.
+It fits on one screen on most phones and on computers.
+
+Everything else is kept, hidden behind one switch: the full page in numbered chapters (the invitation, the day hour by
+hour, the venue, food and drink, Friday at The Crabtree, dress code, where to stay and a gallery of photos, each
+arriving with its own scroll animation). Guests don't download any of it while it's hidden. To bring it back, set
+`showFullSite` to `true` in `src/wedding.ts`. While developing, open `http://localhost:5173/?full` to see it without
+changing the switch (`?full` does nothing on the live site).
 
 ## Guest app
 
@@ -40,12 +48,14 @@ Tests cover desktop and mobile Chromium, and start the guest app's backend with 
 
 ## Edit content
 
-- `src/wedding.ts`: names, display date, venue.
+- `src/wedding.ts`: names, display date, venue, and `showFullSite`, the switch that hides or shows everything beyond the save-the-date.
+- `src/SaveTheDate.tsx` and CSS: the save-the-date card shown for now. Sizes come from the 1024 × 1536 design (one design pixel is `--p`; the type never shrinks below a readable size on small phones). It prints itself in once the envelope has gone: the painting spreads like wet paint, the sprigs settle, each line rises in turn and the names are written in ink.
+- `src/saveTheDateImages.ts` and `src/assets/save-the-date/`: the Caswell House watercolour and the two corner sprigs, cut from the couple's design. The painting keeps its own paper (`#fff9f4`, the page colour) with a feathered outline; the sprigs' paper is transparent so they can overlap it. They load while the envelope is on screen.
+- `src/App.tsx`: the envelope, then the save-the-date, or the full site when `showFullSite` is on. `src/FullSite.tsx` is the full page, loaded only when it's shown.
 - `src/EnvelopeIntro.tsx` and CSS: the opening, from the envelope being set down to the card filling the screen; reduced-motion access skips the animation.
-- `src/Champagne.tsx` and CSS: the bottle, its cork, the flash and the mist; the spray itself is drawn by the particle canvas.
 - `src/Ambience.tsx` and `src/assets/scene/`: the branch shadows and drifting dust over the envelope.
 - `src/WaxSeal.tsx` and `src/crack.ts`: sculpted SVG wax seal and the line it cracks along.
-- `src/confetti.ts` and `src/Celebration.tsx`: one canvas for the champagne spray, the thrown petals and the petals that drift down over the page.
+- `src/confetti.ts` and `src/Celebration.tsx`: one canvas for the thrown petals, leaves and confetti, and the petals that drift down over the page.
 - `src/Invitation.tsx`: the invitation itself (names, date, calendar link, countdown), the "If you're reading this" note, dress code and footer.
 - `src/SectionHeading.tsx`: the numbered chapter heading every section shares.
 - `src/SiteHeader.tsx` and CSS: monogram, chapter links, reading progress and the phone menu.
@@ -73,7 +83,7 @@ The venue is Caswell House, Brize Norton, Oxfordshire, OX18 3NJ. There is no RSV
 4. Use Node 24, build command `npm run build`, deploy command `npx wrangler deploy`, repository root as project root. `wrangler.jsonc` sets the Worker name, required compatibility date and `dist` asset directory. The existing command `npx wrangler deploy --assets ./dist --name imogenanddan` also works with this configuration.
 5. Test the Cloudflare-provided deployment address.
 6. Add `imogenanddan.com` in the Worker's Domains tab; add `www.imogenanddan.com` if desired.
-7. Check HTTPS, opening interaction, calendar download and hotel links before sharing.
+7. Check HTTPS, the opening interaction and the calendar download before sharing (and the hotel links, once the full site is back).
 
 Environment publication is separate from website deployment. Keep committed work
 and a downloadable source archive before rebuilding an environment. This project
