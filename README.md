@@ -6,7 +6,8 @@ Pressing the seal cracks it, lifts the flap and draws out a gatefold card; as th
 "You're invited!" is written in gold before the card flies forward into the page.
 
 **For now the page is only the save-the-date**, laid out like Imogen and Dan's own design: Caswell House in watercolour,
-olive sprigs in the corners of a fine frame, the date, and a "Save our date" button that adds it to the guest's calendar.
+olive sprigs in the corners of a fine frame, the date, "One day. Our favourite people. The beginning of our forever."
+and a "Save our date" button that offers Google Calendar, or the calendar file for Apple Calendar and Outlook.
 It fits on one screen on most phones and on computers.
 
 Everything else is kept, hidden behind one switch: the full page in numbered chapters (the invitation, the day hour by
@@ -48,8 +49,8 @@ Tests cover desktop and mobile Chromium, and start the guest app's backend with 
 
 ## Edit content
 
-- `src/wedding.ts`: names, display date, venue, and `showFullSite`, the switch that hides or shows everything beyond the save-the-date.
-- `src/SaveTheDate.tsx` and CSS: the save-the-date card shown for now. Sizes come from the 1024 × 1536 design (one design pixel is `--p`; the type never shrinks below a readable size on small phones). It prints itself in once the envelope has gone: the painting spreads like wet paint, the sprigs settle, each line rises in turn and the names are written in ink.
+- `src/wedding.ts`: names, display date, venue, the Google Calendar link behind "Save our date", and `showFullSite`, the switch that hides or shows everything beyond the save-the-date.
+- `src/SaveTheDate.tsx` and CSS: the save-the-date card shown for now. Sizes come from the 1024 × 1536 design (one design pixel is `--p`; the type never shrinks below a readable size on small phones). It prints itself in once the envelope has gone: the painting spreads like wet paint, the sprigs settle, each line rises in turn and the names are written in ink. The painting and names reveal by animating `mask-image` itself (Safari doesn't reliably repaint a mask when only a CSS variable inside it changes) and start invisible.
 - `src/saveTheDateImages.ts` and `src/assets/save-the-date/`: the Caswell House watercolour and the two corner sprigs, cut from the couple's design. The painting keeps its own paper (`#fff9f4`, the page colour) with a feathered outline; the sprigs' paper is transparent so they can overlap it. They load while the envelope is on screen.
 - `src/App.tsx`: the envelope, then the save-the-date, or the full site when `showFullSite` is on. `src/FullSite.tsx` is the full page, loaded only when it's shown.
 - `src/EnvelopeIntro.tsx` and CSS: the opening, from the envelope being set down to the card filling the screen; reduced-motion access skips the animation.
@@ -67,7 +68,7 @@ Tests cover desktop and mobile Chromium, and start the guest app's backend with 
 - `src/index.css`: colours, fonts and shared tokens. Fonts are Cormorant Garamond, Jost and Pinyon Script, bundled and self-hosted through Fontsource; all three are under the SIL Open Font License, which ships with each package.
 - `src/Accommodation.tsx` and CSS: hotel photos, driving estimates, map links and expandable price context.
 - `docs/hotel-photo-sources.md`: official hotel photograph sources.
-- `public/save-the-date.ics`: calendar event; change separately when the date changes. End date is exclusive. No ceremony time has been assumed.
+- `public/save-the-date.ics`: calendar event for Apple Calendar and Outlook; change it and the Google Calendar link in `src/wedding.ts` together when the date changes. End date is exclusive. No ceremony time has been assumed.
 - `src/photos.ts` and `src/assets/photos/`: all ten original photos, alternative text and captions; duplicate Colosseum upload omitted.
 - `src/PhotoStory.tsx` and CSS: featured engagement portrait and responsive gallery.
 - `src/hotels.ts`: four hotels with actual August 2027 Thursday price samples.
