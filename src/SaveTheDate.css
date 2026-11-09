@@ -1,0 +1,82 @@
+/*
+ * The save-the-date, set out like Imogen and Dan's own design: a 1024 × 1536 card.
+ * --p is one pixel of that design, scaled so the whole card fits the screen: by width on phones, by height on wider screens.
+ * --t sizes the type and the space between the lines: the same as --p, but never so small that the words get hard to read.
+ */
+.std-page {
+  --p: min(100vw / 1024, 100svh / 1536);
+  --t: max(var(--p), min(.479px, (100vw - 40px) / 730));
+  --std-paper: #fff9f4;
+  --std-ink: #4a3c30;
+  --std-line: rgb(74 60 48 / .5);
+  --std-inset: max(10px, calc(22.5 * var(--p)));
+  --sprig: var(--p);
+  position: relative; isolation: isolate; min-height: 100svh; overflow-x: clip;
+  background: var(--std-paper); color: var(--std-ink); transform-origin: 50% 0;
+}
+/* A whisper of paper grain over everything, painting included, so the painting's own paper melts into the page's. */
+.std-page::after { content: ''; position: absolute; inset: 0; z-index: 5; background: url('/paper-grain.svg'); opacity: .3; mix-blend-mode: multiply; pointer-events: none; }
+.std {
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 100svh; padding: calc(70 * var(--p)) var(--std-inset) calc(100 * var(--p)); text-align: center;
+}
+.std:focus { outline: none; }
+.std-frame { position: absolute; inset: var(--std-inset); z-index: 3; border: 1px solid rgb(74 60 48 / .3); pointer-events: none; }
+
+/* The sprigs grow in from beyond the frame, clipped along its inside edge; on wide screens they spread a little further. */
+.std-sprig { position: absolute; z-index: 2; height: auto; max-width: none; pointer-events: none; }
+.std-sprig-top { top: calc(var(--std-inset) + 1px); left: calc(var(--std-inset) + 1px); width: calc(376 * var(--sprig)); transform-origin: 0 0; }
+.std-sprig-bottom { right: calc(var(--std-inset) + 1px); bottom: calc(var(--std-inset) + 1px); width: calc(300 * var(--sprig)); transform-origin: 100% 100%; }
+@media (min-aspect-ratio: 1/1) { .std-page { --sprig: calc(var(--p) * 1.3); } }
+@media (min-aspect-ratio: 3/2) { .std-page { --sprig: calc(var(--p) * 1.5); } }
+
+/* The painting's paper is the page's paper. It spreads out from the middle like wet paint as the card appears. */
+.std-painting {
+  position: relative; z-index: 1; display: block; flex-shrink: 0; width: calc(950 * var(--p)); max-width: none; height: auto;
+  -webkit-mask-image: radial-gradient(farthest-corner at 50% 55%, #000 calc(var(--bloom, 1.25) * 100% - 25%), #0000 calc(var(--bloom, 1.25) * 100%));
+  mask-image: radial-gradient(farthest-corner at 50% 55%, #000 calc(var(--bloom, 1.25) * 100% - 25%), #0000 calc(var(--bloom, 1.25) * 100%));
+}
+
+/* The type. Tracked capitals carry their spacing after the last letter too, so each line is nudged back to the centre. */
+:where(.std) :is(p, h1) { margin: 0; }
+.std-caps { padding-left: .24em; font: 500 calc(24 * var(--t))/calc(40 * var(--t)) var(--serif); letter-spacing: .24em; text-transform: uppercase; }
+.std-intro { margin-top: calc(-1.5 * var(--t)); }
+.std-title { margin-top: calc(23 * var(--t)); padding-left: .29em; font: 500 calc(67 * var(--t))/1 var(--serif); letter-spacing: .29em; text-transform: uppercase; white-space: nowrap; }
+/* The script "the" mustn't make its line any taller than the capitals around it. */
+.std-title em { font: calc(70 * var(--t))/0 var(--script); letter-spacing: 0; text-transform: none; }
+.std-rule { display: block; flex-shrink: 0; width: calc(94 * var(--t)); height: 1px; margin-top: calc(29.6 * var(--t)); background: var(--std-line); }
+.std-for { margin-top: calc(27 * var(--t)); padding-left: .23em; line-height: 1.2; letter-spacing: .23em; }
+/* Written in by hand: a mask wipes the ink on from left to right, as on the envelope. */
+.std-names {
+  margin-top: calc(4.2 * var(--t)); padding: 0 .2em; font: calc(118 * var(--t))/1.3 var(--script); white-space: nowrap;
+  -webkit-mask-image: linear-gradient(90deg, #000 var(--ink, 115%), transparent calc(var(--ink, 115%) + 12%));
+  mask-image: linear-gradient(90deg, #000 var(--ink, 115%), transparent calc(var(--ink, 115%) + 12%));
+}
+/* The script's own ampersand is rather plain; the serif italic one has the loops of the design's. */
+.std-names span { font: italic 400 .92em/0 var(--serif); }
+.std-names + .std-rule { margin-top: calc(7.6 * var(--t)); }
+.std-when { margin-top: calc(35.1 * var(--t)); }
+.std-day, .std-date, .std-venue, .std-county { display: block; }
+.std-day { padding-left: .38em; font: 500 calc(25 * var(--t))/1.2 var(--serif); letter-spacing: .38em; text-transform: uppercase; }
+.std-date { margin-top: calc(7.6 * var(--t)); padding-left: .3em; font: 500 calc(44 * var(--t))/1.2 var(--serif); letter-spacing: .3em; text-transform: uppercase; font-variant-numeric: lining-nums; }
+.std-when + .std-rule { margin-top: calc(28.5 * var(--t)); }
+.std-place { margin-top: calc(32.7 * var(--t)); }
+.std-venue { padding-left: .34em; font: 500 calc(32 * var(--t))/1.2 var(--serif); letter-spacing: .34em; text-transform: uppercase; }
+.std-county { margin-top: calc(3.6 * var(--t)); padding-left: .2em; font: italic 500 calc(37.5 * var(--t))/1.2 var(--serif); letter-spacing: .2em; }
+
+/* Save our date: adds the day to the guest's calendar. The ink fills it from the bottom on hover. On a narrow phone the
+   bottom sprig reaches its corner, so it sits on its own paper above the leaves. */
+.std-button {
+  position: relative; z-index: 3; isolation: isolate; background: var(--std-paper); overflow: hidden; display: flex; align-items: center; justify-content: center; gap: calc(39 * var(--t));
+  width: calc(514 * var(--t)); min-height: max(46px, calc(77 * var(--t))); margin-top: calc(51.3 * var(--t)); padding: 0 0 0 .415em;
+  border: 1px solid rgb(74 60 48 / .55); color: var(--std-ink); text-decoration: none;
+  font: 400 calc(24 * var(--t))/1 var(--sans); letter-spacing: .415em; text-transform: uppercase;
+  transition: color .5s var(--ease-paper);
+}
+.std-button::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--std-ink); transform: scaleY(0); transform-origin: bottom; transition: transform .5s var(--ease-paper); }
+.std-button:hover { color: var(--std-paper); }
+.std-button:hover::before { transform: scaleY(1); }
+.std-button:focus-visible { outline: 1px solid var(--std-ink); outline-offset: 5px; }
+/* A hairline arrow at any size. */
+.std-arrow { flex-shrink: 0; width: calc(32 * var(--t)); min-width: 22px; height: auto; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1px; }
+.std-arrow path { vector-effect: non-scaling-stroke; }

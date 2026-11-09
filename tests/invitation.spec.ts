@@ -1,8 +1,10 @@
 import { expect, test } from '@playwright/test'
 
-test('starts with only an envelope and opens, downloads the calendar and replays', async ({ page }) => {
+test('starts with only an envelope and opens to the save-the-date, with nothing else on the site', async ({ page }) => {
   const errors: string[] = []
+  const requests: string[] = []
   page.on('pageerror', error => errors.push(error.message))
+  page.on('request', request => requests.push(new URL(request.url()).pathname))
   await page.goto('/')
   await expect(page.getByRole('article')).toHaveCount(0)
   await expect(page.getByRole('banner')).toHaveCount(0)
@@ -12,6 +14,38 @@ test('starts with only an envelope and opens, downloads the calendar and replays
   expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight)).toBe(true)
   await page.getByRole('button', { name: 'Open your invitation' }).click()
   await expect(page.getByRole('button', { name: 'Open your invitation' })).toBeDisabled()
+  const card = page.getByRole('article', { name: /Save the date/ })
+  await expect(card).toBeFocused({ timeout: 15000 })
+  // No champagne any more: the bottle, its cork and the pop are gone from the opening.
+  await expect(page.locator('.champagne, .flying-cork')).toHaveCount(0)
+  await expect(card.getByRole('heading', { level: 1 })).toHaveText('Save the date')
+  await expect(card).toContainText('Imogen & Dan')
+  await expect(card).toContainText('Thursday, 24 August 2028')
+  await expect(card).toContainText('Caswell House, Oxfordshire')
+  await expect(card.getByRole('img', { name: /watercolour of Caswell House/ })).toBeVisible()
+  // The rest of the site is hidden for now, and none of it is downloaded.
+  await expect(page.getByRole('banner')).toHaveCount(0)
+  await expect(page.getByRole('contentinfo')).toHaveCount(0)
+  await expect(page.getByRole('region')).toHaveCount(0)
+  expect(requests.filter(path => /FullSite|Accommodation|PhotoStory|pageAnimations|\/photos\//.test(path))).toEqual([])
+  const save = page.getByRole('link', { name: /Add to calendar/ })
+  await expect(save).toHaveText(/Save our date/)
+  await expect(save).toBeInViewport()
+  const downloadPromise = page.waitForEvent('download')
+  await save.click()
+  expect((await downloadPromise).suggestedFilename()).toBe('imogen-and-dan.ics')
+  const calendar = await (await page.request.get('/save-the-date.ics')).text()
+  expect(calendar).toContain('DTSTART;VALUE=DATE:20280824')
+  expect(calendar).toContain('DTEND;VALUE=DATE:20280825')
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  expect(errors).toEqual([])
+})
+
+test('the full site is kept behind the switch and still opens, downloads the calendar and replays', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', error => errors.push(error.message))
+  await page.goto('/?full')
+  await page.getByRole('button', { name: 'Open your invitation' }).click()
   const card = page.getByRole('article')
   await expect(card).toBeFocused({ timeout: 15000 })
   await expect(card).toContainText('Imogen & Dan')
@@ -21,9 +55,6 @@ test('starts with only an envelope and opens, downloads the calendar and replays
   const downloadPromise = page.waitForEvent('download')
   await page.getByRole('link', { name: /Add to calendar/ }).click()
   expect((await downloadPromise).suggestedFilename()).toBe('imogen-and-dan.ics')
-  const calendar = await (await page.request.get('/save-the-date.ics')).text()
-  expect(calendar).toContain('DTSTART;VALUE=DATE:20280824')
-  expect(calendar).toContain('DTEND;VALUE=DATE:20280825')
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   await page.getByRole('button', { name: 'Open the envelope again' }).click()
   await expect(card).toHaveCount(0)
@@ -47,7 +78,7 @@ test('keyboard access opens immediately with reduced motion', async ({ page }) =
 
 test('hotel cards have photos, travel estimates, directions and discreet price details', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
-  await page.goto('/')
+  await page.goto('/?full')
   await page.getByRole('button', { name: 'Open your invitation' }).click()
   const section = page.getByRole('region', { name: 'Where to stay' })
   await expect(page.getByText('Planning prices · August 2027')).toHaveCount(0)
@@ -75,7 +106,7 @@ test('hotel cards have photos, travel estimates, directions and discreet price d
 
 test('keeps all ten personal photos at their original aspect ratio', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
-  await page.goto('/')
+  await page.goto('/?full')
   await page.getByRole('button', { name: 'Open your invitation' }).click()
   const photos = page.locator('.engagement-photo img, .photo-gallery img')
   await expect(photos).toHaveCount(10)
@@ -113,6 +144,7 @@ test('unfolds both paper wings within the screen before handing focus to the pag
   await expect(page.locator('[data-phase="unfolding"]')).toBeVisible({ timeout: 5000 })
   await expect(page.getByRole('article')).toHaveCount(0)
   await expect(page.getByRole('article')).toBeFocused({ timeout: 8000 })
+  await expect(page.locator('.champagne, .flying-cork')).toHaveCount(0)
   const bounds = await page.evaluate(() => {
     const values = (window as unknown as { wingBounds: { left: number; right: number; top: number; bottom: number }[] }).wingBounds
     return { count: values.length, left: Math.min(...values.map(r => r.left)), right: Math.max(...values.map(r => r.right)), top: Math.min(...values.map(r => r.top)), bottom: Math.max(...values.map(r => r.bottom)), width: innerWidth, height: innerHeight }
@@ -127,7 +159,7 @@ test('unfolds both paper wings within the screen before handing focus to the pag
 
 test('shows the day, venue, food and drink, and the first-date counter', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
-  await page.goto('/')
+  await page.goto('/?full')
   await page.getByRole('button', { name: 'Open your invitation' }).click()
   await expect(page.getByText('If you’re reading this, you’re one of the people who matter most to us.')).toBeVisible()
   await expect(page.getByRole('complementary', { name: /Thursday/ })).toContainText('worth it')

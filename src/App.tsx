@@ -1,51 +1,32 @@
-import { useEffect, useRef, useState } from 'react'
-import { motion, useReducedMotion } from 'motion/react'
-import { PhotoStory } from './PhotoStory'
-import { Accommodation } from './Accommodation'
+import { lazy, Suspense, useState } from 'react'
+import { useReducedMotion } from 'motion/react'
 import { EnvelopeIntro } from './EnvelopeIntro'
 import { Celebration } from './Celebration'
-import { AfterParty, FoodAndDrink, ThursdayNote, Timeline } from './Details'
-import { DressCode, Hero, SiteFooter, Together } from './Invitation'
-import { SiteHeader } from './SiteHeader'
-import { Venue } from './Venue'
-import { usePageAnimations } from './usePageAnimations'
-import './App.css'
+import { SaveTheDate } from './SaveTheDate'
+import { preloadSaveTheDateImages } from './saveTheDateImages'
+import { showFullSite } from './wedding'
+
+// Only the save-the-date is live for now, so guests never download the rest. In development `?full` shows it all.
+const full = showFullSite || (import.meta.env.DEV && new URLSearchParams(location.search).has('full'))
+// Whichever page is coming starts loading straight away, so it's ready by the time the envelope is open.
+const fullSite = full ? import('./FullSite') : undefined
+const FullSite = lazy(() => fullSite!)
+if (!full) preloadSaveTheDateImages()
 
 export default function App() {
   const [isOpen, setIsOpen] = useState(false)
-  const [showInvitation, setShowInvitation] = useState(false)
+  const [showPage, setShowPage] = useState(false)
   const [replay, setReplay] = useState(false)
   const reduceMotion = useReducedMotion()
-  const invitation = useRef<HTMLElement>(null)
-  const page = useRef<HTMLDivElement>(null)
-  usePageAnimations(page, showInvitation, isOpen)
-  useEffect(() => { if (isOpen) invitation.current?.focus({ preventScroll: true }) }, [isOpen])
   function closeInvitation() {
     window.scrollTo({ top: 0, behavior: 'instant' })
     setReplay(true)
     setIsOpen(false)
-    setShowInvitation(false)
+    setShowPage(false)
   }
   return <>
-    {!isOpen && <EnvelopeIntro replay={replay} onReveal={() => setShowInvitation(true)} onOpen={() => setIsOpen(true)} />}
+    {!isOpen && <EnvelopeIntro replay={replay} onReveal={() => setShowPage(true)} onOpen={() => setIsOpen(true)} />}
     {!reduceMotion && <Celebration />}
-    {showInvitation && <>
-      <SiteHeader hidden={!isOpen} />
-      <motion.div ref={page} className="page" inert={!isOpen} aria-hidden={!isOpen || undefined} initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 1.04 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: reduceMotion ? 0 : .9, ease: [.22, 1, .36, 1] }} style={{ transformOrigin: '50% 0' }}>
-        <main>
-          <Hero ref={invitation} />
-          <Together />
-          <ThursdayNote />
-          <Timeline />
-          <Venue />
-          <FoodAndDrink />
-          <AfterParty />
-          <DressCode />
-          <Accommodation />
-          <PhotoStory />
-        </main>
-        <SiteFooter onReplay={closeInvitation} />
-      </motion.div>
-    </>}
+    {showPage && (full ? <Suspense><FullSite open={isOpen} onReplay={closeInvitation} /></Suspense> : <SaveTheDate open={isOpen} />)}
   </>
 }

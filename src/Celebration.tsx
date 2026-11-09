@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { attachCanvas } from './confetti'
 
-/** The full-screen canvas the petals, confetti and champagne are drawn on. */
+/** The full-screen canvas the petals, leaves and confetti are drawn on. */
 export function Celebration() {
   const canvas = useRef<HTMLCanvasElement>(null)
   useEffect(() => (canvas.current ? attachCanvas(canvas.current) : undefined), [])
