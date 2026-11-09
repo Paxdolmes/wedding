@@ -1,11 +1,13 @@
 /*
- * The save-the-date, set out like Imogen and Dan's own design: a 1024 × 1536 card.
+ * The save-the-date, set out like Imogen and Dan's own design: a 1024-wide card (1600 tall with the note added).
  * --p is one pixel of that design, scaled so the whole card fits the screen: by width on phones, by height on wider screens.
- * --t sizes the type and the space between the lines: the same as --p, but never so small that the words get hard to read.
+ * --t sizes the type and the space between the lines: as large as fits the screen (--fit) up to the design's own size,
+ * but never so small that the words get hard to read; a very short phone scrolls a little instead.
  */
 .std-page {
-  --p: min(100vw / 1024, 100svh / 1536);
-  --t: max(var(--p), min(.479px, (100vw - 40px) / 730));
+  --p: min(100vw / 1024, 100svh / 1600);
+  --fit: calc((100svh - 606 * var(--p) - 12px) / 942);
+  --t: max(var(--p), min(.479px, (100vw - 40px) / 730, max(.44px, var(--fit))));
   --std-paper: #fff9f4;
   --std-ink: #4a3c30;
   --std-line: rgb(74 60 48 / .5);
@@ -18,7 +20,7 @@
 .std-page::after { content: ''; position: absolute; inset: 0; z-index: 5; background: url('/paper-grain.svg'); opacity: .3; mix-blend-mode: multiply; pointer-events: none; }
 .std {
   position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  min-height: 100svh; padding: calc(70 * var(--p)) var(--std-inset) calc(100 * var(--p)); text-align: center;
+  min-height: 100svh; padding: calc(40 * var(--p)) var(--std-inset) calc(64 * var(--p)); text-align: center;
 }
 .std:focus { outline: none; }
 .std-frame { position: absolute; inset: var(--std-inset); z-index: 3; border: 1px solid rgb(74 60 48 / .3); pointer-events: none; }
@@ -30,12 +32,8 @@
 @media (min-aspect-ratio: 1/1) { .std-page { --sprig: calc(var(--p) * 1.3); } }
 @media (min-aspect-ratio: 3/2) { .std-page { --sprig: calc(var(--p) * 1.5); } }
 
-/* The painting's paper is the page's paper. It spreads out from the middle like wet paint as the card appears. */
-.std-painting {
-  position: relative; z-index: 1; display: block; flex-shrink: 0; width: calc(950 * var(--p)); max-width: none; height: auto;
-  -webkit-mask-image: radial-gradient(farthest-corner at 50% 55%, #000 calc(var(--bloom, 1.25) * 100% - 25%), #0000 calc(var(--bloom, 1.25) * 100%));
-  mask-image: radial-gradient(farthest-corner at 50% 55%, #000 calc(var(--bloom, 1.25) * 100% - 25%), #0000 calc(var(--bloom, 1.25) * 100%));
-}
+/* The painting's paper is the page's paper. Its wet-paint reveal is a mask animated in SaveTheDate.tsx. */
+.std-painting { position: relative; z-index: 1; display: block; flex-shrink: 0; width: calc(950 * var(--p)); max-width: none; height: auto; }
 
 /* The type. Tracked capitals carry their spacing after the last letter too, so each line is nudged back to the centre. */
 :where(.std) :is(p, h1) { margin: 0; }
@@ -46,12 +44,9 @@
 .std-title em { font: calc(70 * var(--t))/0 var(--script); letter-spacing: 0; text-transform: none; }
 .std-rule { display: block; flex-shrink: 0; width: calc(94 * var(--t)); height: 1px; margin-top: calc(29.6 * var(--t)); background: var(--std-line); }
 .std-for { margin-top: calc(27 * var(--t)); padding-left: .23em; line-height: 1.2; letter-spacing: .23em; }
-/* Written in by hand: a mask wipes the ink on from left to right, as on the envelope. */
-.std-names {
-  margin-top: calc(4.2 * var(--t)); padding: 0 .2em; font: calc(118 * var(--t))/1.3 var(--script); white-space: nowrap;
-  -webkit-mask-image: linear-gradient(90deg, #000 var(--ink, 115%), transparent calc(var(--ink, 115%) + 12%));
-  mask-image: linear-gradient(90deg, #000 var(--ink, 115%), transparent calc(var(--ink, 115%) + 12%));
-}
+/* Written in by hand, as on the envelope: the mask that wipes the ink on is animated in SaveTheDate.tsx. Line height and
+   padding give the swashes room, since a mask clips anything outside the box. */
+.std-names { margin-top: calc(4.2 * var(--t)); padding: 0 .2em; font: calc(118 * var(--t))/1.3 var(--script); white-space: nowrap; }
 /* The script's own ampersand is rather plain; the serif italic one has the loops of the design's. */
 .std-names span { font: italic 400 .92em/0 var(--serif); }
 .std-names + .std-rule { margin-top: calc(7.6 * var(--t)); }
@@ -63,20 +58,44 @@
 .std-place { margin-top: calc(32.7 * var(--t)); }
 .std-venue { padding-left: .34em; font: 500 calc(32 * var(--t))/1.2 var(--serif); letter-spacing: .34em; text-transform: uppercase; }
 .std-county { margin-top: calc(3.6 * var(--t)); padding-left: .2em; font: italic 500 calc(37.5 * var(--t))/1.2 var(--serif); letter-spacing: .2em; }
+/* From the invitation: a quieter voice before the button. */
+.std-note { margin-top: calc(26 * var(--t)); font: italic 400 calc(34 * var(--t))/1.38 var(--serif); color: #66564a; }
 
-/* Save our date: adds the day to the guest's calendar. The ink fills it from the bottom on hover. On a narrow phone the
-   bottom sprig reaches its corner, so it sits on its own paper above the leaves. */
+/* Save our date opens a choice of calendars just above it. On a narrow phone the bottom sprig reaches its corner, so it
+   sits on its own paper above the leaves. The ink fills the button from the bottom while the choice is open, and on hover
+   where there's a mouse (a tapped button on a phone would otherwise stay filled). */
+.std-save { position: relative; z-index: 4; width: calc(514 * var(--t)); margin-top: calc(40 * var(--t)); }
 .std-button {
-  position: relative; z-index: 3; isolation: isolate; background: var(--std-paper); overflow: hidden; display: flex; align-items: center; justify-content: center; gap: calc(39 * var(--t));
-  width: calc(514 * var(--t)); min-height: max(46px, calc(77 * var(--t))); margin-top: calc(51.3 * var(--t)); padding: 0 0 0 .415em;
-  border: 1px solid rgb(74 60 48 / .55); color: var(--std-ink); text-decoration: none;
+  position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: center; justify-content: center; gap: calc(39 * var(--t));
+  width: 100%; min-height: max(46px, calc(77 * var(--t))); padding: 0 0 0 .415em; background: var(--std-paper);
+  border: 1px solid rgb(74 60 48 / .55); color: var(--std-ink);
   font: 400 calc(24 * var(--t))/1 var(--sans); letter-spacing: .415em; text-transform: uppercase;
   transition: color .5s var(--ease-paper);
 }
 .std-button::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--std-ink); transform: scaleY(0); transform-origin: bottom; transition: transform .5s var(--ease-paper); }
-.std-button:hover { color: var(--std-paper); }
-.std-button:hover::before { transform: scaleY(1); }
+.std-button[aria-expanded="true"] { color: var(--std-paper); }
+.std-button[aria-expanded="true"]::before { transform: scaleY(1); }
+@media (hover: hover) {
+  .std-button:hover { color: var(--std-paper); }
+  .std-button:hover::before { transform: scaleY(1); }
+  .std-calendars a:hover { background: rgb(74 60 48 / .06); }
+}
 .std-button:focus-visible { outline: 1px solid var(--std-ink); outline-offset: 5px; }
-/* A hairline arrow at any size. */
-.std-arrow { flex-shrink: 0; width: calc(32 * var(--t)); min-width: 22px; height: auto; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1px; }
+/* A hairline arrow at any size. While the choices are open, the button's arrow points up at them. */
+.std-arrow { flex-shrink: 0; width: calc(32 * var(--t)); min-width: 22px; height: auto; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1px; transition: transform .4s var(--ease-paper); }
 .std-arrow path { vector-effect: non-scaling-stroke; }
+.std-button[aria-expanded="true"] .std-arrow { transform: rotate(-90deg); }
+
+/* The choices: one card with the button, sharing its top edge, so the button seems to open upwards. */
+.std-calendars {
+  position: absolute; left: 0; right: 0; bottom: 100%; margin: 0; padding: 0; list-style: none; background: var(--std-paper);
+  border: 1px solid rgb(74 60 48 / .55); border-bottom: 0; box-shadow: 0 -16px 32px -24px rgb(74 60 48 / .5);
+}
+.std-calendars li + li { border-top: 1px solid rgb(74 60 48 / .16); }
+.std-calendars a {
+  display: flex; align-items: center; justify-content: space-between; gap: 1em; min-height: max(46px, calc(68 * var(--t)));
+  padding: 0 calc(36 * var(--t)) 0 calc(44 * var(--t)); color: var(--std-ink); text-decoration: none;
+  font: 400 calc(22 * var(--t))/1 var(--sans); letter-spacing: .3em; text-transform: uppercase; transition: background-color .3s;
+}
+.std-calendars a:focus-visible { outline: 1px solid var(--std-ink); outline-offset: -5px; }
+.std-calendars .std-arrow { width: calc(26 * var(--t)); min-width: 18px; }
