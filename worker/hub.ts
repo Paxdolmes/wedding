@@ -40,12 +40,19 @@ const SEED_PREDICTIONS: { question: string; kind: 'choice' | 'number'; options: 
 // Web pushes cost one request each; Expo takes 100 a request. Keep each alarm well inside Cloudflare's per-invocation limits.
 const PUSH_BATCH = 40
 const MAX_PHOTO_BYTES = 1_800_000
+// Wrong host or helper codes allowed from one connection before it has to wait, so nobody can sit and guess them.
+const LOGIN_TRIES = 10
+const LOGIN_WINDOW = 15 * 60_000
 
 class HttpError extends Error {
   constructor(public status: number, message: string) { super(message) }
 }
 
-const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } })
+// API answers are never sniffed as anything else, cached or shown in a frame, and carry no referrer onwards.
+const apiHeaders = { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer', 'X-Frame-Options': 'DENY' }
+const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers: { ...apiHeaders, 'Content-Type': 'application/json' } })
+/** The visitor's address as Cloudflare saw it (it can't be faked from outside). */
+const clientIp = (request: Request) => request.headers.get('CF-Connecting-IP') ?? 'unknown'
 const clean = (value: unknown, max: number) => String(value ?? '').replace(/\s+/g, ' ').trim().slice(0, max)
 const normalise = (name: string) => name.toLowerCase().normalize('NFKD').replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim()
 const randomToken = () => crypto.randomUUID().replace(/-/g, '') + crypto.randomUUID().replace(/-/g, '')
@@ -85,6 +92,7 @@ export class WeddingHub extends DurableObject<Env> {
       CREATE TABLE IF NOT EXISTS prediction_answers (prediction_id INTEGER NOT NULL, guest_id TEXT NOT NULL, value TEXT NOT NULL, PRIMARY KEY (prediction_id, guest_id));
       CREATE TABLE IF NOT EXISTS staff_codes (code TEXT PRIMARY KEY, role TEXT NOT NULL, label TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS staff_sessions (token TEXT PRIMARY KEY, role TEXT NOT NULL, label TEXT NOT NULL, code TEXT, created_at INTEGER NOT NULL);
+      CREATE TABLE IF NOT EXISTS login_failures (ip TEXT PRIMARY KEY, count INTEGER NOT NULL, since INTEGER NOT NULL);
     `)
     if (this.setting('seeded') !== '1') {
       SEED_PREDICTIONS.forEach((p, index) => this.sql.exec('INSERT INTO predictions (question, kind, options, sort) VALUES (?, ?, ?, ?)', p.question, p.kind, JSON.stringify(p.options), index))
@@ -195,7 +203,7 @@ export class WeddingHub extends DurableObject<Env> {
   async staffRoute(request: Request, method: string, parts: string[], body: () => Promise<Record<string, unknown>>): Promise<Response> {
     const at = (...pattern: string[]) => pattern.length === parts.length && pattern.every((p, i) => p === '*' || p === parts[i])
 
-    if (method === 'POST' && at('login')) return json(this.staffLogin(await body()))
+    if (method === 'POST' && at('login')) return json(this.staffLogin(await body(), clientIp(request)))
     if (method === 'GET' && at('me')) return json(this.requireStaff(request, 'helper', 'dj'))
     if (method === 'POST' && at('logout')) { this.sql.exec('DELETE FROM staff_sessions WHERE token = ?', request.headers.get('X-Staff-Token') ?? ''); return json({ ok: true }) }
 
@@ -388,7 +396,9 @@ export class WeddingHub extends DurableObject<Env> {
     const sendAt = input.sendAt ? Date.parse(String(input.sendAt)) : Date.now()
     if (Number.isNaN(sendAt)) throw new HttpError(400, 'That send time doesn’t look right.')
     const scheduled = sendAt > Date.now() + 30_000
-    const url = clean(input.url, 80) || '/app/#home'
+    // Tapping a notification only ever opens a page of this site.
+    const link = clean(input.url, 80)
+    const url = link.startsWith('/') && !link.startsWith('//') ? link : '/app/#home'
     const id = this.sql.exec<{ id: number }>(
       'INSERT INTO notifications (title, body, url, audience, sent_by, send_at, status) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id',
       title, body, url, JSON.stringify(audience), staff.label, scheduled ? sendAt : Date.now(), scheduled ? 'scheduled' : 'sending',
@@ -491,6 +501,9 @@ export class WeddingHub extends DurableObject<Env> {
     if (!(request.headers.get('Content-Type') ?? '').startsWith('image/jpeg')) throw new HttpError(400, 'Photos need to be JPEGs.')
     const data = await request.arrayBuffer()
     if (data.byteLength > MAX_PHOTO_BYTES || data.byteLength < 1000) throw new HttpError(400, 'That photo is too large to develop.')
+    // A real JPEG starts FF D8 FF, whatever the request claims; anything else is turned away.
+    const start = new Uint8Array(data, 0, 3)
+    if (start[0] !== 0xff || start[1] !== 0xd8 || start[2] !== 0xff) throw new HttpError(400, 'Photos need to be JPEGs.')
     this.sql.exec('INSERT INTO photos (id, guest_id, data, taken_at) VALUES (?, ?, ?, ?)', crypto.randomUUID(), guest.id, data, Date.now())
     this.sql.exec('UPDATE guests SET shots_used = shots_used + 1 WHERE id = ?', guest.id)
     return { shotsUsed: guest.shots_used + 1, shots }
@@ -515,7 +528,7 @@ export class WeddingHub extends DurableObject<Env> {
     if (!this.galleryOpen() && staff?.role !== 'host') throw new HttpError(403, 'Still developing.')
     const row = this.sql.exec<{ data: ArrayBuffer }>('SELECT data FROM photos WHERE id = ?', id).toArray()[0]
     if (!row) throw new HttpError(404, 'Not found')
-    return new Response(row.data, { headers: { 'Content-Type': 'image/jpeg', 'Cache-Control': 'private, max-age=86400' } })
+    return new Response(row.data, { headers: { ...apiHeaders, 'Content-Type': 'image/jpeg', 'Cache-Control': 'private, max-age=86400' } })
   }
 
   // ---------- songs ----------
@@ -675,7 +688,12 @@ export class WeddingHub extends DurableObject<Env> {
 
   // ---------- host ----------
 
-  staffLogin(input: Record<string, unknown>) {
+  staffLogin(input: Record<string, unknown>, ip: string) {
+    // After LOGIN_TRIES wrong codes, that connection waits out the rest of LOGIN_WINDOW, even with the right code.
+    const now = Date.now()
+    this.sql.exec('DELETE FROM login_failures WHERE since < ?', now - LOGIN_WINDOW)
+    const failures = this.sql.exec<{ count: number; since: number }>('SELECT count, since FROM login_failures WHERE ip = ?', ip).toArray()[0]
+    if (failures && failures.count >= LOGIN_TRIES) throw new HttpError(429, 'Too many wrong codes. Please wait 15 minutes and try again.')
     const code = clean(input.code, 80)
     const passcode = this.env.HOST_PASSCODE ?? ''
     let staff: Staff & { code: string | null } | null = null
@@ -684,7 +702,11 @@ export class WeddingHub extends DurableObject<Env> {
       const row = this.sql.exec<{ code: string; role: Role; label: string }>('SELECT * FROM staff_codes WHERE code = ?', code.toUpperCase()).toArray()[0]
       if (row) staff = { role: row.role, label: row.label, code: row.code }
     }
-    if (!staff) throw new HttpError(403, passcode ? 'That code isn’t right.' : 'That code isn’t right. (The couple’s passcode hasn’t been set up in Cloudflare yet.)')
+    if (!staff) {
+      this.sql.exec('INSERT INTO login_failures (ip, count, since) VALUES (?, 1, ?) ON CONFLICT(ip) DO UPDATE SET count = count + 1', ip, now)
+      throw new HttpError(403, passcode ? 'That code isn’t right.' : 'That code isn’t right. (The couple’s passcode hasn’t been set up in Cloudflare yet.)')
+    }
+    this.sql.exec('DELETE FROM login_failures WHERE ip = ?', ip)
     const token = randomToken()
     this.sql.exec('INSERT INTO staff_sessions (token, role, label, code, created_at) VALUES (?, ?, ?, ?, ?)', token, staff.role, staff.label, staff.code, Date.now())
     return { token, role: staff.role, label: staff.label }

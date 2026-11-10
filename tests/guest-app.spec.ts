@@ -60,3 +60,37 @@ test('the couple sign in and send a notification that lands in guests’ message
   await guest.getByRole('button', { name: 'Join the weekend' }).click()
   await expect(guest.getByText(title)).toBeVisible()
 })
+
+test('the API locks out guessing at the host code, turns away fake photos and outside links, and its answers are locked down', async ({ request }) => {
+  const config = await request.get('/api/config')
+  expect(config.headers()['x-content-type-options']).toBe('nosniff')
+  expect(config.headers()['x-frame-options']).toBe('DENY')
+  expect(config.headers()['referrer-policy']).toBe('no-referrer')
+
+  // Ten wrong codes from one connection, then even the right code has to wait; another connection is unaffected.
+  // Cloudflare sets CF-Connecting-IP itself in production; here each run uses its own made-up addresses.
+  const address = () => `2001:db8::${Math.floor(Math.random() * 0xffff).toString(16)}:${Math.floor(Math.random() * 0xffff).toString(16)}`
+  const guesser = address()
+  const login = (code: string, ip: string) => request.post('/api/staff/login', { data: { code }, headers: { 'CF-Connecting-IP': ip } })
+  for (let i = 0; i < 10; i++) expect((await login(`WRONG${i}`, guesser)).status()).toBe(403)
+  const locked = await login('test-passcode', guesser)
+  expect(locked.status()).toBe(429)
+  expect((await locked.json()).error).toMatch(/wait 15 minutes/)
+  const signedIn = await login('test-passcode', address())
+  expect(signedIn.status()).toBe(200)
+  const staff = { 'X-Staff-Token': (await signedIn.json()).token }
+
+  // A "photo" that isn't really a JPEG is refused, whatever it claims to be.
+  const { token } = await (await request.post('/api/join', { data: { name: `Photo ${unique()}` } })).json()
+  const fake = await request.post('/api/photos', { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'image/jpeg' }, data: Buffer.from(`<html><script>alert(1)</script>${' '.repeat(2000)}</html>`) })
+  expect(fake.status()).toBe(400)
+
+  // Tapping a notification can only ever open a page of this site.
+  const title = `Link ${unique()}`
+  const created = await request.post('/api/staff/notifications', { headers: staff, data: { title, body: 'Testing links', url: 'https://example.com/elsewhere', sendAt: '2099-01-01T12:00:00.000Z' } })
+  expect(created.status()).toBe(200)
+  const sent = await (await request.get('/api/staff/notifications', { headers: staff })).json() as { id: number; title: string; url: string }[]
+  const note = sent.find(n => n.title === title)
+  expect(note?.url).toBe('/app/#home')
+  await request.delete(`/api/staff/notifications/${note?.id}`, { headers: staff })
+})

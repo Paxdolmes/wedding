@@ -1,0 +1,4 @@
+# The save-the-date can be read by anyone. The guest app and its data are private to the wedding guests.
+User-agent: *
+Disallow: /app/
+Disallow: /api/

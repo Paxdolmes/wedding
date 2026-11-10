@@ -16,6 +16,14 @@ arriving with its own scroll animation). Guests don't download any of it while i
 `showFullSite` to `true` in `src/wedding.ts`. While developing, open `http://localhost:5173/?full` to see it without
 changing the switch (`?full` does nothing on the live site).
 
+## Security and link previews
+
+- `public/_headers`: security headers Cloudflare adds to every page. HTTPS only (HSTS), a content security policy that lets pages load scripts, styles, fonts, images and data only from this site, no framing by other sites, no MIME sniffing, a strict referrer policy, and the camera allowed only in the guest app. If you ever add something from another site (a map embed, an analytics script), add its address to the matching part of the policy or the browser will block it.
+- `worker/hub.ts`: the guest app's API. Ten wrong host or helper codes from one connection lock it out for 15 minutes, uploaded photos must really be JPEGs, notifications can only link to pages of this site, and API answers can't be sniffed, framed or cached.
+- `index.html`: the title, description and preview card (`public/share.jpg`, 1200 × 630) used when the link is shared, plus plain-text wedding details for anything that reads the page without JavaScript, including the web filters that categorise sites.
+- `public/robots.txt` and the guest app's `noindex`: the save-the-date can be indexed; the guest app and its API are kept out of search engines.
+- In the Cloudflare dashboard for imogenanddan.com, turn on SSL/TLS → Edge Certificates → **Always Use HTTPS** (and DNSSEC under DNS settings). These are account settings, not code.
+
 ## Guest app
 
 The wedding-weekend app (push notifications, Find My Seat, a disposable camera, song requests, Battle of the Bangers
