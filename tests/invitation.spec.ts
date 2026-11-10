@@ -58,6 +58,11 @@ test('starts with only an envelope and opens to the save-the-date, with nothing 
   expect(calendar).toContain('DTSTART;VALUE=DATE:20280824')
   expect(calendar).toContain('DTEND;VALUE=DATE:20280825')
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  // Shared links show a preview card, and the private guest app stays out of search engines.
+  await expect(page).toHaveTitle('Imogen & Dan’s wedding — Save the date')
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', 'https://imogenanddan.com/share.jpg')
+  expect((await page.request.get('/share.jpg')).headers()['content-type']).toBe('image/jpeg')
+  expect(await (await page.request.get('/robots.txt')).text()).toContain('Disallow: /app/')
   expect(errors).toEqual([])
 })
 

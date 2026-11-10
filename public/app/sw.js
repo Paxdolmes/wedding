@@ -41,7 +41,9 @@ self.addEventListener('push', event => {
 
 self.addEventListener('notificationclick', event => {
   event.notification.close()
-  const target = new URL(event.notification.data?.url || '/app/#home', location.origin).href
+  // Only ever open a page of this site.
+  const link = new URL(event.notification.data?.url || '/app/#home', location.origin)
+  const target = link.origin === location.origin ? link.href : new URL('/app/#home', location.origin).href
   event.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clients => {
     const open = clients.find(client => client.url.includes('/app'))
     if (open) return open.navigate(target).then(client => (client || open).focus()).catch(() => open.focus())

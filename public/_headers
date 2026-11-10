@@ -1,0 +1,22 @@
+# Security headers for everything the site serves. Cloudflare reads this file when it publishes the site; it isn't served.
+# The guest app's API (/api/) sets its own headers in worker/hub.ts.
+#
+# Content-Security-Policy: the pages may only load scripts, styles, fonts, images and data from this site itself, so even
+# if something unexpected found its way onto a page it couldn't pull in code from elsewhere. Links to Google Calendar,
+# Maps and the hotels are ordinary links and still work. Inline styles are allowed because the animations set them.
+/*
+  Strict-Transport-Security: max-age=31536000
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; media-src 'self' blob:; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Cross-Origin-Opener-Policy: same-origin
+
+# The save-the-date never needs the camera, microphone or location.
+/
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+
+# The guest app needs the camera for the disposable camera, and is private: kept out of search engines.
+/app/*
+  Permissions-Policy: camera=(self), microphone=(), geolocation=(), payment=(), usb=()
+  X-Robots-Tag: noindex, nofollow
