@@ -1,5 +1,5 @@
 import type { Ref } from 'react'
-import { useDaysToGo } from './countdown'
+import { Countdown } from './Countdown'
 import { wedding } from './wedding'
 import { EngagementPhoto } from './PhotoStory'
 import { OliveSprig, SprigDivider } from './OliveBranch'
@@ -10,7 +10,6 @@ const arrow = <svg className="arrow-icon" viewBox="0 0 20 20" aria-hidden="true"
 
 /** The invitation itself, framed like the card: the first thing on the page once the envelope is open. */
 export function Hero({ ref }: { ref: Ref<HTMLElement> }) {
-  const days = useDaysToGo()
   return <article className="hero" id="top" ref={ref} tabIndex={-1} aria-labelledby="couple-names">
     <div className="hero-frame" aria-hidden="true"><i /><i /><i /><i /></div>
     <OliveSprig className="hero-sprig" />
@@ -21,7 +20,7 @@ export function Hero({ ref }: { ref: Ref<HTMLElement> }) {
     <p className="wedding-location">{wedding.location}</p>
     <p className="invitation-note">One day. Our favourite people.<br />The beginning of our forever.</p>
     <a className="calendar-link" href="/save-the-date.ics" download="imogen-and-dan.ics"><span>Save our date</span>{arrow}<span className="visually-hidden"> — Add to calendar</span></a>
-    <p className="countdown"><span className="countdown-days foil">{days.toLocaleString('en-GB')}</span><span className="label">days to go</span></p>
+    <Countdown />
     <a className="discover-link" href="#the-details"><span>The lovely details</span><i aria-hidden="true" /></a>
   </article>
 }

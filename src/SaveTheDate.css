@@ -122,14 +122,11 @@
 .std-more > :not(.std-frame, .std-sprig) { max-width: 560px; }
 .std-more .std-rule { width: 56px; margin-top: clamp(40px, 7vw, 56px); }
 .std-small-caps { margin: 0; font: 500 12px/1.5 var(--serif); letter-spacing: .26em; padding-left: .26em; text-transform: uppercase; }
-.std-count { display: flex; flex-direction: column; align-items: center; margin: 0; }
-.std-count-days { font: 300 clamp(76px, 19vw, 132px)/1 var(--serif); font-variant-numeric: lining-nums tabular-nums; letter-spacing: .02em; }
-.std-count-label { margin-top: 10px; font: 500 12px/1.5 var(--serif); letter-spacing: .3em; padding-left: .3em; text-transform: uppercase; }
-.std-sorry, .std-to-come { margin-top: clamp(36px, 6vw, 52px); }
-.std-sorry h2 { margin: 14px 0 0; font: italic 300 clamp(36px, 8vw, 50px)/1.1 var(--serif); }
-.std-sorry h2 em { font: 1.25em/1 var(--script); }
-.std-sorry p:not(.std-small-caps, .std-promise), .std-to-come p:not(.std-small-caps, .std-signature) { margin: 18px auto 0; max-width: 26em; font: 400 clamp(18px, 4.6vw, 21px)/1.55 var(--serif); color: #66564a; }
-.std-promise { margin: 18px 0 0; font: clamp(30px, 7vw, 38px)/1.2 var(--script); }
+.std-to-come { margin-top: clamp(36px, 6vw, 52px); }
+/* The note keeps its own design; here it just needs room for its tape and tilt. */
+.std-note-wrap { width: 100%; margin-top: clamp(48px, 9vw, 72px); }
+.std-note-wrap .thursday-wrap { padding: 0; }
+.std-to-come p:not(.std-small-caps, .std-signature) { margin: 18px auto 0; max-width: 26em; font: 400 clamp(18px, 4.6vw, 21px)/1.55 var(--serif); color: #66564a; }
 .std-to-come .std-small-caps { font-size: 14px; }
 .std-signature { display: flex; flex-direction: column; align-items: center; margin: 26px 0 0; font: clamp(40px, 9vw, 52px)/1.2 var(--script); }
 .std-signature span:first-child { font: italic 400 19px/1.4 var(--serif); color: #66564a; }

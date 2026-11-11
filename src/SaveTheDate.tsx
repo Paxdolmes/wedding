@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { AnimatePresence, animate, motion, useInView, useMotionValue, useReducedMotion, useTransform, type Variants } from 'motion/react'
-import { useDaysToGo } from './countdown'
+import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion/react'
+import { Countdown } from './Countdown'
+import { ThursdayNote } from './ThursdayNote'
 import { saveTheDateImages as images } from './saveTheDateImages'
 import { googleCalendarLink } from './wedding'
 import './SaveTheDate.css'
@@ -58,41 +59,15 @@ function SaveOurDate() {
   </motion.div>
 }
 
-/** The days to go, counting up to today's number when it first comes into view. */
-function DaysToGo() {
-  const days = useDaysToGo()
-  const reduced = useReducedMotion()
-  const box = useRef<HTMLParagraphElement>(null)
-  const seen = useInView(box, { once: true, amount: .6 })
-  const shown = useMotionValue(0)
-  const text = useTransform(shown, value => Math.round(value).toLocaleString('en-GB'))
-  useEffect(() => {
-    if (reduced) { shown.set(days); return }
-    if (!seen) return
-    const controls = animate(shown, days, { duration: 2, ease: [.16, 1, .3, 1] })
-    return () => controls.stop()
-  }, [days, reduced, seen, shown])
-  return <p className="std-count" ref={box}>
-    <motion.span className="std-count-days" aria-hidden="true">{text}</motion.span>
-    <span className="visually-hidden">{days.toLocaleString('en-GB')} </span>
-    <span className="std-count-label">days to go</span>
-  </p>
-}
-
-/** Below the card: how long to go, an apology for the Thursday, and a promise of more to come. Each part rises in as it scrolls into view. */
+/** Below the card: how long to go, the apology for the Thursday on its scrap of paper, and a promise of more to come. Each part rises in as it scrolls into view. */
 function MoreToCome() {
   const reduced = useReducedMotion()
   return <motion.section id="std-more" className="std-more" aria-label="Days to go and more to come" initial={reduced ? false : 'hidden'} whileInView="shown" viewport={{ once: true, amount: .15 }} variants={{ shown: { transition: { staggerChildren: .12 } } }}>
     <motion.div className="std-frame" aria-hidden="true" variants={frame} />
     <motion.img className="std-sprig std-sprig-bottom" src={images.leavesBottomRight} alt="" width="300" height="277" aria-hidden="true" variants={sprig(5)} />
-    <motion.div variants={line}><DaysToGo /></motion.div>
-    <motion.i className="std-rule" aria-hidden="true" variants={rule} />
-    <motion.div className="std-sorry" variants={line}>
-      <p className="std-small-caps">A small apology</p>
-      <h2>Yes, it’s a <em>Thursday.</em></h2>
-      <p>We know, we know. We’re sorry! Book the Friday off and think of it as a very long weekend that starts early.</p>
-      <p className="std-promise">We promise it’ll be worth it.</p>
-    </motion.div>
+    {/* The countdown and the Thursday note exactly as on the full invitation. */}
+    <motion.div variants={line}><Countdown /></motion.div>
+    <motion.div className="std-note-wrap" variants={line}><ThursdayNote /></motion.div>
     <motion.i className="std-rule" aria-hidden="true" variants={rule} />
     <motion.div className="std-to-come" variants={line}>
       <p className="std-small-caps">More information to come</p>

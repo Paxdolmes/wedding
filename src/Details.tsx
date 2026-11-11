@@ -4,23 +4,10 @@ import { afterParty, menu, timeline, wines } from './dayDetails'
 import { OliveSprig } from './OliveBranch'
 import { SectionHeading } from './SectionHeading'
 import crabtree from './assets/venue/crabtree.webp'
+import './paperEdge.css'
 import './Details.css'
 
 const arrow = <svg className="arrow-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" /></svg>
-
-export function ThursdayNote() {
-  return <div className="thursday-wrap">
-    <aside className="thursday-note" aria-labelledby="thursday-heading">
-      <div className="note-paper">
-        <p className="label">A small apology</p>
-        <h2 id="thursday-heading">Yes, it’s a <em>Thursday.</em></h2>
-        <i className="note-rule" aria-hidden="true" />
-        <p>We know, we know. We’re sorry! Book the Friday off and think of it as a very long weekend that starts early.</p>
-        <p className="note-promise">We promise it’ll be worth it.</p>
-      </div>
-    </aside>
-  </div>
-}
 
 export function Timeline() {
   return <section className="section band timeline-section" id="the-day" aria-labelledby="timeline-heading">

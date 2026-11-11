@@ -9,7 +9,8 @@ Pressing the seal cracks it, lifts the flap and draws out a gatefold card; as th
 olive sprigs in the corners of a fine frame, the date, "One day. Our favourite people. The beginning of our forever."
 and a "Save our date" button that offers Google Calendar, or the calendar file for Apple Calendar and Outlook.
 It fits on one screen on most phones and on computers. A small arrow on the card's bottom edge leads to a second card
-below: the days to go (counting up as it scrolls into view), "Yes, it's a Thursday" and "More information to come".
+below: the days to go and the "Yes, it's a Thursday" note on its scrap of paper, both exactly as on the full site
+(`src/Countdown.tsx` and `src/ThursdayNote.tsx` are shared), and "More information to come".
 
 Everything else is kept, hidden behind one switch: the full page in numbered chapters (the invitation, the day hour by
 hour, the venue, food and drink, Friday at The Crabtree, dress code, where to stay and a gallery of photos, each
@@ -60,7 +61,7 @@ Tests cover desktop and mobile Chromium, and start the guest app's backend with 
 
 - `src/wedding.ts`: names, display date, venue, the Google Calendar link behind "Save our date", and `showFullSite`, the switch that hides or shows everything beyond the save-the-date.
 - `src/SaveTheDate.tsx` and CSS: the save-the-date card shown for now. Sizes come from the 1024 × 1536 design (one design pixel is `--p`; the type never shrinks below a readable size on small phones). It prints itself in once the envelope has gone: the painting spreads like wet paint, the sprigs settle, each line rises in turn and the names are written in ink. The painting and names reveal by animating `mask-image` itself (Safari doesn't reliably repaint a mask when only a CSS variable inside it changes) and start invisible.
-- `src/countdown.ts`: the days-to-go count, shared by the save-the-date and the full site.
+- `src/countdown.ts`, `src/Countdown.tsx` and `src/ThursdayNote.tsx` (with their CSS, and `src/paperEdge.css` for the torn edge): the days to go and the Thursday note, shared by the save-the-date and the full site.
 - `src/saveTheDateImages.ts` and `src/assets/save-the-date/`: the Caswell House watercolour and the two corner sprigs, cut from the couple's design. The painting keeps its own paper (`#fff9f4`, the page colour) with a feathered outline; the sprigs' paper is transparent so they can overlap it. They load while the envelope is on screen.
 - `src/App.tsx`: the envelope, then the save-the-date, or the full site when `showFullSite` is on. `src/FullSite.tsx` is the full page, loaded only when it's shown.
 - `src/EnvelopeIntro.tsx` and CSS: the opening, from the envelope being set down to the card filling the screen; reduced-motion access skips the animation.
