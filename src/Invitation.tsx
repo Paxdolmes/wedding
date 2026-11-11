@@ -1,18 +1,12 @@
-import { useEffect, useState, type Ref } from 'react'
+import type { Ref } from 'react'
+import { useDaysToGo } from './countdown'
 import { wedding } from './wedding'
 import { EngagementPhoto } from './PhotoStory'
 import { OliveSprig, SprigDivider } from './OliveBranch'
 import { SectionHeading } from './SectionHeading'
 import { WaxSeal } from './WaxSeal'
 
-const weddingDay = new Date('2028-08-24T14:00:00+01:00').getTime()
 const arrow = <svg className="arrow-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" /></svg>
-
-function useDaysToGo() {
-  const [now, setNow] = useState(() => Date.now())
-  useEffect(() => { const timer = setInterval(() => setNow(Date.now()), 60_000); return () => clearInterval(timer) }, [])
-  return Math.max(0, Math.ceil((weddingDay - now) / 86_400_000))
-}
 
 /** The invitation itself, framed like the card: the first thing on the page once the envelope is open. */
 export function Hero({ ref }: { ref: Ref<HTMLElement> }) {
