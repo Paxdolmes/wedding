@@ -6,12 +6,7 @@
 .band-sage { background-color: #eceee2; }
 
 /* ---------- Shared type and ornaments ---------- */
-.label { margin: 0; font: 400 11px/1.6 var(--sans); letter-spacing: .32em; text-transform: uppercase; color: var(--gold); text-wrap: balance; }
 @media (max-width: 560px) { .label-sep { display: block; height: 0; overflow: hidden; } }
-.foil {
-  background: var(--foil); background-size: 220% 100%; background-position: 100% 0;
-  -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; text-shadow: none;
-}
 .arrow-icon { width: 13px; height: 13px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.1; vertical-align: middle; }
 .ink-link { background-image: linear-gradient(currentColor, currentColor); background-size: 0 1px; background-position: 0 100%; background-repeat: no-repeat; text-decoration: none; transition: background-size .55s var(--ease-paper); }
 .ink-link:hover, .ink-link:focus-visible { background-size: 100% 1px; }
@@ -67,13 +62,9 @@
 .calendar-link::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--ink-soft); transform: scaleY(0); transform-origin: bottom; transition: transform .5s var(--ease-paper); }
 .calendar-link:hover { color: var(--card); }
 .calendar-link:hover::before { transform: scaleY(1); }
-.countdown { display: flex; align-items: baseline; gap: 10px; margin: 24px 0 0; }
-.countdown-days { padding: 0 .1em; font: italic 400 32px/1 var(--serif); font-variant-numeric: lining-nums tabular-nums; }
-.countdown .label { font-size: 10px; color: var(--muted); }
 .discover-link { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 34px; padding: 8px; color: var(--muted); text-decoration: none; font: 400 10px/1.5 var(--sans); letter-spacing: .3em; text-transform: uppercase; }
 .discover-link i { display: block; width: 1px; height: 40px; background: linear-gradient(currentColor, #6b735400); transform-origin: top; }
 @keyframes cue { 0% { transform: scaleY(0); opacity: 0; } 40% { transform: scaleY(1); opacity: 1; } 100% { transform: translateY(16px) scaleY(1); opacity: 0; } }
-@keyframes foil-sheen { from { background-position: 100% 0; } to { background-position: 0 0; } }
 
 /* ---------- Our next chapter ---------- */
 .together { padding-bottom: clamp(72px, 9vw, 120px); }

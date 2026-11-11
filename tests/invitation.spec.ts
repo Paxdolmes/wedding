@@ -35,8 +35,9 @@ test('starts with only an envelope and opens to the save-the-date, with nothing 
   // Below the card: the days to go, the Thursday apology and a promise of more to come.
   const more = page.getByRole('region', { name: 'Days to go and more to come' })
   const days = Math.ceil((new Date('2028-08-24T14:00:00+01:00').getTime() - Date.now()) / 86400000)
-  await expect(more).toContainText(`${days.toLocaleString('en-GB')} days to go`)
-  await expect(more.getByRole('heading', { level: 2 })).toHaveText('Yes, it’s a Thursday.')
+  await expect(more.locator('.countdown-days')).toHaveText(days.toLocaleString('en-GB'))
+  await expect(more.locator('.countdown')).toContainText('days to go')
+  await expect(more.getByRole('complementary', { name: 'Yes, it’s a Thursday.' })).toBeVisible()
   await expect(more).toContainText('We promise it’ll be worth it.')
   await expect(more).toContainText('More information to come')
   expect(requests.filter(path => /FullSite|Accommodation|PhotoStory|pageAnimations|\/photos\//.test(path))).toEqual([])

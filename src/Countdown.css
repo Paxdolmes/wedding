@@ -1,0 +1,4 @@
+/* The days to go, in gold foil, as on the invitation. */
+.countdown { display: flex; align-items: baseline; gap: 10px; margin: 24px 0 0; }
+.countdown-days { padding: 0 .1em; font: italic 400 32px/1 var(--serif); font-variant-numeric: lining-nums tabular-nums; }
+.countdown .label { font-size: 10px; color: var(--muted); }
