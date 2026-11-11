@@ -31,7 +31,14 @@ test('starts with only an envelope and opens to the save-the-date, with nothing 
   // The rest of the site is hidden for now, and none of it is downloaded.
   await expect(page.getByRole('banner')).toHaveCount(0)
   await expect(page.getByRole('contentinfo')).toHaveCount(0)
-  await expect(page.getByRole('region')).toHaveCount(0)
+  await expect(page.getByRole('region', { name: /What to wear|Where to stay|Caswell House/ })).toHaveCount(0)
+  // Below the card: the days to go, the Thursday apology and a promise of more to come.
+  const more = page.getByRole('region', { name: 'Days to go and more to come' })
+  const days = Math.ceil((new Date('2028-08-24T14:00:00+01:00').getTime() - Date.now()) / 86400000)
+  await expect(more).toContainText(`${days.toLocaleString('en-GB')} days to go`)
+  await expect(more.getByRole('heading', { level: 2 })).toHaveText('Yes, it’s a Thursday.')
+  await expect(more).toContainText('We promise it’ll be worth it.')
+  await expect(more).toContainText('More information to come')
   expect(requests.filter(path => /FullSite|Accommodation|PhotoStory|pageAnimations|\/photos\//.test(path))).toEqual([])
   // Save our date offers Google Calendar, or the calendar file for Apple Calendar and Outlook.
   const save = page.getByRole('button', { name: /Save our date/ })
