@@ -6,7 +6,7 @@
   background: #efc9c0b8; clip-path: polygon(3% 0, 97% 6%, 100% 48%, 96% 100%, 2% 94%, 0 52%);
 }
 .note-paper { padding: 58px clamp(26px, 6vw, 60px) 46px; text-align: center; background: url('/paper-grain.svg') var(--card); }
-.thursday-note h2 { margin: 16px 0 0; font: italic 300 clamp(38px, 5vw, 50px)/1.1 var(--serif); color: var(--ink); }
+.thursday-note h2 { margin: 0; font: italic 300 clamp(38px, 5vw, 50px)/1.1 var(--serif); color: var(--ink); }
 .thursday-note h2 em { color: var(--gold); }
 .note-rule { display: block; width: 48px; height: 1px; margin: 22px auto; background: var(--rule-strong); }
 .note-paper > p:not(.label):not(.note-promise) { max-width: 400px; margin: 0 auto; font-size: 20px; line-height: 1.6; color: var(--ink-soft); }

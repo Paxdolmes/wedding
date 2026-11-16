@@ -68,6 +68,12 @@ function MoreToCome() {
     {/* The countdown and the Thursday note exactly as on the full invitation. */}
     <motion.div variants={line}><Countdown /></motion.div>
     <motion.div className="std-note-wrap" variants={line}><ThursdayNote /></motion.div>
+    {/* What to wear, a small version of the full site's dress code. */}
+    <motion.div className="std-dress" variants={line}>
+      <p className="label">What to wear</p>
+      <p className="std-dress-statement">Whatever makes you <em>feel beautiful.</em></p>
+      <p className="std-dress-note">As long as you don’t feel beautiful in <span className="std-dress-white">white</span>.</p>
+    </motion.div>
     <motion.i className="std-rule" aria-hidden="true" variants={rule} />
     <motion.div className="std-to-come" variants={line}>
       <p className="std-small-caps">More information to come</p>
