@@ -39,6 +39,9 @@ test('starts with only an envelope and opens to the save-the-date, with nothing 
   await expect(more.locator('.countdown')).toContainText('days to go')
   await expect(more.getByRole('complementary', { name: 'Yes, it’s a Thursday.' })).toBeVisible()
   await expect(more).toContainText('We promise it’ll be worth it.')
+  await expect(more).not.toContainText('A small apology')
+  await expect(more).toContainText('Whatever makes you feel beautiful.')
+  await expect(more).toContainText('As long as you don’t feel beautiful in white.')
   await expect(more).toContainText('More information to come')
   expect(requests.filter(path => /FullSite|Accommodation|PhotoStory|pageAnimations|\/photos\//.test(path))).toEqual([])
   // Save our date offers Google Calendar, or the calendar file for Apple Calendar and Outlook.
