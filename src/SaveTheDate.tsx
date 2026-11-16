@@ -64,7 +64,9 @@ function MoreToCome() {
   const reduced = useReducedMotion()
   return <motion.section id="std-more" className="std-more" aria-label="Days to go and more to come" initial={reduced ? false : 'hidden'} whileInView="shown" viewport={{ once: true, amount: .15 }} variants={{ shown: { transition: { staggerChildren: .12 } } }}>
     <motion.div className="std-frame" aria-hidden="true" variants={frame} />
-    <motion.img className="std-sprig std-sprig-bottom" src={images.leavesBottomRight} alt="" width="300" height="277" aria-hidden="true" variants={sprig(5)} />
+    {/* The second card has mirrored sprigs, top right and bottom left. */}
+    <motion.img className="std-sprig std-sprig-top-right" src={images.leavesTopRight} alt="" width="376" height="276" aria-hidden="true" variants={sprig(5)} />
+    <motion.img className="std-sprig std-sprig-bottom-left" src={images.leavesBottomLeft} alt="" width="300" height="277" aria-hidden="true" variants={sprig(-5)} />
     {/* The countdown and the Thursday note exactly as on the full invitation. */}
     <motion.div variants={line}><Countdown /></motion.div>
     <motion.div className="std-note-wrap" variants={line}><ThursdayNote /></motion.div>

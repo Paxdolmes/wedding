@@ -138,3 +138,7 @@
 .std-dress-statement em { font-style: italic; font-weight: 400; color: var(--sage); }
 .std-dress-note { margin: 12px 0 0; font: 400 clamp(18px, 4.6vw, 21px)/1.5 var(--serif); color: #66564a; }
 .std-dress-white { padding: 0 .08em; background: linear-gradient(#efc9c000 60%, #efc9c0b3 60%, #efc9c0b3 92%, #efc9c000 92%); }
+
+/* The second card's sprigs: mirrored copies of the first card's, in the other two corners. */
+.std-sprig-top-right { top: calc(var(--std-inset) + 1px); right: calc(var(--std-inset) + 1px); width: calc(376 * var(--sprig)); transform-origin: 100% 0; }
+.std-sprig-bottom-left { bottom: calc(var(--std-inset) + 1px); left: calc(var(--std-inset) + 1px); width: calc(300 * var(--sprig)); transform-origin: 0 100%; }
