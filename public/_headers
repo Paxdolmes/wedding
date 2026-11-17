@@ -12,8 +12,12 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Cross-Origin-Opener-Policy: same-origin
 
-# The save-the-date never needs the camera, microphone or location.
+# The save-the-date (and the wedding party's versions of it) never needs the camera, microphone or location.
 /
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+/bridesmaid/*
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+/groomsman/*
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
 
 # The guest app needs the camera for the disposable camera, and is private: kept out of search engines.

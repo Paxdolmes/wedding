@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type Ref } from 'react'
 import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion/react'
 import { Countdown } from './Countdown'
 import { ThursdayNote } from './ThursdayNote'
 import { saveTheDateImages as images } from './saveTheDateImages'
-import { googleCalendarLink } from './wedding'
+import { googleCalendarLink, partyRoleFrom, weddingParty, type PartyRole } from './wedding'
 import './SaveTheDate.css'
 
 const silk = [.22, 1, .36, 1] as const
@@ -85,15 +85,35 @@ function MoreToCome() {
   </motion.section>
 }
 
+/** On a wedding-party link, the first card asks the question; the save-the-date follows below. */
+function TheQuestion({ role, ref }: { role: PartyRole; ref: Ref<HTMLElement> }) {
+  const reduced = useReducedMotion()
+  const { from, partner, question } = weddingParty[role]
+  return <motion.article ref={ref} className="std-ask" tabIndex={-1} aria-labelledby="std-ask-question" initial={reduced ? false : 'hidden'} animate="shown" variants={{ shown: { transition: { staggerChildren: .12, delayChildren: .65 } } }}>
+    <motion.div className="std-frame" aria-hidden="true" variants={frame} />
+    <motion.img className="std-sprig std-sprig-top" src={images.leavesTopLeft} alt="" width="376" height="276" aria-hidden="true" variants={sprig(-5)} />
+    <motion.img className="std-sprig std-sprig-bottom" src={images.leavesBottomRight} alt="" width="300" height="277" aria-hidden="true" variants={sprig(5)} />
+    <motion.p className="std-small-caps" variants={line}>{from} has a question</motion.p>
+    <motion.h1 className="std-ask-question" id="std-ask-question" variants={handwriting}>{question[0]}<br />{question[1]}</motion.h1>
+    <motion.i className="std-rule" aria-hidden="true" variants={rule} />
+    <motion.p className="std-ask-note" variants={line}>You’re one of the people I can’t imagine the day without. I’d love you by my side as I marry {partner} on Thursday 24 August 2028.</motion.p>
+    <motion.p className="std-signature" variants={line}><span>With love,</span> <span>{from} x</span></motion.p>
+    <motion.a className="std-more-cue" href="#std-card" aria-label="Our save-the-date, below" variants={line}><svg viewBox="0 0 16 10" aria-hidden="true"><path d="M1 1.5l7 7 7-7" /></svg></motion.a>
+  </motion.article>
+}
+
 /** For now the whole website is this one card: Caswell House in watercolour, the date, and a way to keep it. */
 export function SaveTheDate({ open }: { open: boolean }) {
   const reduced = useReducedMotion()
   const card = useRef<HTMLElement>(null)
-  useEffect(() => { if (open) card.current?.focus({ preventScroll: true }) }, [open])
+  const ask = useRef<HTMLElement>(null)
+  const [role] = useState(() => partyRoleFrom(location.pathname))
+  useEffect(() => { if (open) (ask.current ?? card.current)?.focus({ preventScroll: true }) }, [open])
   return <motion.div className="std-page" inert={!open} aria-hidden={!open || undefined} initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 1.04 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: reduced ? 0 : .9, ease: silk }}>
     <main>
+      {role && <TheQuestion role={role} ref={ask} />}
       {/* The page settles into place over .9s; the painting's reveal begins only once it has (.65s + 3 × .09s). */}
-      <motion.article ref={card} className="std" tabIndex={-1} aria-labelledby="std-title std-names" initial={reduced ? false : 'hidden'} animate="shown" variants={{ shown: { transition: { staggerChildren: .09, delayChildren: .65 } } }}>
+      <motion.article ref={card} id="std-card" className="std" tabIndex={-1} aria-labelledby="std-title std-names" initial={reduced ? false : 'hidden'} animate="shown" variants={{ shown: { transition: { staggerChildren: .09, delayChildren: .65 } } }}>
         <motion.div className="std-frame" aria-hidden="true" variants={frame} />
         <motion.img className="std-sprig std-sprig-top" src={images.leavesTopLeft} alt="" width="376" height="276" aria-hidden="true" variants={sprig(-5)} />
         <motion.img className="std-sprig std-sprig-bottom" src={images.leavesBottomRight} alt="" width="300" height="277" aria-hidden="true" variants={sprig(5)} />

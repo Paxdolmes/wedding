@@ -228,3 +228,20 @@ test('shows the day, venue, food and drink, and the first-date counter', async (
   await expect(hotels).toHaveText(['The Double Red Duke', 'The Fleece', 'The Blue Boar', 'Travelodge Witney'])
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
+
+test('the bridesmaids’ and groomsmen’s links ask the question first, then show the save-the-date', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  for (const [path, from, role, partner] of [['/bridesmaid', 'Imogen', 'bridesmaid', 'Dan'], ['/groomsman', 'Dan', 'groomsman', 'Imogen']]) {
+    await page.goto(path)
+    await page.getByRole('button', { name: 'Open your invitation' }).click()
+    const ask = page.getByRole('article', { name: `Will you be my ${role}?` })
+    await expect(ask).toBeFocused({ timeout: 1500 })
+    await expect(ask).toContainText(`${from} has a question`)
+    await expect(ask).toContainText(`as I marry ${partner} on Thursday 24 August 2028`)
+    await expect(page.getByRole('article', { name: /Save the date/ })).toContainText('Caswell House, Oxfordshire')
+  }
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Open your invitation' }).click()
+  await expect(page.getByRole('article', { name: /Save the date/ })).toBeFocused({ timeout: 1500 })
+  await expect(page.getByText(/has a question/)).toHaveCount(0)
+})
