@@ -20,3 +20,16 @@ export const googleCalendarLink = 'https://calendar.google.com/calendar/render?'
  * While developing, add `?full` to the address (http://localhost:5173/?full) to see the full site without changing this.
  */
 export const showFullSite = false
+
+/**
+ * The wedding party's own links: imogenanddan.com/bridesmaid and imogenanddan.com/groomsman show the same save-the-date,
+ * with a card first asking the question. The pages themselves are made at build time (see vite.config.ts).
+ */
+export const weddingParty = {
+  bridesmaid: { from: 'Imogen', partner: 'Dan', question: ['Will you be my', 'bridesmaid?'] },
+  groomsman: { from: 'Dan', partner: 'Imogen', question: ['Will you be my', 'groomsman?'] },
+}
+export type PartyRole = keyof typeof weddingParty
+export const partyRoles = Object.keys(weddingParty) as PartyRole[]
+/** Which wedding-party link this is, if any. */
+export const partyRoleFrom = (pathname: string) => partyRoles.find(role => new RegExp(`^/${role}/?$`).test(pathname))

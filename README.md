@@ -18,6 +18,14 @@ arriving with its own scroll animation). Guests don't download any of it while i
 `showFullSite` to `true` in `src/wedding.ts`. While developing, open `http://localhost:5173/?full` to see it without
 changing the switch (`?full` does nothing on the live site).
 
+## The wedding party's links
+
+Send bridesmaids **imogenanddan.com/bridesmaid** and groomsmen **imogenanddan.com/groomsman**. After the envelope opens,
+a card in the same style asks "Will you be my bridesmaid?" (from Imogen) or "Will you be my groomsman?" (from Dan), with the
+save-the-date below. The wording is in `weddingParty` in `src/wedding.ts`; the question card is `TheQuestion` in
+`src/SaveTheDate.tsx`. `vite.config.ts` copies the page to `dist/bridesmaid/` and `dist/groomsman/` at build time and
+serves those addresses in development.
+
 ## Security and link previews
 
 - `public/_headers`: security headers Cloudflare adds to every page. HTTPS only (HSTS), a content security policy that lets pages load scripts, styles, fonts, images and data only from this site, no framing by other sites, no MIME sniffing, a strict referrer policy, and the camera allowed only in the guest app. If you ever add something from another site (a map embed, an analytics script), add its address to the matching part of the policy or the browser will block it.
