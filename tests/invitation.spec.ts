@@ -22,8 +22,6 @@ test('starts with only an envelope and opens to the save-the-date, with nothing 
   await expect(card).toContainText('Imogen & Dan')
   await expect(card).toContainText('Thursday, 24 August 2028')
   await expect(card).toContainText('Caswell House, Oxfordshire')
-  await expect(card).toContainText('One day. Our favourite people.')
-  await expect(card).toContainText('The beginning of our forever.')
   const painting = card.getByRole('img', { name: /watercolour of Caswell House/ })
   await expect(painting).toBeVisible()
   // Once its reveal has finished, the painting is fully shown: no mask left over it.
@@ -35,8 +33,10 @@ test('starts with only an envelope and opens to the save-the-date, with nothing 
   // Below the card: the days to go, the Thursday apology and a promise of more to come.
   const more = page.getByRole('region', { name: 'Days to go and more to come' })
   const days = Math.ceil((new Date('2028-08-24T14:00:00+01:00').getTime() - Date.now()) / 86400000)
-  await expect(more.locator('.countdown-days')).toHaveText(days.toLocaleString('en-GB'))
-  await expect(more.locator('.countdown')).toContainText('days to go')
+  await expect(card.locator('.countdown-days')).toHaveText(days.toLocaleString('en-GB'))
+  await expect(card.locator('.countdown')).toContainText('days to go')
+  await expect(more).toContainText('One day. Our favourite people.')
+  await expect(more).toContainText('The beginning of our forever.')
   await expect(more.getByRole('complementary', { name: 'Yes, it’s a Thursday.' })).toBeVisible()
   await expect(more).toContainText('We promise it’ll be worth it.')
   await expect(more).not.toContainText('A small apology')

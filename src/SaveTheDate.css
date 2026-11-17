@@ -59,7 +59,10 @@
 .std-venue { padding-left: .34em; font: 500 calc(32 * var(--t))/1.2 var(--serif); letter-spacing: .34em; text-transform: uppercase; }
 .std-county { margin-top: calc(3.6 * var(--t)); padding-left: .2em; font: italic 500 calc(37.5 * var(--t))/1.2 var(--serif); letter-spacing: .2em; }
 /* From the invitation: a quieter voice before the button. */
-.std-note { margin-top: calc(26 * var(--t)); font: italic 400 calc(34 * var(--t))/1.38 var(--serif); color: #66564a; }
+/* The days to go sit where the note used to, just above the button. */
+.std-days .countdown { margin-top: calc(26 * var(--t)); }
+/* "One day. Our favourite people." opens the second card. */
+.std-note { margin: 0; font: italic 400 clamp(22px, 5.4vw, 28px)/1.4 var(--serif); color: #66564a; }
 
 /* Save our date opens a choice of calendars just above it. On a narrow phone the bottom sprig reaches its corner, so it
    sits on its own paper above the leaves. The ink fills the button from the bottom while the choice is open, and on hover
