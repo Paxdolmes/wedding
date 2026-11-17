@@ -67,8 +67,8 @@ function MoreToCome() {
     {/* The second card has mirrored sprigs, top right and bottom left. */}
     <motion.img className="std-sprig std-sprig-top-right" src={images.leavesTopRight} alt="" width="376" height="276" aria-hidden="true" variants={sprig(5)} />
     <motion.img className="std-sprig std-sprig-bottom-left" src={images.leavesBottomLeft} alt="" width="300" height="277" aria-hidden="true" variants={sprig(-5)} />
-    {/* The countdown and the Thursday note exactly as on the full invitation. */}
-    <motion.div variants={line}><Countdown /></motion.div>
+    <motion.p className="std-note" variants={line}>One day. Our favourite people.<br />The beginning of our forever.</motion.p>
+    {/* The Thursday note exactly as on the full invitation. */}
     <motion.div className="std-note-wrap" variants={line}><ThursdayNote /></motion.div>
     {/* What to wear, a small version of the full site's dress code. */}
     <motion.div className="std-dress" variants={line}>
@@ -107,7 +107,8 @@ export function SaveTheDate({ open }: { open: boolean }) {
         <motion.p className="std-when" variants={line}><span className="std-day">Thursday</span><span className="visually-hidden">, </span><time className="std-date" dateTime="2028-08-24">24 August 2028</time></motion.p>
         <motion.i className="std-rule" aria-hidden="true" variants={rule} />
         <motion.p className="std-place" variants={line}><span className="std-venue">Caswell House</span><span className="visually-hidden">, </span><span className="std-county">Oxfordshire</span></motion.p>
-        <motion.p className="std-note" variants={line}>One day. Our favourite people.<br />The beginning of our forever.</motion.p>
+        {/* The days to go, exactly as on the full invitation. */}
+        <motion.div className="std-days" variants={line}><Countdown /></motion.div>
         <SaveOurDate />
         {/* A small arrow on the frame's bottom edge: there's more below. */}
         <motion.a className="std-more-cue" href="#std-more" aria-label="More below" variants={line}><svg viewBox="0 0 16 10" aria-hidden="true"><path d="M1 1.5l7 7 7-7" /></svg></motion.a>
