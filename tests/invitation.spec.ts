@@ -40,8 +40,7 @@ test('starts with only an envelope and opens to the save-the-date, with nothing 
   await expect(more.getByRole('complementary', { name: 'Yes, it’s a Thursday.' })).toBeVisible()
   await expect(more).toContainText('We promise it’ll be worth it.')
   await expect(more).not.toContainText('A small apology')
-  await expect(more).toContainText('Whatever makes you feel beautiful.')
-  await expect(more).toContainText('As long as you don’t feel beautiful in white.')
+  await expect(more).not.toContainText('What to wear')
   await expect(more).toContainText('More information to come')
   expect(requests.filter(path => /FullSite|Accommodation|PhotoStory|pageAnimations|\/photos\//.test(path))).toEqual([])
   // Save our date offers Google Calendar, or the calendar file for Apple Calendar and Outlook.
@@ -229,17 +228,19 @@ test('shows the day, venue, food and drink, and the first-date counter', async (
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
 
-test('the bridesmaids’ and groomsmen’s links ask the question first, then show the save-the-date', async ({ page }) => {
+test('the groomsmen’s link pops the question first, then shows the save-the-date', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
-  for (const [path, from, role, partner] of [['/bridesmaid', 'Imogen', 'bridesmaid', 'Dan'], ['/groomsman', 'Dan', 'groomsman', 'Imogen']]) {
-    await page.goto(path)
-    await page.getByRole('button', { name: 'Open your invitation' }).click()
-    const ask = page.getByRole('article', { name: `Will you be my ${role}?` })
-    await expect(ask).toBeFocused({ timeout: 1500 })
-    await expect(ask).toContainText(`${from} has a question`)
-    await expect(ask).toContainText(`as I marry ${partner} on Thursday 24 August 2028`)
-    await expect(page.getByRole('article', { name: /Save the date/ })).toContainText('Caswell House, Oxfordshire')
-  }
+  await page.goto('/groomsman')
+  await page.getByRole('button', { name: 'Open your invitation' }).click()
+  const ask = page.getByRole('article', { name: 'Will you be my groomsman?' })
+  await expect(ask).toBeFocused({ timeout: 1500 })
+  await expect(ask).toContainText('Daniel has a question')
+  await expect(ask).toContainText('as I marry Imogen on Thursday 24 August 2028')
+  await ask.getByRole('button', { name: 'Obviously, yes' }).click()
+  await expect(ask.getByRole('status')).toContainText('Knew it.')
+  await expect(ask.getByRole('button', { name: /yes/i })).toHaveCount(0)
+  await expect(page.getByRole('article', { name: /Save the date/ })).toContainText('Caswell House, Oxfordshire')
+  await expect(page.getByText(/What to wear/)).toHaveCount(0)
   await page.goto('/')
   await page.getByRole('button', { name: 'Open your invitation' }).click()
   await expect(page.getByRole('article', { name: /Save the date/ })).toBeFocused({ timeout: 1500 })

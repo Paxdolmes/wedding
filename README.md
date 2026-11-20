@@ -18,13 +18,14 @@ arriving with its own scroll animation). Guests don't download any of it while i
 `showFullSite` to `true` in `src/wedding.ts`. While developing, open `http://localhost:5173/?full` to see it without
 changing the switch (`?full` does nothing on the live site).
 
-## The wedding party's links
+## The groomsmen's link
 
-Send bridesmaids **imogenanddan.com/bridesmaid** and groomsmen **imogenanddan.com/groomsman**. After the envelope opens,
-a card in the same style asks "Will you be my bridesmaid?" (from Imogen) or "Will you be my groomsman?" (from Dan), with the
-save-the-date below. The wording is in `weddingParty` in `src/wedding.ts`; the question card is `TheQuestion` in
-`src/SaveTheDate.tsx`. `vite.config.ts` copies the page to `dist/bridesmaid/` and `dist/groomsman/` at build time and
-serves those addresses in development.
+Send groomsmen **imogenanddan.com/groomsman**. After the envelope opens, a card in the same style stages the question:
+"Daniel has a question… It's a big one.", then "Will you be my" written in, and after a beat "groomsman?" in large gold
+with a burst of petals and confetti. Two buttons ("Yes" and "Obviously, yes") throw a second burst and show a thank-you.
+The save-the-date follows below. The wording is in `weddingParty` in `src/wedding.ts`; the card is `TheQuestion` in
+`src/SaveTheDate.tsx`. `vite.config.ts` copies the page to `dist/groomsman/` at build time and serves it in development.
+Nothing is recorded when someone taps Yes.
 
 ## Security and link previews
 
