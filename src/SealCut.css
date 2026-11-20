@@ -1,0 +1,96 @@
+/*
+ * The letter opener cutting the seal (see src/sealCut.ts).
+ *
+ * The sequence animates a handful of unitless custom properties on `.seal-assembly`;
+ * everything below is derived from them with calc(), so the whole rig is one clock.
+ * In an SVG `1px` is one seal unit (the overlay's viewBox is 140), so it scales with the seal at any size.
+ */
+
+/* ---- state ------------------------------------------------------------ */
+.seal-assembly {
+  --tip: 232;     /* x of the blade tip, seal units. ~133 = wax rim, -5 = through the far side */
+  --trail: 233;   /* same idea, but lags behind the tip: the incision opens a hair after the blade passes */
+  --ky: -9;       /* blade height offset (seal units); negative = hovering above the cut line */
+  --tilt: -14;    /* blade rotation about its tip, degrees; negative = handle raised */
+  --ks: 1.03;     /* blade scale, a hair above 1 while it is held off the paper */
+  --lift: 1;      /* 1 = held off the surface (soft, distant shadow), 0 = touching (tight contact shadow) */
+  --bury: 1;      /* 1 = the part of the blade inside the wax is hidden, 0 = blade fully visible */
+  --flash: 0;     /* the single specular flash as the blade leaves */
+}
+
+/* ---- overlay ---------------------------------------------------------------------------------------------------- */
+.seal-cut {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.knife-buried { opacity: var(--bury); }
+
+/* ---- incision ---------------------------------------------------------------------------------------------------- */
+.seal-incision { opacity: 1; }
+.cut-line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+}
+/* The cut path runs right → left (146 → -6), so its revealed fraction is how far the tip has travelled from x = 146. */
+.cut-line-tip { stroke-dashoffset: calc(1 - min(1, max(0, (146 - var(--tip)) / 152))); }
+.cut-line-trailing { stroke-dashoffset: calc(1 - min(1, max(0, (146 - var(--trail)) / 152))); }
+
+.cut-hairline { stroke: #0d1408; stroke-width: 0.5px; stroke-opacity: 0.9; }
+.cut-gap { stroke: #070b04; stroke-width: 1.3px; stroke-opacity: 0.9; }
+.cut-shade { stroke: #0d1408; stroke-width: 1.9px; stroke-opacity: 0.5; transform: translateY(1.1px); }
+.cut-lip { stroke: #e3e6bd; stroke-width: 0.55px; stroke-opacity: 0.8; transform: translateY(-1px); }
+.cut-blade { stroke-width: 0.9px; }
+
+.cut-give { opacity: 0; }
+.cut-give-at-tip { transform: translate(calc((var(--tip) - 2) * 1px), 66px); }
+.cut-glint { opacity: 0; }
+.cut-glint-behind-tip { transform: translate(calc((var(--tip) + 20) * 1px), 66px); }
+
+/* ---- knife ------------------------------------------------------------------------------------------------------- */
+.seal-knife { opacity: 0; }
+.knife-track,
+.knife-shadow,
+.knife-body {
+  transform-box: view-box;
+  transform-origin: 0 0;
+}
+.knife-track { transform: translate(calc(var(--tip) * 1px), 66px); }
+.knife-body {
+  transform: translate(0, calc(var(--ky) * 1px)) rotate(calc(var(--tilt) * 1deg)) scale(var(--ks));
+}
+
+/* Contact shadow: a wide, faint one while the blade hovers, a tight dark one as it touches down. Light is upper-left. */
+.knife-shadow-far {
+  opacity: calc(0.08 + var(--lift) * 0.22);
+  transform: translate(calc(2px + var(--lift) * 6px), calc(3px + var(--lift) * 12px)) rotate(calc(var(--tilt) * 0.3deg));
+}
+.knife-shadow-near {
+  opacity: calc(0.6 - var(--lift) * 0.45);
+  transform: translate(0.5px, calc(1.1px + var(--lift) * 2.5px)) rotate(calc(var(--tilt) * 0.6deg));
+}
+
+/* Specular highlights are fixed in the room, so they slide along the blade as the blade moves. */
+.blade-shine { transform: translateX(calc((40 + (134 - var(--tip)) * 0.62) * 1px)); }
+.handle-shine { transform: translateX(calc((168 + (134 - var(--tip)) * 0.3) * 1px)); }
+.blade-flash { opacity: var(--flash); }
+
+/* ---- wax flecks -------------------------------------------------------------------------------------------------- */
+.cut-fleck {
+  position: absolute;
+  top: 47.14%; /* y = 66 of 140: the crack line */
+  z-index: 4;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  opacity: 0;
+  border-radius: 42% 58% 47% 53% / 55% 45% 58% 42%;
+  background: radial-gradient(circle at 35% 30%, #aab184, #4d5c35 72%);
+  pointer-events: none;
+}
