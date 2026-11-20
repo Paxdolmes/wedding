@@ -1,5 +1,5 @@
 /*
- * The save-the-date, set out like Imogen and Dan's own design: a 1024-wide card (1600 tall with the note added).
+ * The save-the-date, set out like Imogen and Daniel's own design: a 1024-wide card (1600 tall with the note added).
  * --p is one pixel of that design, scaled so the whole card fits the screen: by width on phones, by height on wider screens.
  * --t sizes the type and the space between the lines: as large as fits the screen (--fit) up to the design's own size,
  * but never so small that the words get hard to read; a very short phone scrolls a little instead.
@@ -7,7 +7,7 @@
 .std-page {
   --p: min(100vw / 1024, 100svh / 1600);
   --fit: calc((100svh - 606 * var(--p) - 12px) / 942);
-  --t: max(var(--p), min(.479px, (100vw - 40px) / 730, max(.44px, var(--fit))));
+  --t: max(var(--p), min(.479px, (100vw - 40px) / 750, max(.44px, var(--fit))));
   --std-paper: #fff9f4;
   --std-ink: #4a3c30;
   --std-line: rgb(74 60 48 / .5);
@@ -46,7 +46,7 @@
 .std-for { margin-top: calc(27 * var(--t)); padding-left: .23em; line-height: 1.2; letter-spacing: .23em; }
 /* Written in by hand, as on the envelope: the mask that wipes the ink on is animated in SaveTheDate.tsx. Line height and
    padding give the swashes room, since a mask clips anything outside the box. */
-.std-names { margin-top: calc(4.2 * var(--t)); padding: 0 .2em; font: calc(118 * var(--t))/1.3 var(--script); white-space: nowrap; }
+.std-names { margin-top: calc(4.2 * var(--t)); padding: 0 .2em; font: calc(106 * var(--t))/1.3 var(--script); white-space: nowrap; }
 /* The script's own ampersand is rather plain; the serif italic one has the loops of the design's. */
 .std-names span { font: italic 400 .92em/0 var(--serif); }
 .std-names + .std-rule { margin-top: calc(7.6 * var(--t)); }

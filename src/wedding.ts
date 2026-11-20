@@ -1,4 +1,4 @@
-export const wedding = { names: 'Imogen & Dan', dateLabel: '24 August 2028', location: 'Caswell House, Oxfordshire' }
+export const wedding = { names: 'Imogen & Daniel', dateLabel: '24 August 2028', location: 'Caswell House, Oxfordshire' }
 
 /**
  * "Save our date" in Google Calendar: an all-day event on 24 August 2028 (Google's end date is the day after).
@@ -6,7 +6,7 @@ export const wedding = { names: 'Imogen & Dan', dateLabel: '24 August 2028', loc
  */
 export const googleCalendarLink = 'https://calendar.google.com/calendar/render?' + new URLSearchParams({
   action: 'TEMPLATE',
-  text: 'Imogen & Dan’s wedding',
+  text: 'Imogen & Daniel’s wedding',
   dates: '20280824/20280825',
   details: 'Save the date! Further details and timings to follow.',
   location: 'Caswell House, Brize Norton, Oxfordshire OX18 3NJ',

@@ -30,11 +30,11 @@ const SETTINGS_DEFAULTS: Record<string, string> = {
 }
 
 const SEED_PREDICTIONS: { question: string; kind: 'choice' | 'number'; options: string[] }[] = [
-  { question: 'Who cries first?', kind: 'choice', options: ['Dan', 'Imogen', 'A parent', 'The best man'] },
+  { question: 'Who cries first?', kind: 'choice', options: ['Daniel', 'Imogen', 'A parent', 'The best man'] },
   { question: 'How long will the speeches last, in minutes?', kind: 'number', options: [] },
   { question: 'How many minutes late will the bride be?', kind: 'number', options: [] },
-  { question: 'Who will be last on the dancefloor?', kind: 'choice', options: ['Dan', 'Imogen', 'The best man', 'The maid of honour', 'Someone’s uncle'] },
-  { question: 'Will Dan get through his vows without his voice wobbling?', kind: 'choice', options: ['Yes, steady as a rock', 'No chance'] },
+  { question: 'Who will be last on the dancefloor?', kind: 'choice', options: ['Daniel', 'Imogen', 'The best man', 'The maid of honour', 'Someone’s uncle'] },
+  { question: 'Will Daniel get through his vows without his voice wobbling?', kind: 'choice', options: ['Yes, steady as a rock', 'No chance'] },
 ]
 
 // Web pushes cost one request each; Expo takes 100 a request. Keep each alarm well inside Cloudflare's per-invocation limits.
@@ -697,7 +697,7 @@ export class WeddingHub extends DurableObject<Env> {
     const code = clean(input.code, 80)
     const passcode = this.env.HOST_PASSCODE ?? ''
     let staff: Staff & { code: string | null } | null = null
-    if (passcode && timingSafeEqual(code, passcode)) staff = { role: 'host', label: clean(input.label, 40) || 'Imogen & Dan', code: null }
+    if (passcode && timingSafeEqual(code, passcode)) staff = { role: 'host', label: clean(input.label, 40) || 'Imogen & Daniel', code: null }
     else {
       const row = this.sql.exec<{ code: string; role: Role; label: string }>('SELECT * FROM staff_codes WHERE code = ?', code.toUpperCase()).toArray()[0]
       if (row) staff = { role: row.role, label: row.label, code: row.code }

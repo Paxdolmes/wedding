@@ -27,7 +27,7 @@ export const wines = [
   { kind: 'Red', name: 'Catena Malbec', origin: 'Mendoza, Argentina' },
 ]
 
-/** Friday get-together at the pub where Imogen and Dan had their first date. */
+/** Friday get-together at the pub where Imogen and Daniel had their first date. */
 export const afterParty = {
   pub: 'The Crabtree',
   area: 'Fulham',

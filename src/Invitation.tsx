@@ -15,7 +15,7 @@ export function Hero({ ref }: { ref: Ref<HTMLElement> }) {
     <OliveSprig className="hero-sprig" />
     <p className="label hero-label">With full hearts, we invite you to</p>
     <p className="hero-script foil">save the date</p>
-    <h1 id="couple-names" className="hero-names"><span className="hero-name">Imogen</span> <span className="amp foil">&amp;</span> <span className="hero-name">Dan</span></h1>
+    <h1 id="couple-names" className="hero-names"><span className="hero-name">Imogen</span> <span className="amp foil">&amp;</span> <span className="hero-name">Daniel</span></h1>
     <div className="date-lockup"><span>Thursday</span><i aria-hidden="true" /><time dateTime="2028-08-24">24 August 2028</time><i aria-hidden="true" /><span>Oxfordshire</span></div>
     <p className="wedding-location">{wedding.location}</p>
     <p className="invitation-note">One day. Our favourite people.<br />The beginning of our forever.</p>
@@ -34,7 +34,7 @@ export function Together() {
         <blockquote className="important-note" data-reveal><p>If you’re reading this, you’re one of the people who matter most to us.</p></blockquote>
         <p data-reveal>We’re getting married, and we can’t imagine celebrating without you. Join us at Caswell House on 24 August 2028.</p>
         <p data-reveal>More details will follow. For now, keep the day for us.</p>
-        <p className="signature" data-reveal><span>With love,</span><span>Imogen &amp; Dan</span></p>
+        <p className="signature" data-reveal><span>With love,</span><span>Imogen &amp; Daniel</span></p>
       </div>
     </div>
   </section>
@@ -55,7 +55,7 @@ export function DressCode() {
 export function SiteFooter({ onReplay }: { onReplay: () => void }) {
   return <footer className="site-footer">
     <div className="footer-seal" aria-hidden="true"><WaxSeal /></div>
-    <p className="footer-names">Imogen <span className="foil">&amp;</span> Dan</p>
+    <p className="footer-names">Imogen <span className="foil">&amp;</span> Daniel</p>
     <p className="label">24 August 2028 · Caswell House</p>
     <OliveSprig className="footer-sprig" />
     <button type="button" className="replay-button" onClick={onReplay}>Open the envelope again <span aria-hidden="true">↺</span></button>

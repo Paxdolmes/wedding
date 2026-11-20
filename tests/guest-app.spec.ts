@@ -10,7 +10,7 @@ test('a guest joins, requests and votes for a song, and makes a prediction', asy
   await page.getByLabel('Your name').fill(`Guest ${unique()}`)
   await page.getByRole('button', { name: 'Join the weekend' }).click()
   await expect(page.getByLabel(/days until the wedding/)).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'From Imogen & Dan' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'From Imogen & Daniel' })).toBeVisible()
 
   await page.getByRole('link', { name: 'Music' }).click()
   const song = `Song ${unique()}`
@@ -45,7 +45,7 @@ test('the couple sign in and send a notification that lands in guests’ message
   await page.goto('/app/#host')
   await page.getByLabel(/Passcode/).fill('test-passcode')
   await page.getByRole('button', { name: 'Sign in' }).click()
-  await expect(page.getByRole('heading', { name: 'Imogen & Dan' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Imogen & Daniel' })).toBeVisible()
   const title = `🪩 Dancefloor ${unique()}`
   await page.getByLabel('Title').fill(title)
   await page.getByRole('textbox', { name: 'Message' }).fill('The dancefloor is looking suspiciously empty. Fix that.')

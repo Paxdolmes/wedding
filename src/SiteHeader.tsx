@@ -58,7 +58,7 @@ export function SiteHeader({ hidden }: { hidden: boolean }) {
   }, [menuOpen])
 
   return <header className={`site-header${scrolled ? ' is-scrolled' : ''}`} inert={hidden} aria-hidden={hidden || undefined}>
-    <a className="monogram" href="#top" aria-label="Imogen and Dan, back to the top">I<span className="foil">&amp;</span>D</a>
+    <a className="monogram" href="#top" aria-label="Imogen and Daniel, back to the top">I<span className="foil">&amp;</span>D</a>
     <nav aria-label="Wedding details"><ul>{sections.map(section => <li key={section.href}>
       <a href={section.href} aria-current={active === section.href ? 'location' : undefined}>{section.label}</a>
     </li>)}</ul></nav>

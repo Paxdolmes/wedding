@@ -75,7 +75,7 @@ function MoreToCome() {
     <motion.div className="std-to-come" variants={line}>
       <p className="std-small-caps">More information to come</p>
       <p>Timings, travel and places to stay will follow closer to the day. For now, please keep the date free for us.</p>
-      <p className="std-signature"><span>With love,</span> <span>Imogen <i>&amp;</i> Dan</span></p>
+      <p className="std-signature"><span>With love,</span> <span>Imogen <i>&amp;</i> Daniel</span></p>
     </motion.div>
   </motion.section>
 }
@@ -143,7 +143,7 @@ export function SaveTheDate({ open }: { open: boolean }) {
         <motion.h1 className="std-title" id="std-title" variants={line}><span>Save</span> <em>the</em> <span>date</span></motion.h1>
         <motion.i className="std-rule" aria-hidden="true" variants={rule} />
         <motion.p className="std-caps std-for" variants={line}>For the wedding of</motion.p>
-        <motion.p className="std-names" id="std-names" variants={handwriting}>Imogen <span>&amp;</span> Dan</motion.p>
+        <motion.p className="std-names" id="std-names" variants={handwriting}>Imogen <span>&amp;</span> Daniel</motion.p>
         <motion.i className="std-rule" aria-hidden="true" variants={rule} />
         <motion.p className="std-when" variants={line}><span className="std-day">Thursday</span><span className="visually-hidden">, </span><time className="std-date" dateTime="2028-08-24">24 August 2028</time></motion.p>
         <motion.i className="std-rule" aria-hidden="true" variants={rule} />

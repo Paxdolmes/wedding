@@ -1,4 +1,4 @@
-/* Imogen & Dan guest app: shows push notifications and keeps the app shell working on patchy venue signal. */
+/* Imogen & Daniel guest app: shows push notifications and keeps the app shell working on patchy venue signal. */
 const SHELL = 'iad-shell-v1'
 
 self.addEventListener('install', event => {
@@ -25,8 +25,8 @@ self.addEventListener('fetch', event => {
 
 self.addEventListener('push', event => {
   let data = {}
-  try { data = event.data ? event.data.json() : {} } catch { data = { title: 'Imogen & Dan', body: event.data ? event.data.text() : '' } }
-  const title = data.title || 'Imogen & Dan'
+  try { data = event.data ? event.data.json() : {} } catch { data = { title: 'Imogen & Daniel', body: event.data ? event.data.text() : '' } }
+  const title = data.title || 'Imogen & Daniel'
   event.waitUntil(Promise.all([
     self.registration.showNotification(title, {
       body: data.body || '',

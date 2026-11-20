@@ -1,11 +1,11 @@
-# Imogen & Dan — Save the date
+# Imogen & Daniel — Save the date
 
 React + TypeScript + Vite, with Motion for the envelope and the save-the-date, and GSAP for the full page. A textured
 ivory envelope is set down under dappled garden light, its olive wax seal pressed in and the address written by hand.
 Pressing the seal cracks it, lifts the flap and draws out a gatefold card; as the card opens, petals are thrown and
 "You're invited!" is written in gold before the card flies forward into the page.
 
-**For now the page is only the save-the-date**, laid out like Imogen and Dan's own design: Caswell House in watercolour,
+**For now the page is only the save-the-date**, laid out like Imogen and Daniel's own design: Caswell House in watercolour,
 olive sprigs in the corners of a fine frame, the date, "One day. Our favourite people. The beginning of our forever."
 and a "Save our date" button that offers Google Calendar, or the calendar file for Apple Calendar and Outlook.
 It fits on one screen on most phones and on computers. A small arrow on the card's bottom edge leads to a second card

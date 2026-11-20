@@ -22,7 +22,7 @@ export function HomeScreen({ me, go }: { me: Me; go: (tab: Tab) => void }) {
     <Countdown now={now} />
     <PushCard />
     <Card>
-      <View style={s.row}><Heading>From Imogen &amp; Dan</Heading>{!!inbox.data?.length && <Pill>{inbox.data.length}</Pill>}</View>
+      <View style={s.row}><Heading>From Imogen &amp; Daniel</Heading>{!!inbox.data?.length && <Pill>{inbox.data.length}</Pill>}</View>
       {inbox.data?.length ? inbox.data.map((item, index) => <Pressable key={item.id} style={[s.message, index > 0 && s.messageRule]} onPress={() => { const t = tabFromUrl(item.url); if (isTab(t)) go(t) }}>
         <Text style={s.messageTitle}>{item.title}</Text>
         <Body>{item.body}</Body>
