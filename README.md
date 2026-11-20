@@ -2,7 +2,7 @@
 
 React + TypeScript + Vite, with Motion for the envelope and the save-the-date, and GSAP for the full page. A textured
 ivory envelope is set down under dappled garden light, its olive wax seal pressed in and the address written by hand.
-Pressing the seal brings in a silver letter opener that slices through the wax, then the flap lifts and draws out a gatefold card; as the card opens, petals are thrown and
+Pressing the seal brings in a silver and gold letter opener that settles at the rim of the wax, draws through it (the incision opening behind its tip, flecks of wax lifting out) and lifts away as the seal parts, then the flap lifts and draws out a gatefold card; as the card opens, petals are thrown and
 "You're invited!" is written in gold before the card flies forward into the page.
 
 **For now the page is only the save-the-date**, laid out like Imogen and Daniel's own design: Caswell House in watercolour,
@@ -77,7 +77,8 @@ Tests cover desktop and mobile Chromium, and start the guest app's backend with 
 - `src/App.tsx`: the envelope, then the save-the-date, or the full site when `showFullSite` is on. `src/FullSite.tsx` is the full page, loaded only when it's shown.
 - `src/EnvelopeIntro.tsx` and CSS: the opening, from the envelope being set down to the card filling the screen; reduced-motion access skips the animation.
 - `src/Ambience.tsx` and `src/assets/scene/`: the branch shadows and drifting dust over the envelope.
-- `src/WaxSeal.tsx` and `src/crack.ts`: sculpted SVG wax seal and the line the letter opener cuts along. The letter opener itself is an inline SVG in `src/EnvelopeIntro.tsx`.
+- `src/WaxSeal.tsx` and `src/crack.ts`: sculpted SVG wax seal, its outline and the line the letter opener cuts along.
+- `src/SealCutLayers.tsx`, `src/SealCut.css` and `src/sealCut.ts`: the letter opener, the incision and the choreography of the cut (designed with v0). A few CSS custom properties on `.seal-assembly` (`--tip`, `--lift`, `--tilt`…) drive the blade, its shadow, its highlights and the cut together.
 - `src/confetti.ts` and `src/Celebration.tsx`: one canvas for the thrown petals, leaves and confetti, and the petals that drift down over the page.
 - `src/Invitation.tsx`: the invitation itself (names, date, calendar link, countdown), the "If you're reading this" note, dress code and footer.
 - `src/SectionHeading.tsx`: the numbered chapter heading every section shares.
