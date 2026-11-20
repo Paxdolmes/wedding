@@ -236,6 +236,7 @@ test('the groomsmen’s link pops the question first, then shows the save-the-da
   await expect(ask).toBeFocused({ timeout: 1500 })
   await expect(ask).toContainText('Daniel has a question')
   await expect(ask).toContainText('as I marry Imogen on Thursday 24 August 2028')
+  await expect(ask).toContainText('Daniel & Imogen x')
   await ask.getByRole('button', { name: 'Obviously, yes' }).click()
   await expect(ask.getByRole('status')).toContainText('Knew it.')
   await expect(ask.getByRole('button', { name: /yes/i })).toHaveCount(0)

@@ -22,13 +22,10 @@ export const googleCalendarLink = 'https://calendar.google.com/calendar/render?'
 export const showFullSite = false
 
 /**
- * The groomsmen's own link: imogenanddan.com/groomsman shows the same save-the-date, with a card first in which Daniel
- * pops the question. The pages themselves are made at build time (see vite.config.ts).
+ * The groomsmen's own link: imogenanddan.com/groomsman shows the same save-the-date, with Daniel's proposal first
+ * (src/GroomsmanProposal.tsx). The page itself is made at build time (see vite.config.ts).
  */
-export const weddingParty = {
-  groomsman: { from: 'Daniel', partner: 'Imogen', question: ['Will you be my', 'groomsman?'] },
-}
-export type PartyRole = keyof typeof weddingParty
-export const partyRoles = Object.keys(weddingParty) as PartyRole[]
+export const partyRoles = ['groomsman'] as const
+export type PartyRole = typeof partyRoles[number]
 /** Which wedding-party link this is, if any. */
 export const partyRoleFrom = (pathname: string) => partyRoles.find(role => new RegExp(`^/${role}/?$`).test(pathname))
