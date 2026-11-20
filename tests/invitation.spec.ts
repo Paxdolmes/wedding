@@ -239,6 +239,7 @@ test('the groomsmen’s link pops the question first, then shows the save-the-da
   await expect(ask).toContainText('Daniel & Imogen x')
   await ask.getByRole('button', { name: 'Obviously, yes' }).click()
   await expect(ask.getByRole('status')).toContainText('Knew it.')
+  await expect(ask.getByRole('status')).toContainText('Thank you, it means the world.')
   await expect(ask.getByRole('button', { name: /yes/i })).toHaveCount(0)
   await expect(page.getByRole('article', { name: /Save the date/ })).toContainText('Caswell House, Oxfordshire')
   await expect(page.getByText(/What to wear/)).toHaveCount(0)
