@@ -104,7 +104,10 @@ export function SaveTheDate({ open }: { open: boolean }) {
     <main>
       {role && <TheQuestion ref={ask} />}
       {/* The page settles into place over .9s; the painting's reveal begins only once it has (.65s + 3 × .09s). */}
-      <motion.article ref={card} id="std-card" className="std" tabIndex={-1} aria-labelledby="std-title std-names" initial={reduced ? false : 'hidden'} animate="shown" variants={{ shown: { transition: { staggerChildren: .09, delayChildren: .65 } } }}>
+      {/* On the groomsman's link this card sits below the proposal, so it prints itself in (painting and all) when scrolled to. */}
+      <motion.article ref={card} id="std-card" className="std" tabIndex={-1} aria-labelledby="std-title std-names" initial={reduced ? false : 'hidden'}
+        {...(role ? { whileInView: 'shown', viewport: { once: true, amount: .35 } } : { animate: 'shown' })}
+        variants={{ shown: { transition: { staggerChildren: .09, delayChildren: role ? .2 : .65 } } }}>
         <motion.div className="std-frame" aria-hidden="true" variants={frame} />
         <motion.img className="std-sprig std-sprig-top" src={images.leavesTopLeft} alt="" width="376" height="276" aria-hidden="true" variants={sprig(-5)} />
         <motion.img className="std-sprig std-sprig-bottom" src={images.leavesBottomRight} alt="" width="300" height="277" aria-hidden="true" variants={sprig(5)} />

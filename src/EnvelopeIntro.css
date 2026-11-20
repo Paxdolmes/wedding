@@ -88,9 +88,9 @@
 .seal-half-top .wax-stamp, .seal-half-bottom .wax-stamp { transform-origin: 50% 50%; }
 .seal-crack { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .seal-crack path { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
-.seal-crack .crack-main { stroke: #1d2a15; stroke-opacity: .8; stroke-width: 1.1; }
-.seal-crack .crack-branch { stroke: #1d2a15; stroke-opacity: .55; stroke-width: .6; }
-.seal-crack .crack-lip { stroke: #dfe2bd; stroke-opacity: .45; stroke-width: .4; }
+.seal-crack .knife-cut { stroke: #1d2a15; stroke-opacity: .85; stroke-width: 1.2; }
+/* The letter opener: nearly twice the seal's width, its tip at its left end, level with the cut line. */
+.letter-opener { position: absolute; z-index: 3; left: 0; top: 47.2%; width: 190%; height: auto; overflow: visible; translate: 0 -50%; opacity: 0; transform-origin: 70% 50%; filter: drop-shadow(1px 3px 2px #2a211640) drop-shadow(3px 9px 8px #2a21162a); }
 .seal-crack .crack-glint { stroke: #fffbe6; stroke-width: 1; stroke-dasharray: .14 1.2; opacity: 0; filter: drop-shadow(0 0 1.5px #fff6cf); }
 .seal-press-glow { position: absolute; inset: -12%; border-radius: 50%; opacity: 0; pointer-events: none; background: radial-gradient(circle, #fff8dd00 48%, #fff8dd99 58%, #fff8dd00 72%); }
 .seal-half-bottom { transform-style: preserve-3d; }

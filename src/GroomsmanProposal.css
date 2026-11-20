@@ -6,7 +6,6 @@
   --ga-sage: #7d8761;
   --ga-blush: #efc9c0;
   --ga-foil: linear-gradient(100deg, #806b3e 0%, #9d8d64 20%, #c8a95f 38%, #ecd9a0 48%, #c8a95f 58%, #9d8d64 78%, #806b3e 100%);
-  --ga-seal: clamp(76px, 13vh, 112px);
 
   position: relative;
   isolation: isolate;
@@ -87,7 +86,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  min-height: calc(var(--ga-seal) + 48px);
+  min-height: 132px;
 }
 
 .ga-question {
@@ -111,133 +110,67 @@
   to { background-position: 0% 0; }
 }
 
-/* Wax seal */
-.ga-seal {
+/* Stage curtains: blush fabric in soft folds, hung from a gold rod, drawn apart from the middle. */
+.ga-curtains {
   position: absolute;
   z-index: 2;
-  inset: 0;
-  margin: auto;
-  width: var(--ga-seal);
-  height: var(--ga-seal);
+  inset: -6px -4px -10px;
   pointer-events: none;
 }
 
-.ga-seal-ripple {
+.ga-rod {
   position: absolute;
-  inset: -6%;
-  border-radius: 50%;
-  border: 1px solid rgb(239 201 192 / 0.9);
+  z-index: 1;
+  top: 0;
+  left: -6px;
+  right: -6px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--ga-foil);
+  box-shadow: 0 1px 2px rgb(74 60 48 / 0.3);
 }
 
-.ga-seal-half {
+.ga-curtain {
   position: absolute;
-  inset: 0;
-  filter: drop-shadow(0 6px 7px rgb(74 60 48 / 0.28));
+  top: 2px;
+  bottom: 0;
+  width: 50.5%;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.25), transparent 30%, rgb(110 56 48 / 0.12)),
+    repeating-linear-gradient(90deg, #f5ddd6 0 7px, #ecc6bc 11px, #f7e3dd 16px, #e9bfb4 21px, #f5ddd6 26px);
+  box-shadow: inset 0 -3px 0 #c8a95f, 0 8px 14px -8px rgb(74 60 48 / 0.35);
 }
 
-.ga-seal-clip {
+.ga-curtain--l { left: 0; transform-origin: 0 0; border-bottom-right-radius: 40% 14px; }
+.ga-curtain--r { right: 0; transform-origin: 100% 0; border-bottom-left-radius: 40% 14px; }
+
+.ga-seam {
   position: absolute;
-  inset: 0;
-}
-
-.ga-seal-clip--l {
-  clip-path: polygon(0 0, 52% 0, 46% 22%, 54% 40%, 47% 62%, 53% 80%, 49% 100%, 0 100%);
-}
-
-.ga-seal-clip--r {
-  clip-path: polygon(52% 0, 100% 0, 100% 100%, 49% 100%, 53% 80%, 47% 62%, 54% 40%, 46% 22%);
-}
-
-.ga-seal-face {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  border-radius: 46% 54% 52% 48% / 52% 46% 54% 48%;
-  background: radial-gradient(circle at 34% 28%, #f6dcd4 0%, #efc9c0 22%, #d29a8e 56%, #a96a5f 100%);
-  box-shadow:
-    inset 0 -4px 9px rgb(110 56 48 / 0.35),
-    inset 0 3px 6px rgb(255 240 234 / 0.6);
-}
-
-.ga-seal-face::after {
-  content: '';
-  position: absolute;
-  inset: -25%;
-  background: linear-gradient(105deg, transparent 38%, rgb(236 217 160 / 0.25) 44%, rgb(255 247 224 / 0.85) 50%, rgb(236 217 160 / 0.25) 56%, transparent 62%);
-  transform: translateX(-130%);
-  animation: ga-glint 0.9s ease-in-out var(--ga-glint-delay, 1s) forwards;
-}
-
-@keyframes ga-glint {
-  to { transform: translateX(130%); }
-}
-
-.ga-seal-ring {
-  position: absolute;
-  inset: 13%;
-  border-radius: 50%;
-  border: 1.5px solid rgb(122 64 55 / 0.4);
-  box-shadow:
-    inset 0 1px 2px rgb(110 56 48 / 0.35),
-    0 1px 0 rgb(255 236 230 / 0.55);
-}
-
-.ga-seal-mono i {
-  margin: 0 0.06em;
-  font: italic 500 0.62em / 1 var(--serif, 'Cormorant Garamond', serif);
-}
-
-.ga-seal-mono {
-  font: 400 calc(var(--ga-seal) * 0.34) / 1 var(--script, 'Pinyon Script', cursive);
-  color: rgb(122 64 55 / 0.9);
-  text-shadow:
-    0 1px 0 rgb(255 236 230 / 0.55),
-    0 -1px 0 rgb(90 44 38 / 0.25);
-}
-
-.ga-crack {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  top: 3px;
+  bottom: 6px;
+  left: 50%;
+  width: 2px;
+  margin-left: -1px;
+  background: linear-gradient(180deg, #fff6dc, #ecd9a0 60%, transparent);
+  box-shadow: 0 0 10px 3px rgb(236 217 160 / 0.8);
   opacity: 0;
   animation: ga-crack 0.45s ease-out var(--ga-crack-delay, 1.45s) forwards;
-}
-
-.ga-crack polyline {
-  fill: none;
-  vector-effect: non-scaling-stroke;
-  stroke-linejoin: round;
-}
-
-.ga-crack-glow {
-  stroke: #ecd9a0;
-  stroke-width: 4;
-  opacity: 0.4;
-}
-
-.ga-crack-core {
-  stroke: #fff6dc;
-  stroke-width: 1;
 }
 
 @keyframes ga-crack {
   to { opacity: 1; }
 }
 
-/* Drumroll diamonds */
+/* Drumroll diamonds, along the curtains' hem */
 .ga-dots {
   position: absolute;
   z-index: 2;
   left: 0;
   right: 0;
-  top: calc(50% + var(--ga-seal) / 2 + 12px);
+  bottom: 14px;
   display: flex;
   justify-content: center;
   gap: 14px;
-  pointer-events: none;
 }
 
 .ga-dots span {

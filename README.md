@@ -2,7 +2,7 @@
 
 React + TypeScript + Vite, with Motion for the envelope and the save-the-date, and GSAP for the full page. A textured
 ivory envelope is set down under dappled garden light, its olive wax seal pressed in and the address written by hand.
-Pressing the seal cracks it, lifts the flap and draws out a gatefold card; as the card opens, petals are thrown and
+Pressing the seal brings in a silver letter opener that slices through the wax, then the flap lifts and draws out a gatefold card; as the card opens, petals are thrown and
 "You're invited!" is written in gold before the card flies forward into the page.
 
 **For now the page is only the save-the-date**, laid out like Imogen and Daniel's own design: Caswell House in watercolour,
@@ -21,12 +21,12 @@ changing the switch (`?full` does nothing on the live site).
 ## The groomsmen's link
 
 Send groomsmen **imogenanddan.com/groomsman**. After the envelope opens, Daniel's proposal plays (designed with v0,
-`src/GroomsmanProposal.tsx` and its CSS, with the choreography written out at the top): a candle glow, a blush wax seal
-pressed onto the card, a drumroll of three gold diamonds and a glint, a crack of light, then the seal breaks away in a
-bloom of light with the page's petals and confetti, and the whole question "Will you be my groomsman?" resolves at once
+`src/GroomsmanProposal.tsx` and its CSS, with the choreography written out at the top): a candle glow, a pair of blush stage
+curtains on a gold rod, a drumroll of three gold diamonds along their hem, a sliver of light where they meet, then the
+curtains draw apart in a bloom of light with the page's petals and confetti, and the whole question "Will you be my groomsman?" resolves at once
 (never word by word, so nobody expects a best-man reveal). A gold flourish, the note and two buttons follow; "Yes" or
-"Obviously, yes" throws a second burst and writes "Knew it." It's signed "With love, Daniel & Imogen x". The save-the-date
-follows below. `vite.config.ts` copies the page to `dist/groomsman/` at build time and serves it in development. Nothing
+"Obviously, yes" throws a second burst and writes "Knew it. Thank you, it means the world." It's signed "With love, Daniel & Imogen x". The save-the-date
+follows below and prints itself in (painting and all) only when scrolled to. `vite.config.ts` copies the page to `dist/groomsman/` at build time and serves it in development. Nothing
 is recorded when someone taps Yes.
 
 ## Security and link previews
@@ -77,7 +77,7 @@ Tests cover desktop and mobile Chromium, and start the guest app's backend with 
 - `src/App.tsx`: the envelope, then the save-the-date, or the full site when `showFullSite` is on. `src/FullSite.tsx` is the full page, loaded only when it's shown.
 - `src/EnvelopeIntro.tsx` and CSS: the opening, from the envelope being set down to the card filling the screen; reduced-motion access skips the animation.
 - `src/Ambience.tsx` and `src/assets/scene/`: the branch shadows and drifting dust over the envelope.
-- `src/WaxSeal.tsx` and `src/crack.ts`: sculpted SVG wax seal and the line it cracks along.
+- `src/WaxSeal.tsx` and `src/crack.ts`: sculpted SVG wax seal and the line the letter opener cuts along. The letter opener itself is an inline SVG in `src/EnvelopeIntro.tsx`.
 - `src/confetti.ts` and `src/Celebration.tsx`: one canvas for the thrown petals, leaves and confetti, and the petals that drift down over the page.
 - `src/Invitation.tsx`: the invitation itself (names, date, calendar link, countdown), the "If you're reading this" note, dress code and footer.
 - `src/SectionHeading.tsx`: the numbered chapter heading every section shares.

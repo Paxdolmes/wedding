@@ -3,7 +3,7 @@ import { motion, stagger, useAnimate, useMotionValue, useReducedMotion, useSprin
 import { OliveBranch } from './OliveBranch'
 import { WaxSeal } from './WaxSeal'
 import { DustMotes, LeafShadows } from './Ambience'
-import { crackBranches, crackHalves } from './crack'
+import { crackHalves, cutPath } from './crack'
 import { scatterPetals, throwPetals } from './confetti'
 import './EnvelopeIntro.css'
 
@@ -89,26 +89,31 @@ export function EnvelopeIntro({ onReveal, onOpen, replay }: { onReveal: () => vo
     if (entrance.current) { entrance.current.begin(); entrance.current.controls.forEach(control => control.complete()) }
     const root = scope.current as HTMLElement
     const card = root.querySelector('.keepsake-card') as HTMLElement
-    const halves = '.seal-whole .wax-stamp, .seal-half-top .wax-stamp, .seal-half-bottom .wax-stamp'
     setPhase('unsealing')
 
-    // 1. Press: the wax gives under the thumb and warms a little.
+    // 1. A letter opener slides in from the right, its blade levelled at the seal.
     animate('.press-hint, .seal-glint, .seal-halo', { opacity: 0 }, { duration: .25 })
-    animate('.seal-press-glow', { opacity: [0, .55, 0], scale: [.85, 1.15, 1.3] }, { duration: .9, ease: 'easeOut' })
-    await animate(halves, { scale: .95, y: '1.5%' }, { duration: .24, ease: [.3, 0, .2, 1] })
+    await animate('.letter-opener', { opacity: [0, 1], x: ['85%', '55%'], rotate: [-9, -2] }, { duration: .45, ease: silk })
     if (!mounted.current) return
 
-    // 2. Crack: a hairline runs outwards from the centre, branches, and catches the light.
+    // 2. The cut: the blade glides through the wax from right to left, the cut drawing on behind its tip and catching
+    // the light. The whole seal gives way to its two halves under the blade.
     buzz(12)
-    animate('.seal-crack .crack-main', { strokeDashoffset: [1, 0] }, { duration: .34, ease: [.2, .7, .3, 1] })
-    animate('.seal-crack .crack-branch', { strokeDashoffset: [1, 0] }, { duration: .22, delay: .16, ease: 'easeOut' })
-    animate('.seal-crack .crack-glint', { strokeDashoffset: [1.2, -.2], opacity: [0, 1, 0] }, { duration: .55, delay: .2, ease: 'easeInOut' })
-    // Swap the whole seal for its two halves underneath the crack line.
-    animate('.seal-half-top, .seal-half-bottom', { opacity: 1 }, { duration: .01, delay: .1 })
-    animate('.seal-whole', { opacity: 0 }, { duration: .01, delay: .11 })
-    animate('.break-edge', { opacity: 1 }, { duration: .3, delay: .2 })
-    animate(halves, { scale: 1, y: '0%' }, { duration: .45, ease: [.34, 1.4, .64, 1] })
-    await wait(.5)
+    animate('.seal-press-glow', { opacity: [0, .5, 0], scale: [.9, 1.1, 1.25] }, { duration: .8, ease: 'easeOut' })
+    animate('.letter-opener', { x: ['55%', '-16%'], rotate: [-2, 0] }, { duration: .55, ease: [.45, 0, .2, 1] })
+    animate('.seal-crack .knife-cut', { strokeDashoffset: [1, 0] }, { duration: .55, ease: [.45, 0, .2, 1] })
+    animate('.seal-crack .crack-glint', { strokeDashoffset: [1.2, -.2], opacity: [0, 1, 0] }, { duration: .55, delay: .35, ease: 'easeInOut' })
+    animate('.seal-half-top, .seal-half-bottom', { opacity: 1 }, { duration: .01, delay: .08 })
+    animate('.seal-whole', { opacity: 0 }, { duration: .01, delay: .09 })
+    animate('.break-edge', { opacity: 1 }, { duration: .3, delay: .3 })
+    // The wax gives a little either side of the blade as it passes.
+    animate('.seal-half-top .wax-stamp', { y: ['0%', '-1.2%', '0%'] }, { duration: .55, ease: 'easeInOut' })
+    animate('.seal-half-bottom .wax-stamp', { y: ['0%', '1.2%', '0%'] }, { duration: .55, ease: 'easeInOut' })
+    await wait(.55)
+    if (!mounted.current) return
+    // The opener lifts away, up and to the left.
+    animate('.letter-opener', { x: ['-16%', '-34%'], y: ['0%', '-260%'], rotate: [0, -14], opacity: [1, 0] }, { duration: .5, ease: [.4, 0, .6, 1] })
+    await wait(.15)
     if (!mounted.current) return
 
     // 3. Part: the halves ease apart for a breath before the lower one lets go.
@@ -244,10 +249,21 @@ export function EnvelopeIntro({ onReveal, onOpen, replay }: { onReveal: () => vo
           <span className="seal-stamp-ring" />
           <div className="seal-half-bottom"><WaxSeal part="bottom" /></div>
           <div className="seal-whole"><WaxSeal /></div>
+          {/* A slim letter opener: silver blade, gold bolster and handle. It cuts the seal open. */}
+          <svg className="letter-opener" viewBox="0 0 200 24" aria-hidden="true">
+            <defs>
+              <linearGradient id="opener-blade" x1="0" x2="0" y1="0" y2="1"><stop stopColor="#fbfbf7" /><stop offset=".45" stopColor="#d9d9d2" /><stop offset=".55" stopColor="#a9a9a2" /><stop offset="1" stopColor="#7c7c76" /></linearGradient>
+              <linearGradient id="opener-gold" x1="0" x2="0" y1="0" y2="1"><stop stopColor="#f3e2ae" /><stop offset=".4" stopColor="#c8a95f" /><stop offset="1" stopColor="#7d683a" /></linearGradient>
+            </defs>
+            <path d="M0 12.4Q58 7.6 120 7.4L120 16.6Q58 16.2 0 12.4Z" fill="url(#opener-blade)" />
+            <path d="M6 12.3Q60 9.6 118 9.4" stroke="#ffffff" strokeOpacity=".7" strokeWidth=".6" fill="none" />
+            <rect x="118" y="5" width="7" height="14" rx="1.5" fill="url(#opener-gold)" />
+            <rect x="125" y="7" width="73" height="10" rx="5" fill="url(#opener-gold)" />
+            <path d="M131 12H192" stroke="#7d683a" strokeOpacity=".45" strokeWidth=".6" />
+            <circle cx="193" cy="12" r="2.2" fill="#fff3cc" fillOpacity=".7" />
+          </svg>
           <svg className="seal-crack" viewBox="0 0 140 140">
-            {crackHalves.map(d => <path key={d} className="crack-main" d={d} pathLength={1} />)}
-            {crackBranches.map(d => <path key={d} className="crack-branch" d={d} pathLength={1} />)}
-            {crackHalves.map(d => <path key={`lip-${d}`} className="crack-main crack-lip" d={d} pathLength={1} transform="translate(0 -1.1)" />)}
+            <path className="knife-cut" d={cutPath} pathLength={1} />
             {crackHalves.map(d => <path key={`glint-${d}`} className="crack-glint" d={d} pathLength={1} transform="translate(0 -1.1)" />)}
           </svg>
           <span className="seal-press-glow" />

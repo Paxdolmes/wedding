@@ -4,6 +4,6 @@ export const crackPoints = crackPath.slice(1).split('L').map(point => point.spli
 const toPath = (list: number[][]) => 'M' + list.map(([x, y]) => `${x} ${y}`).join('L')
 /** The crack split at its centre, so it can run outwards in both directions from where the thumb pressed. */
 export const crackHalves = [toPath(crackPoints.filter(([x]) => x <= 67).reverse()), toPath(crackPoints.filter(([x]) => x >= 67))]
-/** Hairline fractures that branch off the main crack. */
-export const crackBranches = ['M46 66L44 60L40 56.5', 'M88 64L91 71L95 74', 'M24 67L22.5 72.5', 'M110 63.5L112 58']
+/** The same line drawn from right to left, the way the letter opener's blade travels through the wax. */
+export const cutPath = toPath([...crackPoints].reverse())
 export const points = (lift: number) => crackPoints.map(([x, y]) => `${x},${y - lift}`).reverse().join(' ')

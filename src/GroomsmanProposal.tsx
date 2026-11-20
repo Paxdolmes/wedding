@@ -3,13 +3,12 @@
  * for the envelope still fading out when the card mounts behind it)
  *
  *  0.00  Candle glow warms up behind everything, then flickers gently (CSS).
- *  0.15  A blush wax seal is PRESSED into the page: drops in, squashes, settles,
- *        with a soft ripple ring. "Daniel has a question…" fades in at 0.55.
- *  1.00  Drumroll: three tiny gold diamonds light up one after another (1.0 / 1.2 / 1.4)
- *        while a gold glint slides across the wax (1.0 -> 1.8).
- *  1.45  A hairline of golden light seeps along a crack in the seal.
- *  1.90  THE BIG MOMENT: the seal splits in two and falls away, a bloom of light
- *        opens behind the stage, gold motes drift up, and onCelebrate() fires.
+ *  0.15  A pair of blush stage curtains on a thin gold rod drops into place over the question.
+ *        "Daniel has a question…" fades in at 0.55.
+ *  1.00  Drumroll: three tiny gold diamonds along the curtains' hem light up one after another (1.0 / 1.2 / 1.4).
+ *  1.45  A sliver of golden light glows where the curtains meet.
+ *  1.90  THE BIG MOMENT: the curtains draw apart, a bloom of light opens behind the stage, gold motes
+ *        drift up, and onCelebrate() fires.
  *  2.00  The whole question "Will you be my groomsman?" resolves from blur to sharp
  *        as ONE unit (no word is withheld), then a gold-foil glint sweeps across the
  *        entire line once (2.5 -> 3.9) and leaves it in warm ink.
@@ -39,7 +38,6 @@ const T = {
   seal: START + 0.15,
   eyebrow: START + 0.55,
   dots: [START + 1.0, START + 1.2, START + 1.4],
-  glint: START + 1.0,
   crack: START + 1.45,
   break: START + 1.9,
   question: START + 2.0,
@@ -86,7 +84,7 @@ export function GroomsmanProposal({ onCelebrate }: { onCelebrate: () => void }) 
         setPhase('open')
         celebrate.current()
       }, T.break * 1000),
-      window.setTimeout(() => setPhase('gone'), (T.break + 1.1) * 1000),
+      window.setTimeout(() => setPhase('gone'), (T.break + 1.5) * 1000),
       window.setTimeout(() => setReady(true), T.buttons * 1000),
     ]
     return () => timers.forEach(window.clearTimeout)
@@ -109,7 +107,6 @@ export function GroomsmanProposal({ onCelebrate }: { onCelebrate: () => void }) 
   })
 
   const cssTimings = {
-    '--ga-glint-delay': `${T.glint}s`,
     '--ga-crack-delay': `${T.crack}s`,
     '--ga-sheen-delay': `${T.sheen}s`,
     '--ga-glow-delay': `${START}s`,
@@ -142,7 +139,7 @@ export function GroomsmanProposal({ onCelebrate }: { onCelebrate: () => void }) 
             Will you be my groomsman?
           </motion.h1>
 
-          {!reduce && phase !== 'gone' && <WaxSeal phase={phase} />}
+          {!reduce && phase !== 'gone' && <Curtains phase={phase} />}
           {!reduce && phase !== 'sealed' && <Motes />}
         </div>
 
@@ -206,7 +203,7 @@ export function GroomsmanProposal({ onCelebrate }: { onCelebrate: () => void }) 
                   animate={{ opacity: 1, y: 0 }}
                   transition={reveal(0.85, 0.7)}
                 >
-                  Thank you. I couldn’t do it without you, and there’s more to come soon.
+                  Thank you, it means the world. More details to come soon.
                 </motion.span>
               </motion.div>
             )}
@@ -222,69 +219,24 @@ export function GroomsmanProposal({ onCelebrate }: { onCelebrate: () => void }) 
   )
 }
 
-function SealFace() {
-  return (
-    <span className="ga-seal-face">
-      <span className="ga-seal-ring" />
-      <span className="ga-seal-mono">
-        D<i>&amp;</i>I
-      </span>
-    </span>
-  )
-}
-
-function WaxSeal({ phase }: { phase: Phase }) {
+/** A pair of blush stage curtains on a gold rod, hanging across the question until the big moment, when they draw apart. */
+function Curtains({ phase }: { phase: Phase }) {
   const open = phase === 'open'
-  const part = { duration: 0.8, ease: [0.5, 0, 0.9, 0.55] as const }
-
+  const draw = { duration: 1.3, ease: [0.65, 0, 0.35, 1] as const }
   return (
-    <>
-      <motion.div
-        className="ga-seal"
-        aria-hidden="true"
-        initial={{ opacity: 0, scale: 1.45, y: -22 }}
-        animate={{ opacity: [0, 1, 1], scale: [1.45, 0.92, 1], y: [-22, 1, 0] }}
-        transition={{ delay: T.seal, duration: 0.55, times: [0, 0.6, 1], ease: 'easeOut' }}
-      >
-        <motion.span
-          className="ga-seal-ripple"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: [0, 0.55, 0], scale: [0.8, 1.3, 1.75] }}
-          transition={{ delay: T.seal + 0.3, duration: 1, ease: 'easeOut' }}
-        />
-        <motion.div
-          className="ga-seal-half"
-          animate={open ? { x: -40, y: 28, rotate: -18, opacity: 0 } : { x: 0, y: 0, rotate: 0, opacity: 1 }}
-          transition={part}
-        >
-          <div className="ga-seal-clip ga-seal-clip--l">
-            <SealFace />
-          </div>
-        </motion.div>
-        <motion.div
-          className="ga-seal-half"
-          animate={open ? { x: 36, y: 32, rotate: 15, opacity: 0 } : { x: 0, y: 0, rotate: 0, opacity: 1 }}
-          transition={part}
-        >
-          <div className="ga-seal-clip ga-seal-clip--r">
-            <SealFace />
-          </div>
-        </motion.div>
-        {!open && (
-          <svg className="ga-crack" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <polyline className="ga-crack-glow" points="52,0 46,22 54,40 47,62 53,80 49,100" />
-            <polyline className="ga-crack-core" points="52,0 46,22 54,40 47,62 53,80 49,100" />
-          </svg>
-        )}
-      </motion.div>
-
-      <motion.div
-        className="ga-dots"
-        aria-hidden="true"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: open ? 0 : 1 }}
-        transition={{ duration: 0.25, delay: open ? 0 : T.seal + 0.5 }}
-      >
+    <motion.div
+      className="ga-curtains"
+      aria-hidden="true"
+      initial={{ opacity: 0, y: -14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: T.seal, duration: 0.7, ease: EASE }}
+    >
+      <span className="ga-rod" />
+      <motion.span className="ga-curtain ga-curtain--l" animate={open ? { scaleX: 0.04, skewY: 4 } : { scaleX: 1, skewY: 0 }} transition={draw} />
+      <motion.span className="ga-curtain ga-curtain--r" animate={open ? { scaleX: 0.04, skewY: -4 } : { scaleX: 1, skewY: 0 }} transition={draw} />
+      {/* A sliver of light where the curtains meet, brightening just before they part. */}
+      {!open && <span className="ga-seam" />}
+      <motion.div className="ga-dots" animate={{ opacity: open ? 0 : 1 }} transition={{ duration: 0.25 }}>
         {T.dots.map((delay) => (
           <motion.span
             key={delay}
@@ -294,7 +246,7 @@ function WaxSeal({ phase }: { phase: Phase }) {
           />
         ))}
       </motion.div>
-    </>
+    </motion.div>
   )
 }
 
