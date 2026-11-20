@@ -1,6 +1,6 @@
 # Guest app
 
-Imogen & Dan's wedding-weekend app comes in three parts that share one backend:
+Imogen & Daniel's wedding-weekend app comes in three parts that share one backend:
 
 | Part | Where | Who uses it |
 | --- | --- | --- |
@@ -35,7 +35,7 @@ Merging to `main` deploys the backend with the website. The Durable Object that 
 automatically on that deploy; there's nothing else to provision.
 
 Then add the couple's passcode as a secret: Cloudflare dashboard → Workers & Pages → **imogenanddan** → Settings →
-Variables and Secrets → Add → type **Secret**, name `HOST_PASSCODE`, value: a passcode only Imogen and Dan know.
+Variables and Secrets → Add → type **Secret**, name `HOST_PASSCODE`, value: a passcode only Imogen and Daniel know.
 Until it's set, nobody can sign in to the host screen.
 
 ### 2. App Store and Google Play accounts

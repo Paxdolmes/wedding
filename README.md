@@ -1,11 +1,11 @@
-# Imogen & Dan — Save the date
+# Imogen & Daniel — Save the date
 
 React + TypeScript + Vite, with Motion for the envelope and the save-the-date, and GSAP for the full page. A textured
 ivory envelope is set down under dappled garden light, its olive wax seal pressed in and the address written by hand.
 Pressing the seal cracks it, lifts the flap and draws out a gatefold card; as the card opens, petals are thrown and
 "You're invited!" is written in gold before the card flies forward into the page.
 
-**For now the page is only the save-the-date**, laid out like Imogen and Dan's own design: Caswell House in watercolour,
+**For now the page is only the save-the-date**, laid out like Imogen and Daniel's own design: Caswell House in watercolour,
 olive sprigs in the corners of a fine frame, the date, "One day. Our favourite people. The beginning of our forever."
 and a "Save our date" button that offers Google Calendar, or the calendar file for Apple Calendar and Outlook.
 It fits on one screen on most phones and on computers. A small arrow on the card's bottom edge leads to a second card
@@ -20,12 +20,14 @@ changing the switch (`?full` does nothing on the live site).
 
 ## The groomsmen's link
 
-Send groomsmen **imogenanddan.com/groomsman**. After the envelope opens, a card in the same style stages the question:
-"Daniel has a question… It's a big one.", then "Will you be my" written in, and after a beat "groomsman?" in large gold
-with a burst of petals and confetti. Two buttons ("Yes" and "Obviously, yes") throw a second burst and show a thank-you.
-The save-the-date follows below. The wording is in `weddingParty` in `src/wedding.ts`; the card is `TheQuestion` in
-`src/SaveTheDate.tsx`. `vite.config.ts` copies the page to `dist/groomsman/` at build time and serves it in development.
-Nothing is recorded when someone taps Yes.
+Send groomsmen **imogenanddan.com/groomsman**. After the envelope opens, Daniel's proposal plays (designed with v0,
+`src/GroomsmanProposal.tsx` and its CSS, with the choreography written out at the top): a candle glow, a blush wax seal
+pressed onto the card, a drumroll of three gold diamonds and a glint, a crack of light, then the seal breaks away in a
+bloom of light with the page's petals and confetti, and the whole question "Will you be my groomsman?" resolves at once
+(never word by word, so nobody expects a best-man reveal). A gold flourish, the note and two buttons follow; "Yes" or
+"Obviously, yes" throws a second burst and writes "Knew it." It's signed "With love, Daniel & Imogen x". The save-the-date
+follows below. `vite.config.ts` copies the page to `dist/groomsman/` at build time and serves it in development. Nothing
+is recorded when someone taps Yes.
 
 ## Security and link previews
 

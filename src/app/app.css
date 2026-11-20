@@ -1,4 +1,4 @@
-/* Imogen & Dan guest app. Shares colours and type with the invitation (src/index.css). */
+/* Imogen & Daniel guest app. Shares colours and type with the invitation (src/index.css). */
 html { background: var(--paper); }
 body { background: var(--paper) url('/paper-grain.svg'); font-size: 17px; overscroll-behavior-y: none; }
 #root { min-height: 100dvh; }

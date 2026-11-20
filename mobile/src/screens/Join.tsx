@@ -35,7 +35,7 @@ export function JoinScreen({ config, onJoined, onHost }: { config: Config | null
         <Button label={busy ? 'Joining…' : 'Join the weekend'} variant="primary" onPress={join} busy={busy} disabled={name.trim().length < 2} />
         <Hint>Use the name on your invitation so we can find your seat.</Hint>
       </Card>
-      <View style={{ alignItems: 'center' }}><LinkButton label="Imogen, Dan, best man, maid of honour or DJ? Sign in" onPress={onHost} /></View>
+      <View style={{ alignItems: 'center' }}><LinkButton label="Imogen, Daniel, best man, maid of honour or DJ? Sign in" onPress={onHost} /></View>
     </Screen>
   </KeyboardAvoidingView>
 }

@@ -52,11 +52,11 @@ function Login({ onIn, onExit }: { onIn: (staff: StaffSession) => void; onExit: 
       <View style={{ alignItems: 'center', gap: 12, paddingTop: 10 }}>
         <Monogram size={150} />
         <Title>Couple &amp; helpers</Title>
-        <Body style={{ textAlign: 'center' }}>Imogen and Dan sign in with their passcode. The best man, maid of honour and DJ use the code Imogen and Dan gave them.</Body>
+        <Body style={{ textAlign: 'center' }}>Imogen and Daniel sign in with their passcode. The best man, maid of honour and DJ use the code Imogen and Daniel gave them.</Body>
       </View>
       <Card>
         <Field label="Passcode or helper code" value={code} onChangeText={setCode} secureTextEntry autoCapitalize="none" />
-        <Field label="Your name on notifications (couple only)" value={label} onChangeText={setLabel} placeholder="Imogen & Dan" />
+        <Field label="Your name on notifications (couple only)" value={label} onChangeText={setLabel} placeholder="Imogen & Daniel" />
         <ErrorText>{error}</ErrorText>
         <Button label="Sign in" variant="primary" busy={busy} disabled={!code} onPress={async () => {
           setBusy(true); setError('')

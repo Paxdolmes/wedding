@@ -211,7 +211,7 @@ export function EnvelopeIntro({ onReveal, onOpen, replay }: { onReveal: () => vo
     if (mounted.current) onOpen()
   }
 
-  return <div className="envelope-intro" ref={scope} data-phase={phase} role="main" aria-label="An invitation from Imogen and Dan" aria-busy={opening}>
+  return <div className="envelope-intro" ref={scope} data-phase={phase} role="main" aria-label="An invitation from Imogen and Daniel" aria-busy={opening}>
     <div className="envelope-intro-surface" aria-hidden="true"><div className="ambient-light" /><div className="celebration-glow" /></div>
     <motion.div className="envelope-tilt" style={{ rotateX, rotateY }} onPointerMove={event => {
       if (busy.current || reduced || event.pointerType !== 'mouse') return
@@ -223,13 +223,13 @@ export function EnvelopeIntro({ onReveal, onOpen, replay }: { onReveal: () => vo
         <div className="envelope-shadow" aria-hidden="true" style={hidden({ opacity: 0 }, reduced)} />
         <div className="envelope-shell envelope-back" aria-hidden="true"><div className="envelope-liner"><OliveBranch /><OliveBranch /><OliveBranch /></div></div>
         <div className="keepsake-card" aria-hidden="true">
-          <div className="card-stock"><div className="keepsake-border"><OliveBranch className="card-branch" /><span className="card-overline">SAVE THE DATE</span><span className="card-names">Imogen <i>&</i> Dan</span><span className="card-rule" /><span className="card-date">24 AUGUST 2028</span><span className="card-venue">Caswell House · Oxfordshire</span></div><div className="card-foil-light" /></div>
+          <div className="card-stock"><div className="keepsake-border"><OliveBranch className="card-branch" /><span className="card-overline">SAVE THE DATE</span><span className="card-names">Imogen <i>&</i> Daniel</span><span className="card-rule" /><span className="card-date">24 AUGUST 2028</span><span className="card-venue">Caswell House · Oxfordshire</span></div><div className="card-foil-light" /></div>
           <div className="gate-shadow gate-shadow-left" /><div className="gate-shadow gate-shadow-right" />
           <div className="card-gate gate-left"><div className="gate-face gate-front"><FoldCover /></div><div className="gate-face gate-back"><OliveBranch /><span>With love,<br />always.</span></div></div>
           <div className="card-gate gate-right"><div className="gate-face gate-front"><FoldCover /></div><div className="gate-face gate-back"><OliveBranch /><span>Our next<br />chapter.</span></div></div>
           <div className="paper-curl" />
         </div>
-        <div className="envelope-shell envelope-folds" aria-hidden="true"><div className="pocket-shadow" /><div className="fold-left" /><div className="fold-right" /><div className="fold-bottom" /><div className="envelope-lettering"><span style={hidden({ '--ink': '-15%' } as CSSProperties, reduced)}>Imogen & Dan</span><span style={hidden({ '--ink': '-15%' } as CSSProperties, reduced)}>For you, with love</span></div></div>
+        <div className="envelope-shell envelope-folds" aria-hidden="true"><div className="pocket-shadow" /><div className="fold-left" /><div className="fold-right" /><div className="fold-bottom" /><div className="envelope-lettering"><span style={hidden({ '--ink': '-15%' } as CSSProperties, reduced)}>Imogen & Daniel</span><span style={hidden({ '--ink': '-15%' } as CSSProperties, reduced)}>For you, with love</span></div></div>
         <div className="envelope-shell flap-cast-shadow" aria-hidden="true" />
         <div className="envelope-shell flap-layer" ref={flapLayer} aria-hidden="true">
           <motion.div className="folding-flap" style={{ rotateX: flapAngle }}>
@@ -255,7 +255,7 @@ export function EnvelopeIntro({ onReveal, onOpen, replay }: { onReveal: () => vo
           <span className="seal-glint" />
         </div>
         <div className="invite-banner" aria-hidden="true"><span className="invite-line">You’re invited!</span><span className="invite-flourish"><OliveBranch /><i /><OliveBranch /></span></div>
-        <button ref={trigger} className="envelope-trigger" onClick={openEnvelope} disabled={opening} aria-label="Open your invitation" aria-describedby="envelope-instructions"><span id="envelope-instructions" className="visually-hidden">Press to break the seal and open Imogen and Dan’s save-the-date.</span></button>
+        <button ref={trigger} className="envelope-trigger" onClick={openEnvelope} disabled={opening} aria-label="Open your invitation" aria-describedby="envelope-instructions"><span id="envelope-instructions" className="visually-hidden">Press to break the seal and open Imogen and Daniel’s save-the-date.</span></button>
       </motion.div>
     </motion.div>
     {!reduced && <><LeafShadows /><DustMotes /></>}

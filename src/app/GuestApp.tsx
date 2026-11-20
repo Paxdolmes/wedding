@@ -92,6 +92,6 @@ function Join({ config, onJoined, onHost }: { config: Config | null; onJoined: (
       <button className="button primary" disabled={busy}>{busy ? 'Joining…' : 'Join the weekend'}</button>
       <p className="hint">Use the name on your invitation so we can find your seat.</p>
     </form>
-    <button className="link-button" onClick={onHost}>Imogen, Dan, best man or maid of honour? Sign in here</button>
+    <button className="link-button" onClick={onHost}>Imogen, Daniel, best man or maid of honour? Sign in here</button>
   </div>
 }

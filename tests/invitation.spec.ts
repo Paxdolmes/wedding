@@ -19,7 +19,7 @@ test('starts with only an envelope and opens to the save-the-date, with nothing 
   // No champagne any more: the bottle, its cork and the pop are gone from the opening.
   await expect(page.locator('.champagne, .flying-cork')).toHaveCount(0)
   await expect(card.getByRole('heading', { level: 1 })).toHaveText('Save the date')
-  await expect(card).toContainText('Imogen & Dan')
+  await expect(card).toContainText('Imogen & Daniel')
   await expect(card).toContainText('Thursday, 24 August 2028')
   await expect(card).toContainText('Caswell House, Oxfordshire')
   const painting = card.getByRole('img', { name: /watercolour of Caswell House/ })
@@ -56,7 +56,7 @@ test('starts with only an envelope and opens to the save-the-date, with nothing 
   const event = new URL(await google.getAttribute('href') ?? '')
   expect(event.origin + event.pathname).toBe('https://calendar.google.com/calendar/render')
   expect(Object.fromEntries(event.searchParams)).toEqual({
-    action: 'TEMPLATE', text: 'Imogen & Dan’s wedding', dates: '20280824/20280825',
+    action: 'TEMPLATE', text: 'Imogen & Daniel’s wedding', dates: '20280824/20280825',
     details: 'Save the date! Further details and timings to follow.', location: 'Caswell House, Brize Norton, Oxfordshire OX18 3NJ',
   })
   const downloadPromise = page.waitForEvent('download')
@@ -69,7 +69,7 @@ test('starts with only an envelope and opens to the save-the-date, with nothing 
   expect(calendar).toContain('DTEND;VALUE=DATE:20280825')
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   // Shared links show a preview card, and the private guest app stays out of search engines.
-  await expect(page).toHaveTitle('Imogen & Dan’s wedding — Save the date')
+  await expect(page).toHaveTitle('Imogen & Daniel’s wedding — Save the date')
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', 'https://imogenanddan.com/share.jpg')
   expect((await page.request.get('/share.jpg')).headers()['content-type']).toBe('image/jpeg')
   expect(await (await page.request.get('/robots.txt')).text()).toContain('Disallow: /app/')
@@ -83,7 +83,7 @@ test('the full site is kept behind the switch and still opens, downloads the cal
   await page.getByRole('button', { name: 'Open your invitation' }).click()
   const card = page.getByRole('article')
   await expect(card).toBeFocused({ timeout: 15000 })
-  await expect(card).toContainText('Imogen & Dan')
+  await expect(card).toContainText('Imogen & Daniel')
   await expect(card).toContainText('24 August 2028')
   await expect(card).toContainText('Caswell House, Oxfordshire')
   await expect(page.getByRole('region', { name: 'What to wear' })).toContainText('As long as you don’t feel beautiful in white.')
@@ -236,6 +236,7 @@ test('the groomsmen’s link pops the question first, then shows the save-the-da
   await expect(ask).toBeFocused({ timeout: 1500 })
   await expect(ask).toContainText('Daniel has a question')
   await expect(ask).toContainText('as I marry Imogen on Thursday 24 August 2028')
+  await expect(ask).toContainText('Daniel & Imogen x')
   await ask.getByRole('button', { name: 'Obviously, yes' }).click()
   await expect(ask.getByRole('status')).toContainText('Knew it.')
   await expect(ask.getByRole('button', { name: /yes/i })).toHaveCount(0)

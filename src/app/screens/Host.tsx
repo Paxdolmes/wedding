@@ -40,13 +40,13 @@ function Login({ onIn, onExit }: { onIn: (staff: StaffSession) => void; onExit: 
   return <div className="join">
     <Monogram size={150} />
     <h1>Couple &amp; <em>helpers</em></h1>
-    <p className="lede">Imogen and Dan sign in with their passcode. The best man, maid of honour and DJ use the code Imogen and Dan gave them.</p>
+    <p className="lede">Imogen and Daniel sign in with their passcode. The best man, maid of honour and DJ use the code Imogen and Daniel gave them.</p>
     <form className="card join-form" onSubmit={async e => {
       e.preventDefault(); setError('')
       try { onIn(await api<StaffSession>('staff/login', { body: { code, label } })) } catch (err) { setError((err as Error).message) }
     }}>
       <label>Passcode or helper code<input value={code} onChange={e => setCode(e.target.value)} autoComplete="current-password" type="password" required /></label>
-      <label>Your name, shown on notifications <small>(couple only)</small><input value={label} onChange={e => setLabel(e.target.value)} placeholder="Imogen & Dan" /></label>
+      <label>Your name, shown on notifications <small>(couple only)</small><input value={label} onChange={e => setLabel(e.target.value)} placeholder="Imogen & Daniel" /></label>
       {error && <p className="form-error" role="alert">{error}</p>}
       <button className="button primary">Sign in</button>
     </form>
@@ -134,7 +134,7 @@ function Guests() {
     <div className="card">
       <h2>Guest list &amp; seating plan</h2>
       <p className="hint">One guest per line: <code>Name | Table | Seat | Groups | A line about them</code>. Seats go round the table in order. Groups are comma-separated and let you message just those people (for example <em>Bridal party, Friday pub</em>).</p>
-      <textarea className="mono" rows={14} value={text ?? (people.data ? toLines(people.data) : '')} onChange={e => setText(e.target.value)} placeholder={'Sam Taylor | Table 1 | 1 | Friday pub | Dan’s uni flatmate, makes a mean negroni\nPriya Shah | Table 1 | 2 | Bridal party | Imogen’s friend since primary school'} spellCheck={false} />
+      <textarea className="mono" rows={14} value={text ?? (people.data ? toLines(people.data) : '')} onChange={e => setText(e.target.value)} placeholder={'Sam Taylor | Table 1 | 1 | Friday pub | Daniel’s uni flatmate, makes a mean negroni\nPriya Shah | Table 1 | 2 | Bridal party | Imogen’s friend since primary school'} spellCheck={false} />
       <button className="button primary" onClick={async () => {
         try { const r = await api<{ count: number }>('staff/people', { method: 'PUT', body: { people: fromLines(text ?? (people.data ? toLines(people.data) : '')) } }); setStatus(`Saved ${r.count} guests.`); people.reload(); overview.reload() } catch (e) { setStatus((e as Error).message) }
       }}>Save guest list</button>

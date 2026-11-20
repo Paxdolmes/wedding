@@ -1,0 +1,434 @@
+/* The groomsman's proposal (GroomsmanProposal.tsx), designed with v0. Uses the site's --serif, --script and --sans. */
+.ga-root {
+  --ga-paper: #fff9f4;
+  --ga-ink: #4a3c30;
+  --ga-ink-soft: #66564a;
+  --ga-sage: #7d8761;
+  --ga-blush: #efc9c0;
+  --ga-foil: linear-gradient(100deg, #806b3e 0%, #9d8d64 20%, #c8a95f 38%, #ecd9a0 48%, #c8a95f 58%, #9d8d64 78%, #806b3e 100%);
+  --ga-seal: clamp(76px, 13vh, 112px);
+
+  position: relative;
+  isolation: isolate;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0;
+  overflow: visible;
+  text-align: center;
+  color: var(--ga-ink);
+}
+
+.ga-root *,
+.ga-root *::before,
+.ga-root *::after {
+  box-sizing: border-box;
+}
+
+.ga-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 640px;
+}
+
+/* Candlelight */
+.ga-glow {
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  top: 40%;
+  width: min(110vw, 980px);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    radial-gradient(closest-side, rgb(236 217 160 / 0.34) 0%, rgb(236 217 160 / 0.28) 10%, rgb(236 217 160 / 0.19) 24%, rgb(236 217 160 / 0.1) 40%, rgb(236 217 160 / 0.04) 58%, rgb(236 217 160 / 0.01) 76%, transparent 100%),
+    radial-gradient(closest-side, rgb(239 201 192 / 0.16) 0%, rgb(239 201 192 / 0.12) 30%, rgb(239 201 192 / 0.06) 55%, rgb(239 201 192 / 0.02) 80%, transparent 100%);
+  animation:
+    ga-glow-in 1.6s ease-out var(--ga-glow-delay, 0s) forwards,
+    ga-flicker 4.6s ease-in-out calc(var(--ga-glow-delay, 0s) + 1.6s) infinite alternate;
+}
+
+@keyframes ga-glow-in {
+  to { opacity: 0.86; }
+}
+
+@keyframes ga-flicker {
+  0% { opacity: 0.86; scale: 1; }
+  18% { opacity: 1; scale: 1.02; }
+  37% { opacity: 0.9; scale: 0.99; }
+  55% { opacity: 0.98; scale: 1.015; }
+  76% { opacity: 0.84; scale: 0.985; }
+  100% { opacity: 0.95; scale: 1; }
+}
+
+/* Eyebrow */
+.ga-eyebrow {
+  margin: 0 0 clamp(6px, 1.4vh, 16px);
+  font: 400 12px/1.4 var(--sans, 'Jost', sans-serif);
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--ga-ink-soft);
+  /* the trailing tracking would otherwise push the line off-centre */
+  padding-left: 0.34em;
+}
+
+/* Stage: question + seal share the same space */
+.ga-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: calc(var(--ga-seal) + 48px);
+}
+
+.ga-question {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 0.04em 0.1em 0.12em;
+  font: 400 clamp(42px, min(11.8vw, 9.5vh), 80px) / 1.2 var(--script, 'Pinyon Script', cursive);
+  text-wrap: balance;
+  color: var(--ga-ink);
+  background: linear-gradient(100deg, var(--ga-ink) 0%, var(--ga-ink) 38%, #806b3e 42%, #c8a95f 46%, #ecd9a0 50%, #c8a95f 54%, #806b3e 58%, var(--ga-ink) 62%, var(--ga-ink) 100%);
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: ga-sheen 1.4s ease-in-out var(--ga-sheen-delay, 2.5s) forwards;
+}
+
+@keyframes ga-sheen {
+  to { background-position: 0% 0; }
+}
+
+/* Wax seal */
+.ga-seal {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  margin: auto;
+  width: var(--ga-seal);
+  height: var(--ga-seal);
+  pointer-events: none;
+}
+
+.ga-seal-ripple {
+  position: absolute;
+  inset: -6%;
+  border-radius: 50%;
+  border: 1px solid rgb(239 201 192 / 0.9);
+}
+
+.ga-seal-half {
+  position: absolute;
+  inset: 0;
+  filter: drop-shadow(0 6px 7px rgb(74 60 48 / 0.28));
+}
+
+.ga-seal-clip {
+  position: absolute;
+  inset: 0;
+}
+
+.ga-seal-clip--l {
+  clip-path: polygon(0 0, 52% 0, 46% 22%, 54% 40%, 47% 62%, 53% 80%, 49% 100%, 0 100%);
+}
+
+.ga-seal-clip--r {
+  clip-path: polygon(52% 0, 100% 0, 100% 100%, 49% 100%, 53% 80%, 47% 62%, 54% 40%, 46% 22%);
+}
+
+.ga-seal-face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 46% 54% 52% 48% / 52% 46% 54% 48%;
+  background: radial-gradient(circle at 34% 28%, #f6dcd4 0%, #efc9c0 22%, #d29a8e 56%, #a96a5f 100%);
+  box-shadow:
+    inset 0 -4px 9px rgb(110 56 48 / 0.35),
+    inset 0 3px 6px rgb(255 240 234 / 0.6);
+}
+
+.ga-seal-face::after {
+  content: '';
+  position: absolute;
+  inset: -25%;
+  background: linear-gradient(105deg, transparent 38%, rgb(236 217 160 / 0.25) 44%, rgb(255 247 224 / 0.85) 50%, rgb(236 217 160 / 0.25) 56%, transparent 62%);
+  transform: translateX(-130%);
+  animation: ga-glint 0.9s ease-in-out var(--ga-glint-delay, 1s) forwards;
+}
+
+@keyframes ga-glint {
+  to { transform: translateX(130%); }
+}
+
+.ga-seal-ring {
+  position: absolute;
+  inset: 13%;
+  border-radius: 50%;
+  border: 1.5px solid rgb(122 64 55 / 0.4);
+  box-shadow:
+    inset 0 1px 2px rgb(110 56 48 / 0.35),
+    0 1px 0 rgb(255 236 230 / 0.55);
+}
+
+.ga-seal-mono i {
+  margin: 0 0.06em;
+  font: italic 500 0.62em / 1 var(--serif, 'Cormorant Garamond', serif);
+}
+
+.ga-seal-mono {
+  font: 400 calc(var(--ga-seal) * 0.34) / 1 var(--script, 'Pinyon Script', cursive);
+  color: rgb(122 64 55 / 0.9);
+  text-shadow:
+    0 1px 0 rgb(255 236 230 / 0.55),
+    0 -1px 0 rgb(90 44 38 / 0.25);
+}
+
+.ga-crack {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  animation: ga-crack 0.45s ease-out var(--ga-crack-delay, 1.45s) forwards;
+}
+
+.ga-crack polyline {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  stroke-linejoin: round;
+}
+
+.ga-crack-glow {
+  stroke: #ecd9a0;
+  stroke-width: 4;
+  opacity: 0.4;
+}
+
+.ga-crack-core {
+  stroke: #fff6dc;
+  stroke-width: 1;
+}
+
+@keyframes ga-crack {
+  to { opacity: 1; }
+}
+
+/* Drumroll diamonds */
+.ga-dots {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  top: calc(50% + var(--ga-seal) / 2 + 12px);
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  pointer-events: none;
+}
+
+.ga-dots span {
+  width: 5px;
+  height: 5px;
+  rotate: 45deg;
+  background: linear-gradient(135deg, #ecd9a0, #c8a95f);
+  box-shadow: 0 0 6px rgb(236 217 160 / 0.9);
+}
+
+/* Light bloom + motes */
+.ga-bloom {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  margin: auto;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgb(255 244 214 / 0.95) 0%, rgb(250 234 190 / 0.75) 14%, rgb(236 217 160 / 0.5) 30%, rgb(236 217 160 / 0.3) 46%, rgb(239 201 192 / 0.15) 62%, rgb(239 201 192 / 0.06) 80%, transparent 100%);
+}
+
+.ga-motes {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ga-mote {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff3cc, #c8a95f 70%);
+  box-shadow: 0 0 6px 1px rgb(236 217 160 / 0.8);
+}
+
+/* Flourish */
+.ga-flourish {
+  display: block;
+  width: min(220px, 60vw);
+  height: auto;
+  margin: clamp(2px, 0.8vh, 10px) 0 clamp(8px, 1.8vh, 20px);
+  overflow: visible;
+}
+
+/* Note */
+.ga-note {
+  margin: 0;
+  max-width: 34ch;
+  font: 500 clamp(19px, 5.1vw, 22px) / 1.45 var(--serif, 'Cormorant Garamond', serif);
+  text-wrap: pretty;
+  color: var(--ga-ink-soft);
+}
+
+/* Actions */
+.ga-actions {
+  display: grid;
+  justify-items: center;
+  min-height: 48px;
+  margin-top: clamp(14px, 3vh, 30px);
+}
+
+.ga-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.ga-btn {
+  appearance: none;
+  min-height: 48px;
+  margin: 0;
+  padding: 0 22px;
+  border-radius: 0;
+  cursor: pointer;
+  font: 400 11.5px/1 var(--sans, 'Jost', sans-serif);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.ga-btn:focus-visible {
+  outline: 2px solid var(--ga-ink);
+  outline-offset: 3px;
+}
+
+.ga-btn--plain {
+  min-width: 96px;
+  border: 1px solid rgb(74 60 48 / 0.55);
+  background: var(--ga-paper);
+  color: var(--ga-ink);
+}
+
+@media (hover: hover) { .ga-btn--plain:hover {
+  background: var(--ga-ink);
+  color: var(--ga-paper);
+} }
+
+.ga-btn--grand {
+  border: 1px solid transparent;
+  color: var(--ga-paper);
+  background:
+    linear-gradient(var(--ga-ink), var(--ga-ink)) padding-box,
+    var(--ga-foil) border-box;
+}
+
+.ga-btn--grand:hover {
+  box-shadow: 0 6px 18px -6px rgb(200 169 95 / 0.8);
+}
+
+/* Reply */
+.ga-reply {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  outline: none;
+}
+
+.ga-reply-big {
+  display: block;
+  padding: 0.05em 0.12em 0.15em;
+  font: 400 clamp(54px, min(16vw, 9vh), 84px) / 1.1 var(--script, 'Pinyon Script', cursive);
+  color: #806b3e;
+  background: linear-gradient(100deg, #806b3e 0%, #9d8d64 14%, #806b3e 30%, #8a7344 36%, #c8a95f 46%, #ecd9a0 50%, #c8a95f 54%, #8a7344 64%, #806b3e 70%, #9d8d64 86%, #806b3e 100%);
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: ga-sheen 1.5s ease-in-out 0.6s forwards;
+}
+
+.ga-reply-text {
+  max-width: 32ch;
+  font: 500 clamp(19px, 5.1vw, 22px) / 1.45 var(--serif, 'Cormorant Garamond', serif);
+  text-wrap: pretty;
+  color: var(--ga-ink-soft);
+}
+
+/* Signature */
+.ga-signature {
+  display: grid;
+  justify-items: center;
+  gap: 0;
+  margin: clamp(10px, 2.4vh, 28px) 0 0;
+}
+
+.ga-with-love {
+  font: italic 500 clamp(18px, 4.6vw, 20px) / 1.3 var(--serif, 'Cormorant Garamond', serif);
+  color: var(--ga-ink-soft);
+}
+
+/* The serif italic ampersand, as in the names on the save-the-date. */
+.ga-names i { font: italic 400 .92em/0 var(--serif, 'Cormorant Garamond', serif); }
+
+.ga-names {
+  font: 400 clamp(34px, min(9.4vw, 5.6vh), 46px) / 1.3 var(--script, 'Pinyon Script', cursive);
+  color: var(--ga-ink);
+}
+
+@media (min-width: 900px) {
+  .ga-btn {
+    padding: 0 30px;
+    letter-spacing: 0.3em;
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ga-glow {
+    animation: none;
+    opacity: 0.86;
+  }
+
+  .ga-question,
+  .ga-reply-big {
+    animation: none;
+  }
+
+  .ga-btn {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .ga-question,
+  .ga-reply-big {
+    background: none;
+    -webkit-text-fill-color: currentColor;
+    color: CanvasText;
+  }
+}

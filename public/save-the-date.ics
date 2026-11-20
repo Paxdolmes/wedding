@@ -1,13 +1,13 @@
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Imogen and Dan//Save the Date//EN
+PRODID:-//Imogen and Daniel//Save the Date//EN
 CALSCALE:GREGORIAN
 BEGIN:VEVENT
 UID:wedding-20280824@imogenanddan.com
 DTSTAMP:20261103T000000Z
 DTSTART;VALUE=DATE:20280824
 DTEND;VALUE=DATE:20280825
-SUMMARY:Imogen & Dan’s wedding
+SUMMARY:Imogen & Daniel’s wedding
 LOCATION:Caswell House\, Brize Norton
 DESCRIPTION:Save the date! Further details and timings to follow.
 END:VEVENT

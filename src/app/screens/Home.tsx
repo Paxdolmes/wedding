@@ -30,7 +30,7 @@ export function Home({ me, config, go }: { me: Me; config: Config | null; go: (t
     <PushCard config={config} />
 
     <section className="card inbox" aria-labelledby="inbox-title">
-      <div className="card-head"><h2 id="inbox-title">From Imogen &amp; Dan</h2>{inbox.data && inbox.data.length > 0 && <span className="pill">{inbox.data.length}</span>}</div>
+      <div className="card-head"><h2 id="inbox-title">From Imogen &amp; Daniel</h2>{inbox.data && inbox.data.length > 0 && <span className="pill">{inbox.data.length}</span>}</div>
       {inbox.data?.length ? <ol className="inbox-list">{inbox.data.map(item => <li key={item.id}>
         <a href={item.url.startsWith('/app/') ? item.url.slice(5) : '#home'}>
           <strong>{item.title}</strong>

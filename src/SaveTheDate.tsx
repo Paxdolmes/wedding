@@ -3,7 +3,8 @@ import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion
 import { Countdown } from './Countdown'
 import { ThursdayNote } from './ThursdayNote'
 import { saveTheDateImages as images } from './saveTheDateImages'
-import { googleCalendarLink, partyRoleFrom, weddingParty, type PartyRole } from './wedding'
+import { googleCalendarLink, partyRoleFrom } from './wedding'
+import { GroomsmanProposal } from './GroomsmanProposal'
 import { throwPetals } from './confetti'
 import './SaveTheDate.css'
 
@@ -75,51 +76,20 @@ function MoreToCome() {
     <motion.div className="std-to-come" variants={line}>
       <p className="std-small-caps">More information to come</p>
       <p>Timings, travel and places to stay will follow closer to the day. For now, please keep the date free for us.</p>
-      <p className="std-signature"><span>With love,</span> <span>Imogen <i>&amp;</i> Dan</span></p>
+      <p className="std-signature"><span>With love,</span> <span>Imogen <i>&amp;</i> Daniel</span></p>
     </motion.div>
   </motion.section>
 }
 
-// The groomsman's card is staged like a proposal: each moment arrives at its own time (seconds after the card appears).
-const at = (delay: number, variants: Variants): Variants => {
-  const { transition = {}, ...target } = variants.shown as { transition?: Record<string, unknown> }
-  // Per-value timings (like the quicker fade under the handwriting) get the same delay.
-  const timed = Object.fromEntries(Object.entries(transition).map(([key, value]) => [key, value && typeof value === 'object' && !Array.isArray(value) ? { ...value, delay } : value]))
-  return { hidden: variants.hidden, shown: { ...target, transition: { ...timed, delay } } }
-}
-const pop: Variants = { hidden: { opacity: 0, scale: .6 }, shown: { opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 260, damping: 14 } } }
-
-/** On the groomsman's link, the first card pops the question, with a drumroll, gold ink and confetti; the save-the-date follows below. */
-function TheQuestion({ role, ref }: { role: PartyRole; ref: Ref<HTMLElement> }) {
+/** On the groomsman's link, the first card is Daniel's proposal; the save-the-date follows below. */
+function TheQuestion({ ref }: { ref: Ref<HTMLElement> }) {
   const reduced = useReducedMotion()
-  const { from, partner, question } = weddingParty[role]
-  const [answered, setAnswered] = useState(false)
-  const reply = useRef<HTMLParagraphElement>(null)
-  useEffect(() => { if (answered) reply.current?.focus({ preventScroll: true }) }, [answered])
-  const sayYes = () => { setAnswered(true); throwPetals() }
-  return <motion.article ref={ref} className="std-ask" tabIndex={-1} aria-labelledby="std-ask-question" initial={reduced ? false : 'hidden'} animate="shown">
-    <motion.div className="std-frame" aria-hidden="true" variants={at(.6, frame)} />
-    <motion.img className="std-sprig std-sprig-top" src={images.leavesTopLeft} alt="" width="376" height="276" aria-hidden="true" variants={at(.7, sprig(-5))} />
-    <motion.img className="std-sprig std-sprig-bottom" src={images.leavesBottomRight} alt="" width="300" height="277" aria-hidden="true" variants={at(.8, sprig(5))} />
-    <motion.p className="std-small-caps" variants={at(1, line)}>{from} has a question…</motion.p>
-    <motion.p className="std-ask-tease" variants={at(2, line)}>It’s a big one.</motion.p>
-    <h1 className="std-ask-question" id="std-ask-question">
-      <motion.span className="std-ask-lead" variants={at(3.1, handwriting)}>{question[0]}</motion.span>
-      {' '}
-      {/* The word itself arrives after a beat, in gold, and the confetti goes off as it lands. */}
-      <motion.span className="std-ask-role" variants={at(5, pop)} onAnimationComplete={definition => { if (definition === 'shown' && !reduced) throwPetals() }}>
-        <motion.span className="foil" variants={at(5, handwriting)}>{question[1]}</motion.span>
-      </motion.span>
-    </h1>
-    <motion.i className="std-rule" aria-hidden="true" variants={at(6.2, rule)} />
-    <motion.p className="std-ask-note" variants={at(6.4, line)}>You’re one of the people I can’t imagine the day without. I’d love you by my side as I marry {partner} on Thursday 24 August 2028.</motion.p>
-    <motion.div className="std-ask-answer" variants={at(7, line)}>
-      {answered
-        ? <p className="std-ask-reply" ref={reply} tabIndex={-1} role="status"><span>Knew it.</span> Thank you. I couldn’t do it without you, and there’s more to come soon.</p>
-        : <div className="std-ask-buttons"><button type="button" onClick={sayYes}>Yes</button><button type="button" onClick={sayYes}>Obviously, yes</button></div>}
-    </motion.div>
-    <motion.p className="std-signature" variants={at(7.4, line)}><span>With love,</span> <span>{from} x</span></motion.p>
-    <motion.a className="std-more-cue" href="#std-card" aria-label="Our save-the-date, below" variants={at(7.8, line)}><svg viewBox="0 0 16 10" aria-hidden="true"><path d="M1 1.5l7 7 7-7" /></svg></motion.a>
+  return <motion.article ref={ref} className="std-ask" tabIndex={-1} aria-labelledby="ga-question" initial={reduced ? false : 'hidden'} animate="shown" variants={{ shown: { transition: { staggerChildren: .1, delayChildren: .6 } } }}>
+    <motion.div className="std-frame" aria-hidden="true" variants={frame} />
+    <motion.img className="std-sprig std-sprig-top" src={images.leavesTopLeft} alt="" width="376" height="276" aria-hidden="true" variants={sprig(-5)} />
+    <motion.img className="std-sprig std-sprig-bottom" src={images.leavesBottomRight} alt="" width="300" height="277" aria-hidden="true" variants={sprig(5)} />
+    <GroomsmanProposal onCelebrate={throwPetals} />
+    <motion.a className="std-more-cue" href="#std-card" aria-label="Our save-the-date, below" variants={{ hidden: { opacity: 0 }, shown: { opacity: 1, transition: { delay: 5.6, duration: 1 } } }}><svg viewBox="0 0 16 10" aria-hidden="true"><path d="M1 1.5l7 7 7-7" /></svg></motion.a>
   </motion.article>
 }
 
@@ -132,7 +102,7 @@ export function SaveTheDate({ open }: { open: boolean }) {
   useEffect(() => { if (open) (ask.current ?? card.current)?.focus({ preventScroll: true }) }, [open])
   return <motion.div className="std-page" inert={!open} aria-hidden={!open || undefined} initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 1.04 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: reduced ? 0 : .9, ease: silk }}>
     <main>
-      {role && <TheQuestion role={role} ref={ask} />}
+      {role && <TheQuestion ref={ask} />}
       {/* The page settles into place over .9s; the painting's reveal begins only once it has (.65s + 3 × .09s). */}
       <motion.article ref={card} id="std-card" className="std" tabIndex={-1} aria-labelledby="std-title std-names" initial={reduced ? false : 'hidden'} animate="shown" variants={{ shown: { transition: { staggerChildren: .09, delayChildren: .65 } } }}>
         <motion.div className="std-frame" aria-hidden="true" variants={frame} />
@@ -143,7 +113,7 @@ export function SaveTheDate({ open }: { open: boolean }) {
         <motion.h1 className="std-title" id="std-title" variants={line}><span>Save</span> <em>the</em> <span>date</span></motion.h1>
         <motion.i className="std-rule" aria-hidden="true" variants={rule} />
         <motion.p className="std-caps std-for" variants={line}>For the wedding of</motion.p>
-        <motion.p className="std-names" id="std-names" variants={handwriting}>Imogen <span>&amp;</span> Dan</motion.p>
+        <motion.p className="std-names" id="std-names" variants={handwriting}>Imogen <span>&amp;</span> Daniel</motion.p>
         <motion.i className="std-rule" aria-hidden="true" variants={rule} />
         <motion.p className="std-when" variants={line}><span className="std-day">Thursday</span><span className="visually-hidden">, </span><time className="std-date" dateTime="2028-08-24">24 August 2028</time></motion.p>
         <motion.i className="std-rule" aria-hidden="true" variants={rule} />
