@@ -4,6 +4,7 @@ import { Countdown } from './Countdown'
 import { ThursdayNote } from './ThursdayNote'
 import { saveTheDateImages as images } from './saveTheDateImages'
 import { googleCalendarLink, partyRoleFrom, weddingParty, type PartyRole } from './wedding'
+import { throwPetals } from './confetti'
 import './SaveTheDate.css'
 
 const silk = [.22, 1, .36, 1] as const
@@ -70,12 +71,6 @@ function MoreToCome() {
     <motion.p className="std-note" variants={line}>One day. Our favourite people.<br />The beginning of our forever.</motion.p>
     {/* The Thursday note exactly as on the full invitation. */}
     <motion.div className="std-note-wrap" variants={line}><ThursdayNote /></motion.div>
-    {/* What to wear, a small version of the full site's dress code. */}
-    <motion.div className="std-dress" variants={line}>
-      <p className="label">What to wear</p>
-      <p className="std-dress-statement">Whatever makes you <em>feel beautiful.</em></p>
-      <p className="std-dress-note">As long as you don’t feel beautiful in <span className="std-dress-white">white</span>.</p>
-    </motion.div>
     <motion.i className="std-rule" aria-hidden="true" variants={rule} />
     <motion.div className="std-to-come" variants={line}>
       <p className="std-small-caps">More information to come</p>
@@ -85,20 +80,46 @@ function MoreToCome() {
   </motion.section>
 }
 
-/** On a wedding-party link, the first card asks the question; the save-the-date follows below. */
+// The groomsman's card is staged like a proposal: each moment arrives at its own time (seconds after the card appears).
+const at = (delay: number, variants: Variants): Variants => {
+  const { transition = {}, ...target } = variants.shown as { transition?: Record<string, unknown> }
+  // Per-value timings (like the quicker fade under the handwriting) get the same delay.
+  const timed = Object.fromEntries(Object.entries(transition).map(([key, value]) => [key, value && typeof value === 'object' && !Array.isArray(value) ? { ...value, delay } : value]))
+  return { hidden: variants.hidden, shown: { ...target, transition: { ...timed, delay } } }
+}
+const pop: Variants = { hidden: { opacity: 0, scale: .6 }, shown: { opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 260, damping: 14 } } }
+
+/** On the groomsman's link, the first card pops the question, with a drumroll, gold ink and confetti; the save-the-date follows below. */
 function TheQuestion({ role, ref }: { role: PartyRole; ref: Ref<HTMLElement> }) {
   const reduced = useReducedMotion()
   const { from, partner, question } = weddingParty[role]
-  return <motion.article ref={ref} className="std-ask" tabIndex={-1} aria-labelledby="std-ask-question" initial={reduced ? false : 'hidden'} animate="shown" variants={{ shown: { transition: { staggerChildren: .12, delayChildren: .65 } } }}>
-    <motion.div className="std-frame" aria-hidden="true" variants={frame} />
-    <motion.img className="std-sprig std-sprig-top" src={images.leavesTopLeft} alt="" width="376" height="276" aria-hidden="true" variants={sprig(-5)} />
-    <motion.img className="std-sprig std-sprig-bottom" src={images.leavesBottomRight} alt="" width="300" height="277" aria-hidden="true" variants={sprig(5)} />
-    <motion.p className="std-small-caps" variants={line}>{from} has a question</motion.p>
-    <motion.h1 className="std-ask-question" id="std-ask-question" variants={handwriting}>{question[0]}<br />{question[1]}</motion.h1>
-    <motion.i className="std-rule" aria-hidden="true" variants={rule} />
-    <motion.p className="std-ask-note" variants={line}>You’re one of the people I can’t imagine the day without. I’d love you by my side as I marry {partner} on Thursday 24 August 2028.</motion.p>
-    <motion.p className="std-signature" variants={line}><span>With love,</span> <span>{from} x</span></motion.p>
-    <motion.a className="std-more-cue" href="#std-card" aria-label="Our save-the-date, below" variants={line}><svg viewBox="0 0 16 10" aria-hidden="true"><path d="M1 1.5l7 7 7-7" /></svg></motion.a>
+  const [answered, setAnswered] = useState(false)
+  const reply = useRef<HTMLParagraphElement>(null)
+  useEffect(() => { if (answered) reply.current?.focus({ preventScroll: true }) }, [answered])
+  const sayYes = () => { setAnswered(true); throwPetals() }
+  return <motion.article ref={ref} className="std-ask" tabIndex={-1} aria-labelledby="std-ask-question" initial={reduced ? false : 'hidden'} animate="shown">
+    <motion.div className="std-frame" aria-hidden="true" variants={at(.6, frame)} />
+    <motion.img className="std-sprig std-sprig-top" src={images.leavesTopLeft} alt="" width="376" height="276" aria-hidden="true" variants={at(.7, sprig(-5))} />
+    <motion.img className="std-sprig std-sprig-bottom" src={images.leavesBottomRight} alt="" width="300" height="277" aria-hidden="true" variants={at(.8, sprig(5))} />
+    <motion.p className="std-small-caps" variants={at(1, line)}>{from} has a question…</motion.p>
+    <motion.p className="std-ask-tease" variants={at(2, line)}>It’s a big one.</motion.p>
+    <h1 className="std-ask-question" id="std-ask-question">
+      <motion.span className="std-ask-lead" variants={at(3.1, handwriting)}>{question[0]}</motion.span>
+      {' '}
+      {/* The word itself arrives after a beat, in gold, and the confetti goes off as it lands. */}
+      <motion.span className="std-ask-role" variants={at(5, pop)} onAnimationComplete={definition => { if (definition === 'shown' && !reduced) throwPetals() }}>
+        <motion.span className="foil" variants={at(5, handwriting)}>{question[1]}</motion.span>
+      </motion.span>
+    </h1>
+    <motion.i className="std-rule" aria-hidden="true" variants={at(6.2, rule)} />
+    <motion.p className="std-ask-note" variants={at(6.4, line)}>You’re one of the people I can’t imagine the day without. I’d love you by my side as I marry {partner} on Thursday 24 August 2028.</motion.p>
+    <motion.div className="std-ask-answer" variants={at(7, line)}>
+      {answered
+        ? <p className="std-ask-reply" ref={reply} tabIndex={-1} role="status"><span>Knew it.</span> Thank you. I couldn’t do it without you, and there’s more to come soon.</p>
+        : <div className="std-ask-buttons"><button type="button" onClick={sayYes}>Yes</button><button type="button" onClick={sayYes}>Obviously, yes</button></div>}
+    </motion.div>
+    <motion.p className="std-signature" variants={at(7.4, line)}><span>With love,</span> <span>{from} x</span></motion.p>
+    <motion.a className="std-more-cue" href="#std-card" aria-label="Our save-the-date, below" variants={at(7.8, line)}><svg viewBox="0 0 16 10" aria-hidden="true"><path d="M1 1.5l7 7 7-7" /></svg></motion.a>
   </motion.article>
 }
 

@@ -3,11 +3,11 @@ import { copyFile, mkdir } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { defineConfig, type Connect, type Plugin } from 'vite'
 
-/** The wedding party's own links (see `weddingParty` in src/wedding.ts). Each is the save-the-date page at its own address. */
-const partyPages = ['bridesmaid', 'groomsman']
+/** The groomsmen's own link (see `weddingParty` in src/wedding.ts): the save-the-date page at its own address. */
+const partyPages = ['groomsman']
 
 function weddingPartyPages(): Plugin {
-  // While developing or previewing, /bridesmaid and /groomsman serve the save-the-date page.
+  // While developing or previewing, /groomsman serves the save-the-date page.
   const rewrite: Connect.NextHandleFunction = (request, _response, next) => {
     const match = request.url?.match(/^\/([a-z]+)\/?(\?.*)?$/)
     if (match && partyPages.includes(match[1])) request.url = `/${match[2] ?? ''}`
@@ -17,7 +17,7 @@ function weddingPartyPages(): Plugin {
     name: 'wedding-party-pages',
     configureServer: server => { server.middlewares.use(rewrite) },
     configurePreviewServer: server => { server.middlewares.use(rewrite) },
-    // In the build, each gets a copy of the page, so Cloudflare serves it at /bridesmaid/ and /groomsman/.
+    // In the build it gets a copy of the page, so Cloudflare serves it at /groomsman/.
     async writeBundle(options) {
       const dir = options.dir ?? resolve(import.meta.dirname, 'dist')
       for (const page of partyPages) {
